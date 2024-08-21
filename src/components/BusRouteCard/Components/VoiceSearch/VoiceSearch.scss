@@ -1,0 +1,62 @@
+.voice-search-wrapper {
+  .modal-trigger {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    // padding: 0.5rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:active {
+      background-color: #fd5901;
+    }
+  }
+}
+
+// Has to be outsie wrapper
+.drawer-body {
+  //   border: 1px solid red;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .drawer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    .modal-mic {
+      background-color: #333;
+      padding: 0.5rem;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.3s;
+
+      svg {
+        transition: 0.3s;
+      }
+    }
+
+    .search-result {
+      font-size: 1.25rem;
+    }
+  }
+
+  .action-buttons {
+    align-self: center;
+
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+}

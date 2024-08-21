@@ -1,0 +1,56 @@
+.LeftFilterBox {
+  border: 0.5px solid #dadada;
+  padding-inline: 15px;
+
+  .leftFilterContainer {
+    display: flex;
+    flex-direction: column;
+
+    .title {
+      padding-block: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      p {
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+
+    ul {
+      padding-left: 0px;
+      max-height: 60vh;
+      overflow-y: auto;
+
+      .filterTypes {
+        display: flex;
+        color: #918e8e;
+        justify-content: space-between;
+
+        .types {
+          display: flex;
+          gap: 10px;
+          font-weight: 600;
+          font-size: 13px;
+          align-items: center;
+        }
+      }
+    }
+
+    input[type="text"] {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}

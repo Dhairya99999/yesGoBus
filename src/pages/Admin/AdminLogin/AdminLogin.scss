@@ -1,0 +1,49 @@
+.login-wrapper {
+  .login-container {
+    max-width: 600px;
+    margin-inline: auto;
+
+    .admin-login-form {
+      .create-input {
+        border: 0;
+        outline: 0;
+        background-color: #f0f0f0;
+
+        font-size: 1rem;
+        padding: 1.5rem 2rem;
+        border-radius: 10rem;
+
+        &::placeholder {
+          color: #8b8b8b;
+        }
+
+        input {
+          border: 0;
+          outline: 0;
+          background-color: #f0f0f0;
+          font-size: 1rem;
+
+          &::placeholder {
+            color: #8b8b8b;
+          }
+        }
+      }
+    }
+  }
+
+  .slide-down {
+    animation: slide-down 0.1s linear 0s 1 forwards;
+  }
+}
+
+@keyframes slide-down {
+  0% {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translate(0px);
+    opacity: 1;
+  }
+}

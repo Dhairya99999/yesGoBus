@@ -1,0 +1,30 @@
+.dashboard-wrapper {
+  padding: 0.25rem;
+
+  @media (min-width: 768px) {
+    padding: 1rem;
+  }
+
+  .dashboard-header {
+    display: grid;
+    grid-template-columns: 100%;
+    gap: 1rem;
+
+    @media (min-width: 768px) {
+      grid-template-columns: calc(100% - 21rem) 19rem;
+      justify-content: space-between;
+    }
+
+    #dashboardSidebar {
+      height: fit-content;
+    }
+  }
+
+  .list-container {
+    .list-bar {
+      & + .list-bar {
+        border-top: 1px solid #0000003b;
+      }
+    }
+  }
+}

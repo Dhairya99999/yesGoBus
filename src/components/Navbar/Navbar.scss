@@ -1,0 +1,491 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  // width: 100%;
+  padding: 10px 20px;
+  .nav-menu {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    .left {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      width: 60%;
+      font-weight: 800;
+      font-size: 15px;
+      .logo{
+        display: none;
+      }
+      .blacklogo {
+        height: 100px;
+        width: 100px;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+
+      .blacklogo {
+        height: 80px;
+        width: 80px;
+      }
+
+      a {
+        text-decoration: none;
+        color: white;
+
+        span {
+          &:hover {
+            color: #fd5901;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+
+    .right {
+      // position: relative;
+
+      // display: block;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      .user {
+        color: inherit;
+        text-decoration: none;
+        margin: 0;
+        padding: 0;
+        font-weight: 600;
+
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+
+        .user-icon {
+          background-color: #fd5901;
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0.5em;
+          color: white;
+
+          svg {
+            fill: white;
+          }
+        }
+      }
+    }
+
+    .hamburger {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fd5901;
+    }
+
+    .select_vehicle {
+      display: none;
+    }
+    .nav-bottom{
+      display: none;
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .navbar {
+    flex-direction: row;
+    .right {
+      display: flex;
+      gap: 5px;
+      // padding-left: 10px;
+    }
+
+    // .left {
+    //   display: none;
+    // }
+  }
+
+  .burger {
+    .hamburger {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fd5901;
+    }
+
+    .nav-menu {
+      height: 100%;
+      top: 0rem !important;
+      left: 0;
+      width: 75%;
+      flex-direction: column;
+      justify-content: flex-start;
+      overflow-x: hidden;
+      overflow-y: auto;
+      transform: translateX(-145%);
+      transition: 0.65s;
+      background:#fff;
+      color: #000 !important;
+      position: fixed;
+      z-index: 999;
+      .right {
+        display: contents;
+        width: 100%;
+        // .user-name {
+        //   display: none;
+        // }
+        .icon-change {
+          position: absolute;
+        }
+        .user{
+          background-color: #fd5901;
+          width: 100%;
+          padding: 2rem 0rem 2rem 2rem;
+          .user-name{
+            color:#fff
+          }
+          .user-icon{
+            background-color: #fff;
+            width: 50px;
+            height: 50px;
+            color: #fd5901;
+            svg {
+              fill: #fd5901;
+              width: 25px;
+              height: 25px;
+            }
+          }
+        }
+      }
+
+      .left {
+        display: none;
+      }
+
+      .bus-page {
+        margin-top: 35px;
+      }
+      // .contactus-page {
+      // }
+
+      .select_vehicle {
+        padding-top: 10px;
+        padding-bottom: 15px;
+        width: 100%;
+        height: 100%;
+        left: 10px;
+        display: flex;
+        flex-direction: column;
+        .link {
+          text-decoration: none;
+          padding: 5px 0;
+          width: 100%;
+          //color: rgb(255, 255, 255);
+        }
+
+        .btn {
+          margin-top: 20px;
+          color: #000;
+          width: 90%;
+          border: none;
+          outline: none;
+          padding-left: 15px;
+          padding-right: 15px;
+          padding-top: 5px;
+          padding-bottom: 5px;
+          border-top-right-radius: 25px;
+          border-bottom-right-radius: 25px;
+          display: flex;
+          align-items: center;
+          //border-radius: 5px;
+          text-align: start;
+          &:hover {
+            background-color: #fd5901;
+            color: #ffff;
+        }
+          .link{
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            width: 100% !important;
+            svg{
+              margin-right: 10px;
+            }
+          }
+        }
+      }
+      .nav-bottom{
+        width: 100%;
+        display: block;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        button{
+          width: 95%;
+          background-color: #fd5901;
+          color: #fff;
+          outline: none;
+          border:none;
+          cursor: pointer;
+          padding: 0px 0;
+          font-size: 20px;
+          border-radius: 25px;
+        }
+      }
+    }
+    .nav-active {
+      transform: translateX(-0%);
+    }
+    
+    .nav-active {
+      animation: animation 0.5s ease forwards 0.85s;
+    }
+    .white-screen{
+      height: 100%;
+      top: 0rem !important;
+      left: 0;
+      width: 25%;
+      flex-direction: column;
+      justify-content: flex-start;
+      overflow-x: hidden;
+      overflow-y: auto;
+      transform: translateX(-100%);
+      transition: 0.65s;
+      background:transparent;
+      color: #000 !important;
+      position: fixed;
+      z-index: 999;
+    }
+    .white-screen-active{
+      transform: translateX(300%);
+    }
+    .white-screen-active{
+      animation: animation 0.5s ease forwards 0.85s;
+    }
+  }
+}
+
+@media (max-width: 426px) {
+  .navbar {
+    max-height: 80px;
+    padding: 10px 10px !important;
+   // flex-direction: row-reverse;
+  }
+
+  .burger {
+    .hamburger {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fd5901;
+    }
+
+    .nav-menu {
+      height: 100%;
+      top: 0rem !important;
+      left: 0;
+      width: 75%;
+      flex-direction: column;
+      justify-content: flex-start;
+      overflow-x: hidden;
+      overflow-y: auto;
+      transform: translateX(-145%);
+      transition: 0.65s;
+      background:#fff;
+      color: #000 !important;
+      position: fixed;
+      z-index: 999;
+      .right {
+        display: contents;
+        width: 100%;
+        // .user-name {
+        //   display: none;
+        // }
+        .icon-change {
+          position: absolute;
+        }
+        .user{
+          background-color: #fd5901;
+          width: 100%;
+          padding: 2rem 0rem 2rem 2rem;
+          .user-name{
+            color:#fff
+          }
+          .user-icon{
+            background-color: #fff;
+            width: 50px;
+            height: 50px;
+            color: #fd5901;
+            svg {
+              fill: #fd5901;
+              width: 25px;
+              height: 25px;
+            }
+          }
+        }
+      }
+
+      .left {
+        display: none;
+      }
+
+      .bus-page {
+        margin-top: 35px;
+      }
+      // .contactus-page {
+      // }
+
+      .select_vehicle {
+        padding-top: 10px;
+        padding-bottom: 15px;
+        width: 100%;
+        height: 100%;
+        left: 10px;
+        display: flex;
+        flex-direction: column;
+        .link {
+          text-decoration: none;
+          padding: 5px 0;
+          width: 100%;
+          //color: rgb(255, 255, 255);
+        }
+
+        .btn {
+          margin-top: 20px;
+          color: #000;
+          width: 90%;
+          border: none;
+          outline: none;
+          padding-left: 15px;
+          padding-right: 15px;
+          padding-top: 5px;
+          padding-bottom: 5px;
+          border-top-right-radius: 25px;
+          border-bottom-right-radius: 25px;
+          display: flex;
+          align-items: center;
+          //border-radius: 5px;
+          text-align: start;
+          &:hover {
+            background-color: #fd5901;
+            color: #ffff;
+        }
+          .link{
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            width: 100% !important;
+            svg{
+              margin-right: 10px;
+            }
+          }
+        }
+      }
+      .nav-bottom{
+        width: 100%;
+        display: block;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        button{
+          width: 95%;
+          background-color: #fd5901;
+          color: #fff;
+          outline: none;
+          border:none;
+          cursor: pointer;
+          padding: 0px 0;
+          font-size: 20px;
+          border-radius: 25px;
+        }
+      }
+    }
+    .nav-active {
+      transform: translateX(-0%);
+    }
+    
+    .nav-active {
+      animation: animation 0.5s ease forwards 0.85s;
+    }
+    .white-screen{
+      height: 100%;
+      top: 0rem !important;
+      left: 0;
+      width: 25%;
+      flex-direction: column;
+      justify-content: flex-start;
+      overflow-x: hidden;
+      overflow-y: auto;
+      transform: translateX(-100%);
+      transition: 0.65s;
+      background:transparent;
+      color: #000 !important;
+      position: fixed;
+      z-index: 999;
+    }
+    .white-screen-active{
+      transform: translateX(300%);
+    }
+    .white-screen-active{
+      animation: animation 0.5s ease forwards 0.85s;
+    }
+  }
+}
+
+// // #google_translate_element {
+// //   position: fixed;
+// //   left: 50%;
+// //   transform: translateX(-50%);
+// //   top: -10px;
+// //   color: black;
+// //   padding: 10px;
+// //   border-radius: 5px;
+// //   z-index: 9999;
+// //   font-weight: bold;
+// // }
+
+// .goog-te-banner-frame {
+//   display: none;
+//   margin-top: -20px;
+// }
+
+// .goog-logo-link {
+//   display: none !important;
+// }
+
+// .goog-te-gadget {
+//   color: transparent !important;
+// }
+
+// .VIpgJd-ZVi9od-l4eHX-hSRGPd {
+//   display: none !important;
+// }
+
+// .VIpgJd-ZVi9od-ORHb-OEVmcd {
+//   top: -40px !important;
+// }
+
+// .translated-ltr {
+//   margin-top: -40px !important;
+// }
+
+// .VIpgJd-ZVi9od-aZ2wEe-wOHMyf {
+//   display: none;
+// }
+
+// #goog-gt-tt {
+//   display: none !important;
+// }

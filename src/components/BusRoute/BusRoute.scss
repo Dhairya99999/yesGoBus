@@ -1,0 +1,198 @@
+.BusRoute {
+  display: flex;
+  background: black;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 20px 30px;
+
+  .reverse-img {
+    transition: transform 0.5s ease;
+  }
+
+  input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    height: 1em;
+    width: 1em;
+    border-radius: 50em;
+    background: url("../../assets/busbooking/x-symbol.svg") no-repeat 50% 50%;
+    background-size: contain;
+    opacity: 0;
+    pointer-events: none;
+    cursor: pointer;
+  }
+
+  input[type="search"]:focus::-webkit-search-cancel-button {
+    opacity: 0.8;
+    pointer-events: all;
+  }
+
+  input[type="search"].dark::-webkit-search-cancel-button {
+    filter: invert(1);
+  }
+}
+
+.MobileBusRoute {
+  padding: 20px 0;
+  padding-left: 10px;
+  padding-right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .orange-text {
+    color: #fd5901;
+    padding-top: 5px;
+    margin-bottom: 10px;
+  }
+
+  .btn1 {
+    background: #fd5901;
+    border: none;
+    outline: none;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+  }
+
+  .btn2 {
+    background: #fd5901;
+    border: none;
+    outline: none;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+  }
+
+  .select_vehicle {
+    padding-top: 10px;
+    padding-bottom: 15px;
+
+    display: flex;
+    gap: 7px;
+
+    .link {
+      text-decoration: none;
+      color: black;
+    }
+  }
+
+  .outer_border {
+    border: 1px solid gray;
+    border-radius: 15px;
+    // height: 150px;
+    margin: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+
+    .inputs {
+      padding-left: 5px;
+      padding-right: 5px;
+
+      .fromto {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        border: 1px solid gray;
+        border-radius: 10px;
+        margin-bottom: 10px;
+
+        .img_rotater {
+          position: relative;
+
+          .reverse-img {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            right: 8px;
+            bottom: -14px;
+            background-color: rgb(255, 255, 255);
+            // padding-left: 7px;
+            // padding-right: 6px;
+            // padding-top: 5px;
+            // padding-bottom: 5px;
+            padding: 5px;
+            color: #fd5901;
+            object-fit: contain;
+
+            border-radius: 100px;
+          }
+        }
+      }
+
+      .days {
+        margin-top: 10px;
+        padding-left: 10px;
+        display: flex;
+        gap: 7px;
+
+        .dayButton {
+          border: none;
+          border-radius: 5px;
+          padding: 5px 7px;
+          background-color: white;
+          &.highlighted {
+            background-color: #fd5901;
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .BusRoute {
+    display: none;
+
+    flex-direction: column;
+    gap: 25px;
+    justify-content: space-between;
+
+    button {
+      font-size: 0.9rem;
+      margin: auto;
+      height: 50px;
+      width: 150px;
+    }
+  }
+
+  .MobileBusRoute {
+    display: block;
+  }
+}
+
+@media (max-width: 426px) {
+  .BusRoute {
+    display: none;
+
+    flex-direction: column;
+    gap: 25px;
+    justify-content: space-between;
+
+    button {
+      font-size: 0.9rem;
+      margin: auto;
+      height: 50px;
+      width: 150px;
+    }
+  }
+
+  .MobileBusRoute {
+    display: block;
+  }
+}
+
+@media (min-width: 426px) {
+  .MobileBusRoute {
+    display: block;
+  }
+}
