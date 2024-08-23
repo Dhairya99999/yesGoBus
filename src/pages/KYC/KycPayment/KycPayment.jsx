@@ -24,14 +24,14 @@ const KycPayments = () => {
   const handlePayment = async () => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/payment/initiatePayment`,
+        ${import.meta.env.VITE_BASE_URL}/api/payment/initiatePayment,
         {
           amount: 2000,
-          redirectUrl: `https://yesgobus.com/cabs/kyc/payment?driverId=${driverId}&paymentVerify=1`,
+          redirectUrl: https://yesgobus.com/cabs/kyc/payment?driverId=${driverId}&paymentVerify=1,
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: Bearer ${token},
             "Content-Type": "application/json", // Set the content type to JSON
           },
         }
@@ -47,7 +47,7 @@ const KycPayments = () => {
           },
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: Bearer ${token},
               "Content-Type": "application/json", // Set the content type to JSON
             },
           }
@@ -68,57 +68,48 @@ const KycPayments = () => {
     }
   };
   useEffect(() => {
+    let isMounted = true; // Track if the component is mounted
+  
     const paymentVerification = async () => {
-      const getDriverDetails = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}/api/driver/getDriverById/${driverId}`,{},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json", // Set the content type to JSON
-          },
-        }
-      );
-      if (getDriverDetails.status === 200) {
-        const merchantTransactionId =
-          getDriverDetails?.data?.data.merchantTransactionId;
-        const checkPaymentStatus = await axios.get(
-          `${
-            import.meta.env.VITE_BASE_URL
-          }/api/payment/checkPaymentStatus/${merchantTransactionId}`,{},
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json", // Set the content type to JSON
-            },
-          }
-        );
-        if (checkPaymentStatus.data.code === "PAYMENT_SUCCESS") {
-          const updatePaymentDetails = await axios.patch(
-            `${
-              import.meta.env.VITE_BASE_URL
-            }/api/driver/updateDriver/${driverId}`,
-            {
-              paymentStatus: "paid",
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json", // Set the content type to JSON
-              },
+      try {
+        const getDriverDetails = await axiosInstance.get(/api/driver/getDriverById/${driverId});
+        if (getDriverDetails.status === 200) {
+          const merchantTransactionId = getDriverDetails.data.data.merchantTransactionId;
+          const checkPaymentStatus = await axiosInstance.get(/api/payment/checkPaymentStatus/${merchantTransactionId});
+  
+          if (checkPaymentStatus.data.code === "PAYMENT_SUCCESS") {
+            if (isMounted) {
+              const updatePaymentDetails = await axiosInstance.patch(/api/driver/updateDriver/${driverId}, {
+                paymentStatus: "paid",
+              });
+  
+              if (updatePaymentDetails.status === 200) {
+                setShowPaymentModal(true);
+              }
             }
-          );
-          if (updatePaymentDetails.status === 200) {
-            setShowPaymentModal(true);
+          } else if (checkPaymentStatus.data.code === 'TRANSACTION_NOT_FOUND') {
+            console.warn("Transaction not found:", checkPaymentStatus.data);
+            // Handle transaction not found scenario, maybe stop further API calls
+          } else if (checkPaymentStatus.data.code === 'PAYMENT_ERROR') {
+            console.warn("Payment Error:", checkPaymentStatus.data);
+            // Handle payment error, maybe notify the user and stop further API calls
           }
-        } else {
-          alert("Payment Failed");
         }
+      } catch (error) {
+        console.error("Payment verification error:", error);
+        alert("An error occurred during payment verification. Please try again.");
       }
     };
-    if (paymentVerify) {
+  
+    if (paymentVerify && driverId) {
       paymentVerification();
     }
+  
+    return () => {
+      isMounted = false; // Cleanup when unmounting
+    };
   }, [paymentVerify, driverId]);
+  
   return (
     <div className="Payments">
       <KycNavbar />
