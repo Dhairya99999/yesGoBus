@@ -10,7 +10,6 @@ import {
   smile,
 } from "../../assets/homepage";
 import { Navbar, InfoCard, Title, BusRoute } from "../../components";
-import Loader from "../Loader/Loader"; // Import the loader component
 import BottomBar from "../BottomBar/BottomBar.jsx"; // Import the BottomBar component
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -18,7 +17,6 @@ import "./landingPage.scss";
 
 const LandingPage = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true); // Loader state
   let currentDate = new Date();
   const year = currentDate.getFullYear();
   const month = String(currentDate.getMonth() + 1).padStart(2, "0");
@@ -89,16 +87,7 @@ const LandingPage = () => {
     return `${year}-${month}-${day}`;
   };
 
-  useEffect(() => {
-    // Simulate a delay for loading (e.g., fetching data)
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000); // Change this value to how long it takes to load your content
-  }, []);
-
-  if (loading) {
-    return <Loader />; // Show loader while the page is loading
-  }
+ 
 
   return (
     <div className="landingPage">
