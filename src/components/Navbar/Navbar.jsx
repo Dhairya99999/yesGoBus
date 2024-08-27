@@ -86,7 +86,7 @@ const Navbar = ({ page }) => {
   };
 
   const menu = (
-    <div className="nav-menubar mt-20 ml-3">
+    <div className="nav-menubar mt-10 ml-3">
       <div className="logo-new">
         <a href={"/"}>
           <img className="blacklogo" src={blacklogo} width={150} alt="" />
