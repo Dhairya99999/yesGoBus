@@ -4,6 +4,10 @@ import calender from "./calender.svg";
 import fromto from "./fromto.svg";
 import mic from "./mic.svg";
 import disabled from "./disabled.svg";
+import seat from "./seat.png";
+import recommendation from "./recommendation.png";
+import schoolBus from "./school-bus.png";
+
 import bus from "./bus.svg";
 import graybus from "./graybus.svg";
 import wifi from "./wifi.svg";
@@ -22,7 +26,8 @@ import custcare from "./custcare.svg";
 import filledticket from "./ticket.png";
 import smile from "./smile.png";
 import star from "./star.png";
-import blacklogo from "./logoblack.png";
+// import blacklogo from "./logoblack.png";
+import blacklogo from "../../assets/yegobus-logo.png";
 import playstore from "./playstore.png";
 import applestore from "./applestore.png";
 import fb from "./fb.png";
@@ -50,6 +55,9 @@ export {
   heroimage,
   office,
   calender,
+  seat,
+  schoolBus,
+  recommendation,
   fromto,
   mic,
   disabled,

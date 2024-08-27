@@ -160,12 +160,16 @@ const BusRoute = ({
         />
         <Button text={"Search"} onClicked={() => handleSearch()} />
       </div>
-      <div className="MobileBusRoute" style={{ background: "black" }}>
-        <h4 style={{ color: "white" }}>PROVIDING QUALITY SERVICES AT </h4>
-        <h4 className="orange-text">AFFORDABLE PRICES</h4>
+      <div className="MobileBusRoute" >
+      <h3 className="ml-3">Bus Ticket</h3>
+
+        {/* <h4 style={{ color: "white" }}>PROVIDING QUALITY SERVICES AT </h4>
+        <h4 className="orange-text">AFFORDABLE PRICES</h4> */}
         <div>
           {/* <h5 style={{ color: "white" }}>Bus Ticket</h5> */}
+
           <div className="outer_border">
+            
             <div className="inputs">
               <div className="fromto">
                 <BusRouteCard

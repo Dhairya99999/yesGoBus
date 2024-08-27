@@ -6,7 +6,6 @@ import { RiContactsFill } from "react-icons/ri";
 import { BiSolidBus } from "react-icons/bi";
 import { MdHome } from "react-icons/md";
 import { useNavigate, Link } from "react-router-dom";
-//import { MdCardTravel } from "react-icons/md";
 import { RiCustomerService2Fill } from "react-icons/ri";
 import { MdOutlinePolicy } from "react-icons/md";
 import "./Navbar.scss";
@@ -31,49 +30,24 @@ const Navbar = ({ page }) => {
     );
   };
 
-  function changeLanguage(languageCode) {
-    translateElement.showInvisible();
-    translateElement.selectLanguage(languageCode);
-  }
-
-  // useEffect(() => {
-  //   const translateElement = document.getElementById("google_translate_element");
-  //   if (translateElement) {
-  //     translateElement.innerHTML = "";
-  //   }
-  //   const script = document.createElement("script");
-  //   script.src =
-  //     "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-  //   script.async = true;
-  //   document.body.appendChild(script);
-  //   window.googleTranslateElementInit = googleTranslateElementInit;
-  // }, []);
-
   useEffect(() => {
-    const translateElement = document.getElementById(
-      "google_translate_element"
-    );
+    const translateElement = document.getElementById("google_translate_element");
     if (translateElement) {
       translateElement.innerHTML = "";
     }
 
     const buttonElement = document.getElementById("your_button_id");
     if (buttonElement) {
-      // Check if the button element is already present
       return;
     }
 
-    // Your existing script loading logic
-
     window.googleTranslateElementInit = googleTranslateElementInit;
 
-    // Additional logic to prevent multiple renderings of the button
     const yourButton = document.createElement("button");
-    yourButton.id = "your_button_id"; // Replace with the actual ID for your button
+    yourButton.id = "your_button_id";
     yourButton.style.display = "none";
     document.querySelector(".right").appendChild(yourButton);
 
-    // Clean up the button on component unmount
     return () => {
       const buttonToRemove = document.getElementById("your_button_id");
       if (buttonToRemove) {
@@ -88,35 +62,68 @@ const Navbar = ({ page }) => {
 
   const loggedInUser = localStorage.getItem("loggedInUser");
   const token = localStorage.getItem("token");
+
+  const activeStyle = {
+    paddingLeft: '20px',
+    paddingRight: '20px',
+    paddingTop: '10px',
+    paddingBottom: '10px',
+    backgroundColor: '#FF5722',
+    color: '#FFFFFF',
+    borderRadius: '8px',
+    textDecoration: 'none',
+  };
+
+  const inactiveStyle = {
+    paddingLeft: '20px',
+    paddingRight: '20px',
+    paddingTop: '10px',
+    paddingBottom: '10px',
+    backgroundColor: '#BDBDBD',
+    color: '#FFFFFF',
+    borderRadius: '8px',
+    textDecoration: 'none',
+  };
+
   const menu = (
-    <div className="burger-menu">
-     {/* <a href="/">
-        <span>Home</span>
-      </a>*/}
-      <Link to="/busbooking">
-        <span>Bus</span>
-      </Link>
-        <Link to={
-          token
-            ? `/travel-app/?token=${token}&userName=${
-                JSON.parse(loggedInUser).fullName
-              }&email=${JSON.parse(loggedInUser).email}&userId=${
-                JSON.parse(loggedInUser)._id
-              }&phoneNumber=${JSON.parse(loggedInUser).phoneNumber}`
-            : "/login"
-        }>
+    <div className="nav-menubar mt-20 ml-3">
+      <div className="logo-new">
+        <a href={"/"}>
+          <img className="blacklogo" src={blacklogo} width={150} alt="" />
+        </a>
+      </div>
+      <h4 style={{ color: "black" }}>
+        PROVIDING QUALITY SERVICES AT
+      </h4>
+      <h4 className="orange-text" style={{ color: "#FF5722" }}>
+        AFFORDABLE PRICES
+      </h4>
+      <div className="burger-menu">
+        <Link to="/busbooking" style={activeStyle}>
+          <span>Bus</span>
+        </Link>
+        <Link
+          to={
+            token
+              ? `/travel-app/?token=${token}&userName=${
+                  JSON.parse(loggedInUser).fullName
+                }&email=${JSON.parse(loggedInUser).email}&userId=${
+                  JSON.parse(loggedInUser)._id
+                }&phoneNumber=${JSON.parse(loggedInUser).phoneNumber}`
+              : "/login"
+          }
+          style={inactiveStyle}
+        >
           <span>Tours & Travels</span>
         </Link>
-
-{ /*     <Link to="/contactus">
-        <span>Contact Us</span>
-      </Link>*/}
-      <div className="md:block" id="google_translate_element"></div>
+        <div className="md:block" id="google_translate_element"></div>
+      </div>
     </div>
   );
+
   return (
     <nav className="navbar burger">
-      {menu}
+      {page === "home" && menu}
       <div
         className="hamburger"
         onClick={() => {
@@ -127,15 +134,9 @@ const Navbar = ({ page }) => {
       </div>
       <div className={`${openNav ? "nav-menu nav-active" : "nav-menu"}`}>
         <div className="left">
-          {page === "home" ? (
-            <a href={"/"}>
-              <img className="logo" src={logo} width={50} height={50} alt="" />
-            </a>
-          ) : (
-            <a href={"/"}>
-              <img className="blacklogo" src={blacklogo} width={50} alt="" />
-            </a>
-          )}
+          <a href={"/"}>
+            <img className="logo" src={page === "home" ? logo : blacklogo} width={50} height={50} alt="" />
+          </a>
           <a href="/busbooking">
             <span>Bus</span>
           </a>
@@ -149,10 +150,9 @@ const Navbar = ({ page }) => {
           </a>
         </div>
 
-        <div className="right  ">
-
+        <div className="right">
           <Link to={`/profile`} className="user">
-            <span className={page === "home" ? "user-icon" : "user-icon"}>
+            <span className="user-icon">
               <UserIcon />
             </span>
             <div>
@@ -163,75 +163,55 @@ const Navbar = ({ page }) => {
               )}
               {loggedInUser && (
                 <div className="user-name" style={{ paddingTop: "5px" }}>
-                  {JSON.parse(loggedInUser)?.phoneNumber
-                    ? JSON.parse(loggedInUser)?.phoneNumber
-                    : JSON.parse(loggedInUser)?.mobileNumber}
+                  {JSON.parse(loggedInUser)?.phoneNumber ||
+                    JSON.parse(loggedInUser)?.mobileNumber}
                 </div>
               )}
             </div>
           </Link>
         </div>
-        <>
-          <div className={`select_vehicle`}>
-            {!isMobileApp && (
-              <button className="btn">
-                <Link to={"/"} className="link">
-                  <MdHome size={22} />
-                  Home
-                </Link>
-              </button>
-            )}
+
+        <div className={`select_vehicle`}>
+          {!isMobileApp && (
             <button className="btn">
-              <Link to={"/busbooking"} className="link">
-                <BiSolidBus size={22} />
-                Bus
+              <Link to={"/"} className="link">
+                <MdHome size={22} />
+                Home
               </Link>
             </button>
-{ /*           <button className="btn">
-              <Link
-                to={
-                  token
-                    ? `/travel-app/?token=${token}&userName=${
-                        JSON.parse(loggedInUser).fullName
-                      }&email=${JSON.parse(loggedInUser).email}&userId=${
-                        JSON.parse(loggedInUser)._id
-                      }&phoneNumber=${JSON.parse(loggedInUser).phoneNumber}`
-                    : "/login"
-                }
-                className="link"
-              >
-                <MdCardTravel size={22} />
-                Tours & Travels
-              </Link>
-            </button>*/}
+          )}
+          <button className="btn">
+            <Link to={"/busbooking"} className="link">
+              <BiSolidBus size={22} />
+              Bus
+            </Link>
+          </button>
+          <button className="btn">
+            <Link to="/terms-of-service" className="link">
+              <RiCustomerService2Fill size={22} />
+              Terms Of Service
+            </Link>
+          </button>
+          <button className="btn">
+            <Link to="/privacy" className="link">
+              <MdOutlinePolicy size={22} />
+              Privacy Policy
+            </Link>
+          </button>
+          {isMobileApp && (
             <button className="btn">
-              <Link to="/terms-of-service" className="link">
-                <RiCustomerService2Fill size={22} />
-                Terms Of Service
+              <Link to={"/cabs"} className="link">
+                Cab
               </Link>
             </button>
-            <button className="btn">
-              <Link to="/privacy" className="link">
-                <MdOutlinePolicy size={22} />
-                Privacy Policy
-              </Link>
-            </button>
-            {isMobileApp && (
-              <button className="btn">
-                <Link to={"/cabs"} className="link">
-                  Cab
-                </Link>
-              </button>
-            )}
-            <button className="btn">
-              <Link to={"/contactus"} className="link">
-                <RiContactsFill size={22} />
-                Contact Us
-              </Link>
-            </button>
-          </div>
-        </>
-        {showMenu && menu}
+          )}
+          <button className="btn">
+            <Link to={"/contactus"} className="link">
+              <RiContactsFill size={22} />
+              Contact Us
+            </Link>
+          </button>
+        </div>
         {loggedInUser ? (
           <a href="#" className="nav-bottom">
             <button
