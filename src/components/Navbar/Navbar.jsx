@@ -99,10 +99,10 @@ const Navbar = ({ page }) => {
         AFFORDABLE PRICES
       </h4>
       <div className="burger-menu">
-        <Link to="/busbooking" style={activeStyle}>
+        {/* <Link to="/busbooking" style={activeStyle}>
           <span>Bus</span>
-        </Link>
-        <Link
+        </Link> */}
+        {/* <Link
           to={
             token
               ? `/travel-app/?token=${token}&userName=${
@@ -115,7 +115,7 @@ const Navbar = ({ page }) => {
           style={inactiveStyle}
         >
           <span>Tours & Travels</span>
-        </Link>
+        </Link> */}
         <div className="md:block" id="google_translate_element"></div>
       </div>
     </div>

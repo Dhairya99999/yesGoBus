@@ -1,27 +1,16 @@
 .landingPage {
   .logo {
-    margin: 5vw auto; // Fluid margin that scales with viewport width
-    padding: 1rem; // Padding in rem for consistent spacing
-    width: 10rem; // Consistent width across devices
+    margin: 5vw auto; // Adjusts with viewport width
+    padding: 1rem; // Consistent padding
+    width: 10rem; // Consistent logo size
   }
 
   .MobileBusRoute {
-    margin: 5vw auto; // Fluid margin to match the logo
+    // margin: 5vw auto;
     padding: 1rem;
-    width: calc(100% - 10vw); // Width calculated to leave space for margins
-    max-width: 40rem; // Optional: max width for larger screens
+    width: calc(100% - 10vw); // Leaves space for margins
+    max-width: 40rem; // Ensures it doesn't grow too large on bigger screens
   }
-
-  // General responsive styles
-  @media (max-width: 768px) {
-    
-
-    .MobileBusRoute {
-      margin: 4rem auto;
-    }
-  }
-
-
 
   .hero {
     height: 75vh;
