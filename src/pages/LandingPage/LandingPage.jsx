@@ -14,6 +14,7 @@ import BottomBar from "../BottomBar/BottomBar.jsx"; // Import the BottomBar comp
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./landingPage.scss";
+import Banner from "../../components/IntroHome/Banner.jsx";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -92,6 +93,7 @@ const LandingPage = () => {
   return (
     <div className="landingPage">
       <Navbar page={"home"} />
+      <Banner/>
       <BusRoute
         locationOne={fromLocation}
         locationTwo={toLocation}

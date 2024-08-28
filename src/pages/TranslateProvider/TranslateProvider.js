@@ -14,7 +14,7 @@ export const TranslateProvider = () => {
           includedLanguages: 'en,kn',
           layout: window.google.translate.TranslateElement.InlineLayout.TOP_RIGHT,
         },
-        'google_translate_elementt'
+        'google_translate_element'
       );
     };
   }, []);

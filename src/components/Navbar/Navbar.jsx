@@ -63,27 +63,7 @@ const Navbar = ({ page }) => {
   const loggedInUser = localStorage.getItem("loggedInUser");
   const token = localStorage.getItem("token");
 
-  const activeStyle = {
-    paddingLeft: '20px',
-    paddingRight: '20px',
-    paddingTop: '10px',
-    paddingBottom: '10px',
-    backgroundColor: '#FF5722',
-    color: '#FFFFFF',
-    borderRadius: '8px',
-    textDecoration: 'none',
-  };
 
-  const inactiveStyle = {
-    paddingLeft: '20px',
-    paddingRight: '20px',
-    paddingTop: '10px',
-    paddingBottom: '10px',
-    backgroundColor: '#BDBDBD',
-    color: '#FFFFFF',
-    borderRadius: '8px',
-    textDecoration: 'none',
-  };
 
   const menu = (
     <div className="nav-menubar mt-10 ml-3">
@@ -92,38 +72,14 @@ const Navbar = ({ page }) => {
           <img className="blacklogo" src={blacklogo} width={150} alt="" />
         </a>
       </div>
-      <h4 style={{ color: "black" }}>
-        PROVIDING QUALITY SERVICES AT
-      </h4>
-      <h4 className="orange-text" style={{ color: "#FF5722" }}>
-        AFFORDABLE PRICES
-      </h4>
-      <div className="burger-menu">
-        {/* <Link to="/busbooking" style={activeStyle}>
-          <span>Bus</span>
-        </Link> */}
-        {/* <Link
-          to={
-            token
-              ? `/travel-app/?token=${token}&userName=${
-                  JSON.parse(loggedInUser).fullName
-                }&email=${JSON.parse(loggedInUser).email}&userId=${
-                  JSON.parse(loggedInUser)._id
-                }&phoneNumber=${JSON.parse(loggedInUser).phoneNumber}`
-              : "/login"
-          }
-          style={inactiveStyle}
-        >
-          <span>Tours & Travels</span>
-        </Link> */}
-        <div className="md:block" id="google_translate_element"></div>
-      </div>
     </div>
   );
 
   return (
     <nav className="navbar burger">
+      <div id="google_translate_element" style={{ marginTop: '100px' }}></div>
       {page === "home" && menu}
+      
       <div
         className="hamburger"
         onClick={() => {
@@ -132,6 +88,7 @@ const Navbar = ({ page }) => {
       >
         {openNav ? <RxCross2 size={36} /> : <IoMenu size={36} />}
       </div>
+      
       <div className={`${openNav ? "nav-menu nav-active" : "nav-menu"}`}>
         <div className="left">
           <a href={"/"}>
@@ -231,6 +188,7 @@ const Navbar = ({ page }) => {
           </Link>
         )}
       </div>
+      
       <div
         className={`${
           openNav ? "white-screen white-screen-active" : "white-screen"
