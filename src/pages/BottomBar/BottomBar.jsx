@@ -13,15 +13,15 @@ const BottomBar = () => {
         <FaHome />
         <span>Home</span>
       </div>
-      <div className="bottom-bar-item" onClick={() => navigate("/about")}>
+      <div className="bottom-bar-item" onClick={() => navigate("/")}>
         <FaInfoCircle />
-        <span>About Us</span>
+        <span>Justdial</span>
       </div>
-      <div className="bottom-bar-item" onClick={() => navigate("/bus")}>
+      <div className="bottom-bar-item" onClick={() => navigate("/busbooking")}>
         <FaBus />
-        <span>Bus</span>
+        <span>Bookings</span>
       </div>
-      <div className="bottom-bar-item" onClick={() => navigate("/help")}>
+      <div className="bottom-bar-item" onClick={() => navigate("/contactus")}>
         <FaQuestionCircle />
         <span>Help</span>
       </div>
