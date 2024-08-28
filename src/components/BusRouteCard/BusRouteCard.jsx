@@ -3,8 +3,6 @@ import "./BusRouteCard.scss";
 import { Spin } from "antd";
 import { LuCalendarDays } from "react-icons/lu";
 import { LuMic } from "react-icons/lu";
-import { useSelector } from "react-redux";
-import { selectIsMobileApp } from "../../stores/slices/designSlice";
 import Calendar from "../Calendar/Calendar";
 
 const BusRouteCard = ({
@@ -19,11 +17,9 @@ const BusRouteCard = ({
   color,
   setData,
 }) => {
-  const isMobileApp = useSelector(selectIsMobileApp);
   const [openCalendar, setOpenCalendar] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [isListening, setIsListening] = useState(false);
-  const recognitionRef = useRef(null);
 
   useEffect(() => {
     const year = new Date().getFullYear();
@@ -40,37 +36,6 @@ const BusRouteCard = ({
 
   const [showSuggestions, setShowSuggestions] = useState(false);
   const inputRef = useRef(null);
-
-  useEffect(() => {
-    if (!("webkitSpeechRecognition" in window)) {
-      alert("Sorry, your browser doesn't support speech recognition.");
-    } else {
-      const recognition = new window.webkitSpeechRecognition();
-      recognition.continuous = false;
-      recognition.interimResults = false;
-      recognition.lang = "en-US";
-
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        setInputValue(transcript);
-        setData(transcript);
-        setLocationQuery(transcript);
-        setShowSuggestions(true);
-        setIsListening(false);
-      };
-
-      recognition.onerror = (event) => {
-        console.error("Speech recognition error", event);
-        setIsListening(false);
-      };
-
-      recognition.onend = () => {
-        setIsListening(false);
-      };
-
-      recognitionRef.current = recognition;
-    }
-  }, [setLocationQuery, setData]);
 
   const handleInputChange = (e) => {
     const newInputValue = e.target.value;
@@ -107,13 +72,33 @@ const BusRouteCard = ({
     };
   }, []);
 
-  const handleInputClick = () => {
-    setShowSuggestions(true);
-  };
-
   const startListening = () => {
-    setIsListening(true);
-    recognitionRef.current.start();
+    if (annyang) {
+      setIsListening(true);
+
+      annyang.start({ autoRestart: false, continuous: false });
+
+      annyang.addCallback('result', function(phrases) {
+        const transcript = phrases[0];
+        setInputValue(transcript);
+        setData(transcript);
+        setLocationQuery(transcript);
+        setShowSuggestions(true);
+        setIsListening(false);
+        annyang.abort(); // Stop listening after getting the result
+      });
+
+      annyang.addCallback('error', function() {
+        console.error("Speech recognition error");
+        setIsListening(false);
+      });
+
+      annyang.addCallback('end', function() {
+        setIsListening(false);
+      });
+    } else {
+      alert("Speech recognition is not supported in this browser.");
+    }
   };
 
   return (
@@ -144,7 +129,7 @@ const BusRouteCard = ({
             type="search"
             value={inputValue}
             onInput={handleInputChange}
-            onClick={handleInputClick}
+            onClick={() => setShowSuggestions(true)}
             style={{ flex: 1 }}
           />
           <LuMic
