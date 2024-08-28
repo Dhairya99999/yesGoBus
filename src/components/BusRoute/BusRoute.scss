@@ -43,9 +43,8 @@
   border-radius: 30px;
 
   .outer_border {
-    border: 1px solid gray;
+    // border: 1px solid rgb(35, 35, 35);
     border-radius: 15px;
-    padding: 10px;
     margin: 5px;
     display: flex;
     flex-direction: column;
@@ -57,9 +56,8 @@
 
     .fromto {
       padding: 5px 0;
-      border: 1px solid gray;
+      border: 1px solid rgb(34, 34, 34);
       border-radius: 10px;
-      margin-bottom: 10px;
 
       .img_rotater {
         position: relative;

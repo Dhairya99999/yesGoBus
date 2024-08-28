@@ -59,6 +59,14 @@ const BusRouteCard = ({
     }
   };
 
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+    const day = date.getDate();
+    const monthName = date.toLocaleDateString('en-US', { month: 'short' });
+    return `${dayName} ${day}-${monthName}`;
+  };
+
   useEffect(() => {
     document.addEventListener("click", handleClickOutside);
     return () => {
@@ -85,15 +93,12 @@ const BusRouteCard = ({
         >
           <input
             placeholder="dd-mm-yyyy"
-            value={location.split("-").reverse().join("-")}
-          />
-          <div
+            value={formatDate(location)}
             onClick={() => {
               setOpenCalendar(true);
             }}
-          >
-            <LuCalendarDays size={25} />
-          </div>
+          />
+          
         </div>
       ) : (
         <div style={{ display: "flex", alignItems: "center" }}>

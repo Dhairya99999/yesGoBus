@@ -9,31 +9,6 @@ export default function BankingDetails() {
           <p className="text-xl font-semibold">Enter Account Details</p>
         </header>
 
-        {/* Account Type */}
-        {/* <div className="account-type flex flex-col md:flex-row items-center gap-5 px-5 pt-7">
-          <p className="text-xl font-medium m-0">Account Type</p>
-
-          <Radio.Group
-            defaultValue="Savings"
-            buttonStyle="solid"
-            name="accountType"
-            className="custom-radio-group"
-          >
-            <Radio.Button
-              value="Savings"
-              style={{ borderRadius: "10rem", paddingInline: "3rem" }}
-            >
-              Savings
-            </Radio.Button>
-            <Radio.Button
-              value="Current"
-              style={{ borderRadius: "10rem", paddingInline: "3rem" }}
-            >
-              Current
-            </Radio.Button>
-          </Radio.Group>
-        </div> */}
-
         <div className="flex items-center flex-wrap gap-x-10 gap-y-2 px-5 py-5">
           {/* Account Holder Name */}
           <Form.Item

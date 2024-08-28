@@ -235,8 +235,8 @@ const BusRoute = ({
                   }}
                   setData={setDestinationCity}
                 />
-              </div>
-              <BusRouteCard
+                <hr/>
+                <BusRouteCard
                 title="Select Date"
                 location={doj}
                 setLocation={(value) =>
@@ -244,7 +244,6 @@ const BusRoute = ({
                 }
                 date={true}
                 style={{
-                  borderTop: "none",
                   backgroundColor: "transparent",
                   paddingLeft: "10px",
                   paddingTop: "0px",
@@ -254,6 +253,8 @@ const BusRoute = ({
                 }}
                 setData={setDoj}
               />
+              </div>
+              
               <div className="days">
                 <button
                   onClick={() => handleDateChange(true)}
