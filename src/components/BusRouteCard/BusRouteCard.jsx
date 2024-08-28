@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./BusRouteCard.scss";
 import { Spin } from "antd";
 import { LuCalendarDays } from "react-icons/lu";
-import VoiceSearch from "./Components/VoiceSearch/VoiceSearch";
+import { LuMic } from "react-icons/lu";
 import { useSelector } from "react-redux";
 import { selectIsMobileApp } from "../../stores/slices/designSlice";
 import Calendar from "../Calendar/Calendar";
@@ -22,6 +22,8 @@ const BusRouteCard = ({
   const isMobileApp = useSelector(selectIsMobileApp);
   const [openCalendar, setOpenCalendar] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef(null);
 
   useEffect(() => {
     const year = new Date().getFullYear();
@@ -38,6 +40,37 @@ const BusRouteCard = ({
 
   const [showSuggestions, setShowSuggestions] = useState(false);
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (!("webkitSpeechRecognition" in window)) {
+      alert("Sorry, your browser doesn't support speech recognition.");
+    } else {
+      const recognition = new window.webkitSpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = "en-US";
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setInputValue(transcript);
+        setData(transcript);
+        setLocationQuery(transcript);
+        setShowSuggestions(true);
+        setIsListening(false);
+      };
+
+      recognition.onerror = (event) => {
+        console.error("Speech recognition error", event);
+        setIsListening(false);
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current = recognition;
+    }
+  }, [setLocationQuery, setData]);
 
   const handleInputChange = (e) => {
     const newInputValue = e.target.value;
@@ -78,6 +111,11 @@ const BusRouteCard = ({
     setShowSuggestions(true);
   };
 
+  const startListening = () => {
+    setIsListening(true);
+    recognitionRef.current.start();
+  };
+
   return (
     <div className="BusRouteCard" ref={inputRef} style={style}>
       <p style={color}>{title}</p>
@@ -98,7 +136,7 @@ const BusRouteCard = ({
               setOpenCalendar(true);
             }}
           />
-          
+          <LuCalendarDays style={{ marginLeft: "auto", cursor: "pointer" }} />
         </div>
       ) : (
         <div style={{ display: "flex", alignItems: "center" }}>
@@ -107,16 +145,12 @@ const BusRouteCard = ({
             value={inputValue}
             onInput={handleInputChange}
             onClick={handleInputClick}
+            style={{ flex: 1 }}
           />
-
-          {isMobileApp && (
-            <VoiceSearch
-              setLocationQuery={setLocationQuery}
-              setInputValue={setInputValue}
-              setData={setData}
-              title={title}
-            />
-          )}
+          <LuMic
+            onClick={startListening}
+            style={{ marginLeft: "auto", cursor: "pointer", color: isListening ? 'red' : 'inherit' }}
+          />
         </div>
       )}
       {showSuggestions && (
