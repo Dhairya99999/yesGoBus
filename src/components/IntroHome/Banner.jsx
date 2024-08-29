@@ -44,8 +44,7 @@ const Banner = () => {
                 <span style={iconStyle}>⭐</span>
                 <span>Bus</span>
             </Link>
-
-            <Link to={
+            <Link style={buttonStyle} to={
                 token
                     ? `/travel-app/?token=${token}&userName=${
                         JSON.parse(loggedInUser).fullName
@@ -55,7 +54,7 @@ const Banner = () => {
                     : "/login"
                 }>
                 <span>Tours & Travels</span>
-            </Link>
+            </Link>
 
             </div>
         </div>
