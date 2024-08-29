@@ -44,15 +44,16 @@ const Banner = () => {
                 <span style={iconStyle}>⭐</span>
                 <span>Bus</span>
             </Link>
-            <Link
-                to={
+
+            <Link to={
                 token
-                    ? `/travel-app/?token=${token}&userName=${JSON.parse(localStorage.getItem('loggedInUser')).fullName}&email=${JSON.parse(localStorage.getItem('loggedInUser')).email}&userId=${JSON.parse(localStorage.getItem('loggedInUser'))._id}&phoneNumber=${JSON.parse(localStorage.getItem('loggedInUser')).phoneNumber}`
-                    : '/login'
-                }
-                style={buttonStyle}
-            >
-                <span style={{ padding: '2px', marginRight: '8px' }}></span>
+                    ? `/travel-app/?token=${token}&userName=${
+                        JSON.parse(loggedInUser).fullName
+                    }&email=${JSON.parse(loggedInUser).email}&userId=${
+                        JSON.parse(loggedInUser)._id
+                    }&phoneNumber=${JSON.parse(loggedInUser).phoneNumber}`
+                    : "/login"
+                }>
                 <span>Tours & Travels</span>
             </Link>
 
