@@ -52,28 +52,33 @@
 						.rating-bar {
 							display: flex;
 							background-color: #00f06e;
-							padding: 3px 3px 3px 10px;
+							padding: 3px;
 							border-radius: 5px;
 
 							.rating {
 								background-color: #00f06e;
 								color: white;
 								border-radius: 8px;
-								padding: 2px 4px;
+								padding: 2px 2px;
+								font-size: 8px;
+								font-weight: 400;
+								line-height: 13px;
 							}
 
 							.count {
-								font-size: 14px;
+								font-size: 8px;
+								font-weight: 400;
+								line-height: 13px;
 								color: grey;
 								background-color: white;
-								padding: 4px 10px 4px 8px;
+								padding: 4px;
 								border-radius: 5px;
 							}
 						}
 					}
 				}
 				.price-container {
-					border: 0.75px solid rgb(235, 235, 235);
+					// border: 0.75px solid rgb(235, 235, 235);
 					border-radius: 5px;
 					padding: 3px 5px;
 					font-size: 11px;
@@ -285,8 +290,9 @@
 						span {
 							border-radius: 5px;
 							padding: 3px;
-							font-size: 10px;
-							font-weight: 500;
+							font-size: 8px;
+							font-weight: 400;
+							line-height: 13px;
 							text-align: center;
 							background-color: white;
 						}
@@ -294,11 +300,17 @@
 						.rating {
 							color: white;
 							background-color: green;
+							font-size: 8px;
+							font-weight: 400;
+							line-height: 13px;
 						}
 
 						.count {
 							color: gray;
 							border: 1px solid green;
+							font-size: 8px;
+							font-weight: 400;
+							line-height: 13px;
 						}
 					}
 				}

@@ -716,7 +716,7 @@ const BusBookingCard = ({
 										★ {(Math.random() * 1 + 4).toFixed(1)}
 									</span>
 									<span className="count">
-										{Math.floor(Math.random() * 101) + 37} Reviews
+										{Math.floor(Math.random() * 101) + 37} Ratings
 									</span>
 								</div>
 							</div>

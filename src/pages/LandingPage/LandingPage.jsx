@@ -93,7 +93,7 @@ const LandingPage = () => {
   return (
     <div className="landingPage">
       <Navbar page={"home"} />
-      <Banner/>
+      {/* <Banner/> */}
       <BusRoute
         locationOne={fromLocation}
         locationTwo={toLocation}

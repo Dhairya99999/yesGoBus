@@ -1183,53 +1183,51 @@ const Payment = () => {
 
 			<div className="payment-container">
 				<div className="containerleft">
-					<h5>Review your booking</h5>
-					<RoutesTitle
-						locationOne={sourceCity}
-						locationTwo={destinationCity}
-						date={doj}
-					/>
+					<h5>Passenger Information</h5>
 
 					<div className="reviewsCard">
-						<div className="reviewleft">
-							<div
-								style={{
-									width: "100%",
-									display: "flex",
-									justifyContent: "space-between",
-									alignItems: "flex-start",
-								}}
-							>
-								<BusBookingCardInfo
-									title={busName}
-									subtitle={busType}
-									rating={5}
-									reviews={100}
-								/>
-								<div className="reviewright" style={{ display: "flex" }}>
-									<span style={{ fontSize: "14px" }}>
-										{bookingDetails?.selectedSeats?.length} Seat Selected
-									</span>
-									<span>{bookingDetails?.selectedSeats?.join(", ")}</span>
-									{/* <a href="">View Policies</a> */}
+						<div className="review-top">
+							<div className="heading">
+								<div className="review-heading">
+									<div className="title">{busName}</div>
+									<div className="ratings-container">
+										<div className="rating-bar">
+											<span className="rating">
+												★ {(Math.random() * 1 + 4).toFixed(1)}
+											</span>
+											<span className="count">
+												{Math.floor(Math.random() * 101) + 37} Reviews
+											</span>
+										</div>
+									</div>
+								</div>
+
+								<div className="bus-details">{busType}</div>
+							</div>
+						</div>
+						<div className="review-bottom">
+							<div className="review-left">
+								<div className="time-duration">
+									<h4>{pickUpTime}</h4>
+									<span>-</span>
+									<h4>{reachTime}</h4>
+								</div>
+								<div className="from-duration-to">
+									<h4>{sourceCity}</h4>
+									<h4>{travelTime}</h4>
+									<h4>{destinationCity}</h4>
 								</div>
 							</div>
-
-							<div className="to">
-								<BusBookingCardInfo title={sourceCity} subtitle={pickUpTime} />
-								<BusBookingCardInfo img={true} subtitle={travelTime} />
-								<BusBookingCardInfo
-									title={destinationCity}
-									subtitle={reachTime}
-								/>
+							<div className="review-right" style={{ display: "flex" }}>
+								<span>
+									Seat Selected:
+									{bookingDetails?.selectedSeats?.length}
+								</span>
+								<span>Seat No:{bookingDetails?.selectedSeats?.join(", ")}</span>
 							</div>
-							{/* <div className="liveLocation">
-                <img src={livelocation} alt="" />
-                <span>Live tracking</span>
-              </div> */}
 						</div>
 					</div>
-
+					{/* 
 					<div className="destinations">
 						<SimpleCard
 							text={"Boarding Pass Details"}
@@ -1255,6 +1253,48 @@ const Payment = () => {
 							// locationOne={bookingDetails.droppingPoint.location}
 							locationTwo={bookingDetails?.droppingPoint?.bpName}
 						/>
+					</div> */}
+
+					<div className="contact-details">
+						<div className="contact-heading">
+							<h4>Contact Details</h4>
+							<span>Your ticket and bus details will sent here</span>
+						</div>
+						<div className="contact-input">
+							<input
+								type="email"
+								placeholder="Enter Email"
+								name=""
+								id=""
+								className="email"
+							/>
+
+							<div className="input-container">
+								<span>+91</span>
+								<input
+									type="number"
+									placeholder="Alternate Number"
+									name=""
+									id=""
+									className="number"
+								/>
+							</div>
+							<div className="input-container">
+								<span>+91</span>
+								<input
+									type="number"
+									placeholder="Alternate Number"
+									name=""
+									id=""
+									className="number"
+								/>
+							</div>
+
+							<div className="checkbox-container">
+								<input type="checkbox" name="" id="" />
+								<span>Send me the booking details on Whatsapp</span>
+							</div>
+						</div>
 					</div>
 
 					{/* Previous Travellers */}
@@ -1287,14 +1327,15 @@ const Payment = () => {
 					</div>
 
 					{/* Traveller details */}
-					<div className="details">
-						<h4>Enter Traveller Details:</h4>
+					<div className="TravelerDetails">
+						<h4>Add Passengers</h4>
 						{bookingDetails?.selectedSeats?.map((seat, index) => (
-							<div key={index} className="travelerDetails">
-								<h3 style={{ textAlign: "center" }}>Traveler {index + 1}</h3>
-								<br />
+							<div key={index} className="traveler-Details">
+								<span>Passenger {index + 1}</span>
+								{/* <br /> */}
 								<div className="detailsContainer">
 									<Input
+										className="input-element"
 										title={"First Name *"}
 										type={"text"}
 										placeholder={"First name"}
@@ -1303,6 +1344,65 @@ const Payment = () => {
 										}
 										givenName={`firstName_${index}`}
 										value={userData[`firstName_${index}`] || ""}
+									/>
+									<Input
+										className="input-element"
+										title={"Last Name *"}
+										type={"text"}
+										placeholder={"Last name"}
+										onChanged={(e) => handleInputChange(e, `lastName_${index}`)}
+										givenName={`lastName_${index}`}
+										value={userData[`lastName_${index}`] || ""}
+									/>
+									<Input
+										className="input-element"
+										title={"Age *"}
+										type={"number"}
+										placeholder={"Enter Age"}
+										onChanged={(e) => handleInputChange(e, `age_${index}`)}
+										givenName={`age_${index}`}
+										value={userData[`age_${index}`] || ""}
+									/>
+									<div className="genderContainer">
+										<label htmlFor={`gender_${index}`}>Gender *</label>
+										<select
+											name={`gender_${index}`}
+											id={`gender_${index}`}
+											value={userData[`gender_${index}`] || ""}
+											onChange={(e) => handleInputChange(e, `gender_${index}`)}
+										>
+											<option value="">Select Gender</option>
+											<option value="M">Male</option>
+											<option value="F">Female</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						))}
+					</div>
+
+					{/* Traveller details */}
+					{/* < className="details">
+						<h4>Enter Traveller Details:</h4>
+						{bookingDetails?.selectedSeats?.map((seat, index) => (
+							<div key={index} className="travelerDetails">
+								<h3 style={{ textAlign: "center" }}>
+									Traveler {index + 1} | Seat {seat}
+								</h3>
+								<br />
+								<div className="detailsContainer">
+									<PassengerInput
+										title="First Name *"
+										suggestions={passenger}
+										value={userData[`firstName_${index}`] || ""}
+										loading={loading}
+										userData={userData}
+										//setLocationQuery={setLocationOneQuery}
+										setUserData={setUserData}
+										name1={`firstName_${index}`}
+										name2={`lastName_${index}`}
+										age={`age_${index}`}
+										gender={`gender_${index}`}
 									/>
 									<Input
 										title={"Last Name *"}
@@ -1331,53 +1431,17 @@ const Payment = () => {
 											<option value="">Select Gender</option>
 											<option value="M">Male</option>
 											<option value="F">Female</option>
-										</select>
+											{/* <option value="O">Other</option> */}
+					{/* </select>
 									</div>
 								</div>
 							</div>
 						))}
-					</div>
-
-					{/* Contact Details */}
-					<div className="details">
-						<h4>Enter Contact Details</h4>
-						<div className="detailsContainer">
-							<Input
-								title={"Email *"}
-								type={"text"}
-								placeholder={"example@email.com"}
-								onChanged={handleInputChange}
-								givenName={"email"}
-								value={userData.email}
-							/>
-							<Input
-								title={"Mobile Number *"}
-								type={"number"}
-								placeholder={"1234567890"}
-								onChanged={handleInputChange}
-								givenName={"mobile"}
-								value={userData.mobile}
-							/>
-							{/* <Input
-                title={"Altername Number"}
-                type={"number"}
-                placeholder={"1234567890"}
-                onChanged={handleInputChange}
-                givenName={"alternativeNumber"}
-              /> */}
-							<Input
-								title={"Address *"}
-								type={"text"}
-								placeholder={"Address"}
-								onChanged={handleInputChange}
-								givenName={"address"}
-							/>
-						</div>
-					</div>
+					</div>  */}
 
 					{/* Agent Details */}
 					{!loggedInUser.isAgent && (
-						<div className="details">
+						<div className="agent-details">
 							<h4>Enter Agent Code (Optional)</h4>
 							<div className="detailsContainer">
 								<Input
@@ -1391,7 +1455,7 @@ const Payment = () => {
 								<Button
 									text={`Verify`}
 									onClicked={handleAgentCodeVerify}
-									style={{ height: "40px", marginTop: "35px" }}
+									style={{ height: "40px" }}
 								/>
 							</div>
 						</div>
@@ -1450,52 +1514,30 @@ const Payment = () => {
             </div>
           </div> */}
 				</div>
+
+				{/* Payment section */}
 				<div className="containerright">
 					<div className="paymentCard">
 						<h2>Price</h2>
-						<hr />
+
 						<div className="prices">
-							{/* <div className="price">
-                <p>Total Basefare</p>
-                <p>{"₹" + parseFloat(bookingDetails?.fare).toFixed(2)}</p>
-              </div>
-              <hr /> */}
-
-							{/* {bookingDetails?.serviceTax !== 0 && (
-                <>
-                  <div className="price">
-                    <p>Service Tax</p>
-                    <p>₹{parseFloat(bookingDetails?.serviceTax).toFixed(2)}</p>
-                  </div>
-                  <hr />
-                </>
-              )} */}
-
-							{/* {bookingDetails?.operatorTax !== 0 && (
-                <>
-                  <div className="price">
-                    <p>Operator Tax</p>
-                    <p>₹{parseFloat(bookingDetails?.operatorTax).toFixed(2)}</p>
-                  </div>
-                  <hr />
-                </>
-              )} */}
-
-							{/* GST */}
-							{/* <div className="price">
-                <p>GST</p>
-                <p>₹{parseFloat(bookingDetails?.gst).toFixed(2)}</p>
-              </div>
-              <hr /> */}
-
 							<div className="price">
 								<p>Total</p>
 								<p>₹{parseFloat(bookingDetails?.totalFare).toFixed(2)}</p>
 							</div>
-							<hr />
+						</div>
+					</div>
+					<Button
+						text={`Pay Amount ₹${parseFloat(bookingDetails?.totalFare).toFixed(
+							2
+						)}`}
+						onClicked={handlePayment}
+					/>
+				</div>
+				{/* <hr /> */}
 
-							{/* Show Fare Breakdown */}
-							<Popover
+				{/* Show Fare Breakdown */}
+				{/* <Popover
 								content={() => {
 									return (
 										<>
@@ -1558,11 +1600,42 @@ const Payment = () => {
 										Show Fare Breakdown
 									</span>
 								</AntButton>
-							</Popover>
-						</div>
-					</div>
+							</Popover> */}
 
-					{/* <div className="paymentCard">
+				{/* <div className="price">
+                <p>Total Basefare</p>
+                <p>{"₹" + parseFloat(bookingDetails?.fare).toFixed(2)}</p>
+              </div>
+              <hr /> */}
+
+				{/* {bookingDetails?.serviceTax !== 0 && (
+                <>
+                  <div className="price">
+                    <p>Service Tax</p>
+                    <p>₹{parseFloat(bookingDetails?.serviceTax).toFixed(2)}</p>
+                  </div>
+                  <hr />
+                </>
+              )} */}
+
+				{/* {bookingDetails?.operatorTax !== 0 && (
+                <>
+                  <div className="price">
+                    <p>Operator Tax</p>
+                    <p>₹{parseFloat(bookingDetails?.operatorTax).toFixed(2)}</p>
+                  </div>
+                  <hr />
+                </>
+              )} */}
+
+				{/* GST */}
+				{/* <div className="price">
+                <p>GST</p>
+                <p>₹{parseFloat(bookingDetails?.gst).toFixed(2)}</p>
+              </div>
+              <hr /> */}
+
+				{/* <div className="paymentCard">
             <h2>OFFERS</h2>
             <div className="promo">
               <div className="heading">
@@ -1573,13 +1646,6 @@ const Payment = () => {
               <input type="text" name="" id="" placeholder="Enter your code" />
             </div>
           </div> */}
-					<Button
-						text={`Pay Amount ₹${parseFloat(bookingDetails?.totalFare).toFixed(
-							2
-						)}`}
-						onClicked={handlePayment}
-					/>
-				</div>
 			</div>
 			{/* <div className="popularBusRoutes">
         <Title title={"Popular Bus Routes"} subtitle={"View More"} />
