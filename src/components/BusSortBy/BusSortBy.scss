@@ -1,0 +1,30 @@
+.sortBy-container {
+	display: flex;
+	flex-direction: column;
+	padding: 10px;
+	margin-left: 6px;
+	justify-content: space-between;
+	.sortBy-header {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		p {
+			font-size: 16px;
+			font-weight: 600;
+			margin-bottom: 5px;
+		}
+	}
+}
+.sort-option-container {
+	border: 0;
+	background-color: transparent;
+	outline: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	font-size: 15px;
+	font-weight: 500;
+	color: #000;
+}
