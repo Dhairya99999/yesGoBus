@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
 import "./calendar.css"; // Import custom CSS for styling
 
-const Calendar = ({ setOpenCalendar, setDoj, setInputDate }) => {
+const Calendar = ({ setOpenCalendar, setInputDate }) => {
 	const today = new Date();
 	const [currentDate, setCurrentDate] = useState(today);
 	const [selectedDate, setSelectedDate] = useState(null);
@@ -72,32 +72,27 @@ const Calendar = ({ setOpenCalendar, setDoj, setInputDate }) => {
 
 	// Handle date click
 	const handleDateClick = (day) => {
-		// console.log("handleDateClick called with day:", day);
 		if (day > 0 && day <= getDaysInMonth(currentDate)) {
 			const clickedDate = new Date(
 				currentDate.getFullYear(),
 				currentDate.getMonth(),
 				day
 			);
-			// console.log("clickedDate:", clickedDate);
-			// console.log(
-			// 	"clickedDate.toLocaleString():",
-			// 	clickedDate.toLocaleString()
-			// );
+
+			if (clickedDate < today) {
+				return; // Do nothing if the date is in the past
+			}
+
 			if (
 				selectedDate &&
 				clickedDate.toDateString() === selectedDate.toDateString()
 			) {
-				// console.log(" deselecting date");
 				setSelectedDate(null);
-				setDoj("");
-				setInputDate("");
+				setInputDate(""); // Clear the date
 				setOpenCalendar(false);
 			} else {
-				// console.log("selecting date");
 				setSelectedDate(clickedDate);
-				setDoj(formatDate(clickedDate));
-				setInputDate(formatDate(clickedDate));
+				setInputDate(formatDate(clickedDate)); // Set the date
 				setOpenCalendar(false);
 			}
 		}
@@ -122,8 +117,8 @@ const Calendar = ({ setOpenCalendar, setDoj, setInputDate }) => {
 					</div>
 				</div>
 				<div className="calendar-grid">
-					{daysOfWeek.map((day) => (
-						<div key={day} className="calendar-day-header">
+					{daysOfWeek.map((day, index) => (
+						<div key={`day-header-${index}`} className="calendar-day-header">
 							{day}
 						</div>
 					))}
@@ -141,7 +136,7 @@ const Calendar = ({ setOpenCalendar, setDoj, setInputDate }) => {
 
 						return (
 							<div
-								key={index}
+								key={`day-${index}`}
 								className={`calendar-day ${day === "" ? "empty" : ""} ${
 									isBeforeToday ? "disabled" : ""
 								} ${isToday ? "today" : ""} ${isSelected ? "selected" : ""}`}
