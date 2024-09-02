@@ -20,7 +20,7 @@ const Input = ({
   const handleOnChange = isKyc ? handleChange : onChanged;
   return (
     <div className="Input">
-      <span className="title">{title}</span>
+      {/* <span className="title">{title}</span> */}
       {givenName === "phoneNumber" ? (
         <div
           style={{

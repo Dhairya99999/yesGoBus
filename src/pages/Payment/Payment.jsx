@@ -1299,7 +1299,7 @@ const Payment = () => {
 
 					{/* Previous Travellers */}
 					<div className="previousTravellersDetails">
-						<h4>Booking for Previous Travellers</h4>
+						<h4>Booking for Previous Passengers</h4>
 						<ul className="previousTravellers">
 							{bookingHistory?.map((booking, index) => (
 								<li key={booking._id} className="traveller">
@@ -1313,9 +1313,9 @@ const Payment = () => {
 											<tr>
 												<td>{booking.travellerName}</td>
 											</tr>
-											<tr>
+											{/* <tr>
 												<td>{booking.travellerEmail}</td>
-											</tr>
+											</tr> */}
 											<tr>
 												<td>{booking.travellerPhoneNumber}</td>
 											</tr>
@@ -1354,27 +1354,31 @@ const Payment = () => {
 										givenName={`lastName_${index}`}
 										value={userData[`lastName_${index}`] || ""}
 									/>
-									<Input
-										className="input-element"
-										title={"Age *"}
-										type={"number"}
-										placeholder={"Enter Age"}
-										onChanged={(e) => handleInputChange(e, `age_${index}`)}
-										givenName={`age_${index}`}
-										value={userData[`age_${index}`] || ""}
-									/>
-									<div className="genderContainer">
-										<label htmlFor={`gender_${index}`}>Gender *</label>
-										<select
-											name={`gender_${index}`}
-											id={`gender_${index}`}
-											value={userData[`gender_${index}`] || ""}
-											onChange={(e) => handleInputChange(e, `gender_${index}`)}
-										>
-											<option value="">Select Gender</option>
-											<option value="M">Male</option>
-											<option value="F">Female</option>
-										</select>
+									<div className="age-gender">
+										<Input
+											className="input-element"
+											title={"Age *"}
+											type={"number"}
+											placeholder={"Enter Age"}
+											onChanged={(e) => handleInputChange(e, `age_${index}`)}
+											givenName={`age_${index}`}
+											value={userData[`age_${index}`] || ""}
+										/>
+										<div className="genderContainer">
+											{/* <label htmlFor={`gender_${index}`}>Gender *</label> */}
+											<select
+												name={`gender_${index}`}
+												id={`gender_${index}`}
+												value={userData[`gender_${index}`] || ""}
+												onChange={(e) =>
+													handleInputChange(e, `gender_${index}`)
+												}
+											>
+												<option value="">Gender</option>
+												<option value="M">Male</option>
+												<option value="F">Female</option>
+											</select>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -1452,11 +1456,12 @@ const Payment = () => {
 									givenName={"agentCode"}
 									value={userData.agentCode}
 								/>
-								<Button
+								{/* <Button
 									text={`Verify`}
 									onClicked={handleAgentCodeVerify}
 									style={{ height: "40px" }}
-								/>
+								/> */}
+								<button onClick={handleAgentCodeVerify}>Verify</button>
 							</div>
 						</div>
 					)}

@@ -937,9 +937,9 @@ const Seats = ({
               img={ladiesbooked}
             />
           </div>
-          {prices.length > 1 && (
+          {/* {prices.length > 1 && (
             <div className="filters">
-              {/* <p className="tag">Seat Price:</p> */}
+              <p className="tag">Seat Price:</p>
               <button
                 className={`filter ${
                   selectedPriceFilter === null ? "highlighted" : ""
@@ -963,7 +963,7 @@ const Seats = ({
                 {"No seats available"}
               </p>
             </div>
-          )}
+          )} */}
           <div
             className="bus-container"
             style={

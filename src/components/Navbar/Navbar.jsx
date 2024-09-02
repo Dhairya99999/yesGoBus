@@ -17,47 +17,6 @@ import { selectIsMobileApp } from "../../stores/slices/designSlice";
 const Navbar = ({ page }) => {
 	const isMobileApp = useSelector(selectIsMobileApp);
 
-	let translateElement;
-
-	const googleTranslateElementInit = () => {
-		translateElement = new window.google.translate.TranslateElement(
-			{
-				pageLanguage: "en",
-				includedLanguages: "en,kn,te,ta,ml,hi",
-				layout: window.google.translate.TranslateElement.InlineLayout.TOP_RIGHT,
-			},
-			"google_translate_element"
-		);
-	};
-
-	useEffect(() => {
-		const translateElement = document.getElementById(
-			"google_translate_element"
-		);
-		if (translateElement) {
-			translateElement.innerHTML = "";
-		}
-
-		const buttonElement = document.getElementById("your_button_id");
-		if (buttonElement) {
-			return;
-		}
-
-		window.googleTranslateElementInit = googleTranslateElementInit;
-
-		const yourButton = document.createElement("button");
-		yourButton.id = "your_button_id";
-		yourButton.style.display = "none";
-		document.querySelector(".right").appendChild(yourButton);
-
-		return () => {
-			const buttonToRemove = document.getElementById("your_button_id");
-			if (buttonToRemove) {
-				buttonToRemove.remove();
-			}
-		};
-	});
-
 	const [showMenu, setShowMenu] = useState(false);
 	const [openNav, setOpenNav] = useState(false);
 	const navigate = useNavigate();
@@ -128,11 +87,6 @@ const Navbar = ({ page }) => {
 	return (
 		<nav className="navbar burger">
 			{page === "home" && menu}
-
-			<div
-				id="google_translate_element"
-				style={{ marginTop: "120px", position: "absolute", left: "20px" }}
-			></div>
 
 			<div
 				className="hamburger"
