@@ -26,7 +26,7 @@ const BottomBar = () => {
 				</div>
 				{/* Update this div to include an anchor tag for calling Justdial */}
 				<div className="bottom-bar-item">
-					<a href="tel:+18001234567" className="call-link">
+					<a href="tel:+91" className="call-link">
 						<IoMdCall />
 						<span>Call Now</span>
 					</a>
