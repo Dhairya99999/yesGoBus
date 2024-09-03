@@ -2,7 +2,6 @@
 import { useState } from "react";
 import "./BottomBar.scss";
 import { IoMdCall } from "react-icons/io";
-
 import {
 	FaHome,
 	FaInfoCircle,
@@ -17,6 +16,11 @@ import { useNavigate } from "react-router-dom";
 const BottomBar = () => {
 	const navigate = useNavigate();
 
+	// Function to handle phone call initiation
+	const handleCallJustdial = () => {
+		window.location.href = "tel:+919888417555"; 
+	};
+
 	return (
 		<>
 			<div className="bottom-bar">
@@ -24,12 +28,9 @@ const BottomBar = () => {
 					<FaHome />
 					<span>Home</span>
 				</div>
-				{/* Update this div to include an anchor tag for calling Justdial */}
-				<div className="bottom-bar-item">
-					<a href="tel:+919888417555" className="call-link">
-						<IoMdCall />
-						<span>Call Now</span>
-					</a>
+				<div className="bottom-bar-item" onClick={handleCallJustdial}>
+					<IoMdCall />
+					<span>Call Now</span>
 				</div>
 				<div
 					className="bottom-bar-item"
