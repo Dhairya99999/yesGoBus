@@ -1,17 +1,19 @@
 .BusRouteCard {
   position: relative;
-  background: rgba(253, 89, 1, 0.15);
-  padding: 20px;
+  // background: rgba(253, 89, 1, 0.15);
+  // padding: 20px;
   border-radius: 25px;
   display: flex;
   flex-direction: column;
   
   p {
+    margin-left: 10px;
     color: #474747;
     font-weight: 400;
     font-size: 13px;
   }
   input {
+    margin-left: 10px;
     color: #110803;
     font-size: 20px;
     width: 100%;
