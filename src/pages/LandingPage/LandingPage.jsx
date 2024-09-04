@@ -108,7 +108,7 @@ const LandingPage = () => {
 				onSearch={handleSearchClick}
 			/>
 			<div className="popularBusTicket">
-				<h1 style={{ fontSize: 24, paddingTop: 20 }}>Popular Bus Ticket</h1>
+				<span className="popularBusTicketTitle">Popular Bus Ticket</span>
 				<div className="wrapper">
 					<InfoCard
 						img={schoolBus}
@@ -130,7 +130,8 @@ const LandingPage = () => {
 				</div>
 			</div>
 			<div className="whyChooseYesGoBus">
-				<Title title={"Why YesGoBus For Bus Booking"} />
+				{/* <Title title={"Why YesGoBus For Bus Booking"} /> */}
+				<span className="whyChooseYesGoBusTitle">Why YesGoBus For Bus Booking</span>
 				<div className="whyChooseYesGoBusContainer">
 					<InfoCard img={routes} title={"10000+"} subtitle={"Routes"} />
 					<InfoCard img={orangeBus} title={"3500+"} subtitle={"BUS PARTNERS"} />
