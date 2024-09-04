@@ -46,6 +46,12 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+		h3 {
+			font-size: 20px;
+			font-weight: 600;
+			color: #110803;
+			line-height: 27px;
+		}
 		.google_translate_element {
 			height: 40px !important;
 			select {
@@ -134,11 +140,11 @@
 				border-radius: 5px;
 				padding: 5px 7px;
 				background-color: white;
-
-				&.highlighted {
-					background-color: #fd5901;
-					color: #fff;
-				}
+				color: #110803;
+			}
+			.highlighted {
+				background-color: #fd5901;
+				color: #fff;
 			}
 		}
 	}
