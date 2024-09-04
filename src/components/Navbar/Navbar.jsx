@@ -7,6 +7,7 @@ import { BiSolidBus } from "react-icons/bi";
 import { MdHome } from "react-icons/md";
 import { useNavigate, Link } from "react-router-dom";
 import { RiCustomerService2Fill } from "react-icons/ri";
+import { MdLogout, MdLogin } from "react-icons/md";
 import { MdOutlinePolicy } from "react-icons/md";
 import "./Navbar.scss";
 import { blacklogo } from "../../assets/homepage";
@@ -182,8 +183,30 @@ const Navbar = ({ page }) => {
 							Contact Us
 						</Link>
 					</button>
+					{loggedInUser ? (
+						<button
+							onClick={() => {
+								localStorage.removeItem("token");
+								localStorage.removeItem("loggedInUser");
+								navigate("/login");
+							}}
+							className="btn-login-logout"
+						>
+							<a href="#" className="link-login-logout">
+								<MdLogout size={22} />
+								Logout
+							</a>
+						</button>
+					) : (
+						<button className="btn-login-logout">
+							<Link to="/login" className="link-login-logout">
+								<MdLogin size={22} />
+								Login
+							</Link>
+						</button>
+					)}
 				</div>
-				{loggedInUser ? (
+				{/* {loggedInUser ? (
 					<a href="#" className="nav-bottom">
 						<button
 							style={{ padding: "5px 0" }}
@@ -200,7 +223,7 @@ const Navbar = ({ page }) => {
 					<Link to="/login" className="nav-bottom">
 						<button style={{ padding: "5px 0" }}>Login</button>
 					</Link>
-				)}
+				)} */}
 			</div>
 
 			<div
