@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
-import "./calendar.scss"; // Import custom CSS for styling
+import "./calendar.css"; // Import custom CSS for styling
 
-const Calendar = ({ setOpenCalendar, setInputDate, inputDate }) => {
+const Calendar = ({ setOpenCalendar, setInputDate }) => {
 	const today = new Date();
 	const [currentDate, setCurrentDate] = useState(today);
-
-	const [highlighted, setHighlighted] = useState(true);
+	const [selectedDate, setSelectedDate] = useState(null);
 
 	// Get the first day and the total days of the month
 	const getFirstDayOfMonth = (date) =>
@@ -55,7 +54,7 @@ const Calendar = ({ setOpenCalendar, setInputDate, inputDate }) => {
 	const year = currentDate.getFullYear();
 
 	// Days of the week headers
-	const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+	const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"];
 
 	const formatDate = (dateValue) => {
 		let date;
@@ -70,8 +69,7 @@ const Calendar = ({ setOpenCalendar, setInputDate, inputDate }) => {
 		const day = date.toLocaleString("default", { day: "2-digit" });
 		return `${day}-${month}-${year}`;
 	};
-	const [selectedDate, setSelectedDate] = useState(formatDate(inputDate));
-	// console.log(selectedDate);
+
 	// Handle date click
 	const handleDateClick = (day) => {
 		if (day > 0 && day <= getDaysInMonth(currentDate)) {
@@ -87,7 +85,7 @@ const Calendar = ({ setOpenCalendar, setInputDate, inputDate }) => {
 
 			if (
 				selectedDate &&
-				clickedDate.toDateString() === selectedDate.toString()
+				clickedDate.toDateString() === selectedDate.toDateString()
 			) {
 				setSelectedDate(null);
 				setInputDate(""); // Clear the date
@@ -100,81 +98,17 @@ const Calendar = ({ setOpenCalendar, setInputDate, inputDate }) => {
 		}
 	};
 
-	const handleDateChange = (isToday) => {
-		const currentDate = new Date();
-		const nextDate = new Date(currentDate);
-		nextDate.setDate(currentDate.getDate() + (isToday ? 0 : 1));
-		setInputDate(formatDate(nextDate));
-		setHighlighted(isToday);
-		setOpenCalendar(false);
-	};
-
-	function getCurrentAndNextDate() {
-		const today = new Date();
-		const tomorrow = new Date(today);
-		tomorrow.setDate(today.getDate() + 1);
-
-		const formattedToday = today.toLocaleDateString("en-US", {
-			weekday: "long",
-			year: "numeric",
-			month: "short",
-			day: "numeric",
-		});
-
-		const formattedTomorrow = tomorrow.toLocaleDateString("en-US", {
-			weekday: "long",
-			year: "numeric",
-			month: "short",
-			day: "numeric",
-		});
-
-		return { today: formattedToday, tomorrow: formattedTomorrow };
-	}
-
-	const dates = getCurrentAndNextDate();
-
 	return (
-		<div className="calendar-container">
-			{/* Header */}
-			<div className="header">
-				<div
-					className="back-btn"
-					onClick={() => {
-						setOpenCalendar(false);
-					}}
-				>
-					<FaArrowLeftLong />
-				</div>
-
-				<div className="title">Select Journey Date</div>
-			</div>
-			{/* Today and tomorrow */}
-			<div className="dates-container">
-				<button
-					onClick={() => handleDateChange(true)}
-					className={highlighted ? "date highlighted" : "date"}
-				>
-					<span>Today</span>
-					<span className="date-0">{dates.today}</span>
-				</button>
-				<button
-					onClick={() => handleDateChange(false)}
-					className={!highlighted ? "date highlighted" : "date"}
-				>
-					<span>Tomorrow</span>
-					<span className="date-0">{dates.tomorrow}</span>
-				</button>
-			</div>
-			{/* Calendar */}
-			<div className="calendar">
+		<div>
+			<div
+				className="overlay"
+				onClick={() => {
+					setOpenCalendar(false);
+				}}
+			></div>
+			<div className="calendar-container">
 				<div className="calendar-header">
-					<div
-						onClick={prevMonth}
-						className="calendar-arrow"
-						style={{
-							cursor: "pointer",
-						}}
-					>
+					<div onClick={prevMonth} style={{ cursor: "pointer" }}>
 						<FaArrowLeftLong />
 					</div>
 					<h2>{`${month} ${year}`}</h2>
@@ -183,8 +117,8 @@ const Calendar = ({ setOpenCalendar, setInputDate, inputDate }) => {
 					</div>
 				</div>
 				<div className="calendar-grid">
-					{daysOfWeek.map((day) => (
-						<div key={day} className="calendar-day-header">
+					{daysOfWeek.map((day, index) => (
+						<div key={`day-header-${index}`} className="calendar-day-header">
 							{day}
 						</div>
 					))}
@@ -195,18 +129,17 @@ const Calendar = ({ setOpenCalendar, setInputDate, inputDate }) => {
 							day
 						);
 						const isBeforeToday = dateObj < today && day !== "";
-						// const isToday = dateObj.toDateString() === today.toDateString();
+						const isToday = dateObj.toDateString() === today.toDateString();
 						const isSelected =
 							selectedDate &&
-							formatDate(dateObj).toString() === selectedDate.toString();
-						// console.log(isSelected);
+							dateObj.toDateString() === selectedDate.toDateString();
 
 						return (
 							<div
-								key={index}
+								key={`day-${index}`}
 								className={`calendar-day ${day === "" ? "empty" : ""} ${
 									isBeforeToday ? "disabled" : ""
-								}  ${isSelected ? "selected" : ""}`}
+								} ${isToday ? "today" : ""} ${isSelected ? "selected" : ""}`}
 								onClick={() => handleDateClick(day)}
 							>
 								{day}
