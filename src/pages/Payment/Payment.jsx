@@ -1273,13 +1273,13 @@ const Payment = () => {
 								<span>+91</span>
 								<input
 									type="number"
-									placeholder="Alternate Number"
+									placeholder="Mobile Number"
 									name=""
 									id=""
 									className="number"
 								/>
 							</div>
-							<div className="input-container">
+							{/* <div className="input-container">
 								<span>+91</span>
 								<input
 									type="number"
@@ -1288,7 +1288,7 @@ const Payment = () => {
 									id=""
 									className="number"
 								/>
-							</div>
+							</div> */}
 
 							<div className="checkbox-container">
 								<input type="checkbox" name="" id="" />
