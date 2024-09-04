@@ -1,29 +1,29 @@
 .BusRouteCard {
-  position: relative;
-  background: rgba(253, 89, 1, 0.15);
-  padding: 20px;
-  border-radius: 25px;
-  display: flex;
-  flex-direction: column;
-  
-  p {
-    color: #474747;
-    font-weight: 400;
-    font-size: 13px;
-  }
-  input {
-    color: #110803;
-    font-size: 20px;
-    width: 100%;
-    font-weight: 700;
-    background: none;
-    border: none;
-    outline: none;
-  }
-  ::-webkit-calendar-picker-indicator {
-    background-color: #fd5901;
-    padding: 5px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
+	position: relative;
+	background: rgba(253, 89, 1, 0.15);
+	padding: 10px;
+	border-radius: 25px;
+	display: flex;
+	flex-direction: column;
+
+	p {
+		color: #474747;
+		font-weight: 400;
+		font-size: 14px;
+	}
+	input {
+		color: #110803;
+		font-size: 20px;
+		width: 100%;
+		font-weight: 700;
+		background: none;
+		border: none;
+		outline: none;
+	}
+	::-webkit-calendar-picker-indicator {
+		background-color: #fd5901;
+		padding: 5px;
+		cursor: pointer;
+		border-radius: 5px;
+	}
 }

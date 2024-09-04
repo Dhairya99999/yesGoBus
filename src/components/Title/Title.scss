@@ -1,17 +1,21 @@
 .titleContainer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    p {
-        color: #fd5901;
-    }
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	p {
+		color: #fd5901;
+	}
 }
 
-@media (max-width: 426px) {
-    .titleContainer {
-        width: 300px;
-        h1 {
-            font-size: 24px;
-        }
-    }
+@media (max-width: 435px) {
+	.titleContainer {
+		width: 300px;
+		h1 {
+			font-family: poppins;
+			font-size: 20px;
+			font-weight: 600;
+			color: #110803;
+			line-height: 30px;
+		}
+	}
 }

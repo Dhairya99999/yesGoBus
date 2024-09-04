@@ -2,11 +2,10 @@
 	padding: 10px 15px;
 	font-size: 15px;
 	font-weight: 600;
-
 	background: #fd5901;
 	border: none;
 	color: white;
-	// border-radius: 15px;
+	border-radius: 15px;
 	padding: 20px 15px;
 	&:hover {
 		cursor: pointer;
@@ -17,6 +16,6 @@
 @media (max-width: 435px) {
 	.button {
 		padding: 10px 15px;
-		font-size: 12px;
+		font-size: 14px;
 	}
 }
