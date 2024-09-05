@@ -1263,10 +1263,11 @@ const Payment = () => {
 						<div className="contact-input">
 							<input
 								type="email"
-								placeholder="Enter Email"
+								placeholder="Enmter Email"
 								name=""
 								id=""
 								className="email"
+								value={userData.email || "test"}
 							/>
 
 							<div className="input-container">
@@ -1277,6 +1278,7 @@ const Payment = () => {
 									name=""
 									id=""
 									className="number"
+									value={userData.mobile || ""}
 								/>
 							</div>
 							{/* <div className="input-container">
