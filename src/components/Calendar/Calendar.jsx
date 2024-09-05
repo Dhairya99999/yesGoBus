@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
-import "./calendar.scss"; // Import custom CSS for styling
+import "./Calendar.scss"; // Import custom CSS for styling
 
 const Calendar = ({ setOpenCalendar, setInputDate, inputDate }) => {
 	const today = new Date();
