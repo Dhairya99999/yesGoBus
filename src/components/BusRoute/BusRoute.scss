@@ -1,0 +1,171 @@
+.BusRoute {
+	display: flex;
+	background: black;
+	align-items: center;
+	justify-content: space-evenly;
+	padding: 20px 30px;
+	margin-top: 10px; // Ensure separation from the navbar
+
+	.reverse-img {
+		transition: transform 0.5s ease;
+		cursor: pointer;
+	}
+
+	input[type="search"]::-webkit-search-cancel-button {
+		-webkit-appearance: none;
+		height: 1em;
+		width: 1em;
+		border-radius: 50em;
+		background: url("../../assets/busbooking/x-symbol.svg") no-repeat 50% 50%;
+		background-size: contain;
+		opacity: 0;
+		pointer-events: none;
+		cursor: pointer;
+	}
+
+	input[type="search"]:focus::-webkit-search-cancel-button {
+		opacity: 0.8;
+		pointer-events: all;
+	}
+
+	input[type="search"].dark::-webkit-search-cancel-button {
+		filter: invert(1);
+	}
+}
+
+.MobileBusRoute {
+	padding: 30px 10px;
+	background: rgba(253, 89, 1, 0.15);
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	background: linear-gradient(to bottom, transparent, #ffe1d6);
+	border-radius: 30px;
+
+	.MobileBusRouteHead {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		h3 {
+			font-size: 20px;
+			font-weight: 600;
+			color: #110803;
+			line-height: 27px;
+		}
+		.google_translate_element {
+			height: 40px !important;
+			select {
+				height: 30px !important;
+				width: auto !important;
+				padding: 4px !important;
+			}
+		}
+	}
+
+	.outer_border {
+		// border: 1px solid rgb(35, 35, 35);
+		border-radius: 15px;
+		margin: 5px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-evenly;
+	}
+
+	.inputs {
+		padding: 10px;
+
+		.date-input {
+			.date-label {
+				color: black;
+				margin-left: 10px;
+			}
+			.date-container {
+				display: flex;
+				gap: 10px;
+				align-items: center;
+				margin: 5px 10px;
+				width: "100%";
+				color: "#fd5901";
+				input {
+					color: #110803;
+					font-size: 20px;
+					width: 100%;
+					font-weight: 700;
+					background: none;
+					border: none;
+					outline: none;
+					&::placeholder {
+						font-size: 14px;
+						font-weight: 600;
+					}
+				}
+				.calendar-icon {
+					color: #fd5901;
+				}
+			}
+		}
+
+		.fromto {
+			padding: 5px 0;
+			border: 1px solid rgb(34, 34, 34);
+			border-radius: 10px;
+
+			.img_rotater {
+				position: relative;
+
+				.reverse-img {
+					width: 20px;
+					height: 20px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					position: absolute;
+					right: 8px;
+					bottom: -14px;
+					background-color: rgb(22, 22, 22);
+					padding: 5px;
+					color: #fd5901;
+					border-radius: 100px;
+				}
+			}
+		}
+
+		.days {
+			margin-top: 10px;
+			display: flex;
+			gap: 7px;
+
+			.dayButton {
+				border: none;
+				border-radius: 5px;
+				padding: 5px 7px;
+				background-color: white;
+				color: #110803;
+			}
+			.highlighted {
+				background-color: #fd5901;
+				color: #fff;
+			}
+		}
+	}
+}
+
+@media (max-width: 768px) {
+	.BusRoute {
+		display: none;
+	}
+
+	.MobileBusRoute {
+		display: block;
+	}
+}
+
+@media (min-width: 768px) {
+	.BusRoute {
+		display: flex;
+	}
+
+	.MobileBusRoute {
+		display: none;
+	}
+}

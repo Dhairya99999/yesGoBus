@@ -1,0 +1,27 @@
+.track-agent-wrapper {
+  padding: 1rem;
+  .ant-spin-container {
+    .ant-table {
+      border-radius: 10px;
+    }
+  }
+
+  .ant-table-thead {
+    tr {
+      th {
+        text-align: center;
+      }
+    }
+  }
+  .ant-table-tbody {
+    tr {
+      td {
+        text-align: center;
+      }
+    }
+  }
+  .ant-table-footer {
+    background: transparent;
+    padding-top: 50px;
+  }
+}
