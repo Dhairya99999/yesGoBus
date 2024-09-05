@@ -1115,9 +1115,9 @@ const Payment = () => {
 		if (!userData.mobile?.trim()) {
 			errors.mobile = "Mobile is required";
 		}
-		if (!userData.address?.trim()) {
-			errors.address = "Address is required";
-		}
+		// if (!userData.address?.trim()) {
+		// 	errors.address = "Address is required";
+		// }
 		return errors;
 	};
 
@@ -1263,11 +1263,12 @@ const Payment = () => {
 						<div className="contact-input">
 							<input
 								type="email"
-								placeholder="Enmter Email"
+								placeholder="Enter Email"
 								name=""
 								id=""
 								className="email"
-								value={userData.email || "test"}
+								value={userData.email || ""}
+
 							/>
 
 							<div className="input-container">
