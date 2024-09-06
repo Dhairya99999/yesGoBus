@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./landingPage.scss";
 // import Banner from "../../components/IntroHome/Banner.jsx";
+import { formatDate } from "../../utils/BusBookingHelpers.js";
 
 const LandingPage = () => {
 	const navigate = useNavigate();
@@ -82,19 +83,19 @@ const LandingPage = () => {
 		};
 	}, [fromLocation, toLocation]);
 
-	const formatDate = (dateValue) => {
-		let date;
-		if (typeof dateValue === "string") {
-			const [day, month, year] = dateValue.split("-");
-			date = new Date(`${year}-${month}-${day}T00:00:00.000Z`);
-		} else {
-			date = new Date(dateValue);
-		}
-		const year = date.getFullYear();
-		const month = date.toLocaleString("default", { month: "2-digit" });
-		const day = date.toLocaleString("default", { day: "2-digit" });
-		return `${day}-${month}-${year}`;
-	};
+	// const formatDate = (dateValue) => {
+	// 	let date;
+	// 	if (typeof dateValue === "string") {
+	// 		const [day, month, year] = dateValue.split("-");
+	// 		date = new Date(`${year}-${month}-${day}T00:00:00.000Z`);
+	// 	} else {
+	// 		date = new Date(dateValue);
+	// 	}
+	// 	const year = date.getFullYear();
+	// 	const month = date.toLocaleString("default", { month: "2-digit" });
+	// 	const day = date.toLocaleString("default", { day: "2-digit" });
+	// 	return `${day}-${month}-${year}`;
+	// };
 
 	return (
 		<div className="landingPage">

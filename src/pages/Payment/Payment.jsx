@@ -1268,7 +1268,6 @@ const Payment = () => {
 								id=""
 								className="email"
 								value={userData.email || ""}
-
 							/>
 
 							<div className="input-container">
@@ -1540,6 +1539,7 @@ const Payment = () => {
 							2
 						)}`}
 						onClicked={handlePayment}
+						style={{ height: "50px", width: "100%", borderRadius: "0" }}
 					/>
 				</div>
 				{/* <hr /> */}

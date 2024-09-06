@@ -105,7 +105,9 @@
 				gap: 20px;
 
 				h4 {
-					font-size: 20px;
+					font-size: 15px;
+					font-weight: 600;
+					line-height: 30px;
 				}
 
 				p {
@@ -150,7 +152,8 @@
 						font-size: 12px;
 					}
 					h4 {
-						font-size: 20px;
+						font-size: 16px;
+						font-weight: 700;
 					}
 				}
 			}
@@ -177,7 +180,7 @@
 	}
 }
 
-@media (max-width: 426px) {
+@media (max-width: 435px) {
 	.BusBookingCard {
 		border-radius: 8px;
 

@@ -5,6 +5,7 @@ import "./BusRoute.scss";
 import { LuArrowUpDown, LuCalendarDays } from "react-icons/lu";
 import axios from "axios";
 import Calendar from "../Calendar/Calendar";
+import { formatDate } from "../../utils/BusBookingHelpers";
 
 const BusRoute = ({ locationOne, locationTwo, departureDate, onSearch }) => {
 	const [locationOneSuggestions, setLocationOneSuggestions] = useState([]);
@@ -18,19 +19,19 @@ const BusRoute = ({ locationOne, locationTwo, departureDate, onSearch }) => {
 	const [openCalendar, setOpenCalendar] = useState(false);
 	const token = localStorage.getItem("token");
 
-	const formatDate = (dateValue) => {
-		let date;
-		if (typeof dateValue === "string") {
-			const [day, month, year] = dateValue.split("-");
-			date = new Date(`${year}-${month}-${day}`);
-		} else {
-			date = new Date(dateValue);
-		}
-		const year = date.getFullYear();
-		const month = String(date.getMonth() + 1).padStart(2, "0");
-		const day = String(date.getDate()).padStart(2, "0");
-		return `${day}-${month}-${year}`;
-	};
+	// const formatDate = (dateValue) => {
+	// 	let date;
+	// 	if (typeof dateValue === "string") {
+	// 		const [day, month, year] = dateValue.split("-");
+	// 		date = new Date(`${year}-${month}-${day}`);
+	// 	} else {
+	// 		date = new Date(dateValue);
+	// 	}
+	// 	const year = date.getFullYear();
+	// 	const month = String(date.getMonth() + 1).padStart(2, "0");
+	// 	const day = String(date.getDate()).padStart(2, "0");
+	// 	return `${day}-${month}-${year}`;
+	// };
 
 	const handleDateChange = (isToday) => {
 		const currentDate = new Date();
@@ -85,14 +86,52 @@ const BusRoute = ({ locationOne, locationTwo, departureDate, onSearch }) => {
 		return () => clearTimeout(debounceTimer);
 	}, [locationOneQuery, locationTwoQuery]);
 
+	// const handleSearch = async () => {
+	// 	if (sourceCity && destinationCity && doj) {
+	// 		let formattedDate;
+	// 		if (/^\d{2}-\d{2}-\d{4}$/.test(doj)) {
+	// 			const [day, month, year] = doj.split("-");
+	// 			formattedDate = `${year}-${month}-${day}`;
+	// 		} else {
+	// 			formattedDate = doj;
+	// 		}
+	// 		onSearch(sourceCity, destinationCity, formattedDate);
+	// 	} else {
+	// 		alert("Please enter values for all fields");
+	// 	}
+	// };
+
 	const handleSearch = async () => {
 		if (sourceCity && destinationCity && doj) {
 			let formattedDate;
-			if (/^\d{2}-\d{2}-\d{4}$/.test(doj)) {
-				const [day, month, year] = doj.split("-");
-				formattedDate = `${year}-${month}-${day}`;
+			if (/^\w+, \d{1,2}-\w+$/.test(doj)) {
+				const [dayOfWeek, dayMonth] = doj.split(", ");
+				const [dayOfMonth, monthName] = dayMonth.split("-");
+				const months = [
+					"Jan",
+					"Feb",
+					"Mar",
+					"Apr",
+					"May",
+					"Jun",
+					"Jul",
+					"Aug",
+					"Sep",
+					"Oct",
+					"Nov",
+					"Dec",
+				];
+				const monthIndex = months.indexOf(monthName) + 1;
+				const year = new Date().getFullYear();
+				formattedDate = `${year}-${monthIndex
+					.toString()
+					.padStart(2, "0")}-${dayOfMonth.padStart(2, "0")}`;
 			} else {
-				formattedDate = doj;
+				const [day, month, year] = doj.split("-");
+				formattedDate = `${year}-${month.padStart(2, "0")}-${day.padStart(
+					2,
+					"0"
+				)}`;
 			}
 			onSearch(sourceCity, destinationCity, formattedDate);
 		} else {

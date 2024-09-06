@@ -16,6 +16,7 @@ import {
 // import { offer1 } from "../../assets/homepage";
 import { useEffect, useState } from "react";
 //import axiosInstance from "../../utils/service";
+import { formatDate } from "../../utils/BusBookingHelpers";
 
 import { Spin } from "antd";
 import { useLocation, Navigate } from "react-router-dom";
@@ -69,10 +70,10 @@ const BusBooking = () => {
 	for (let i = 0; i <= 6; i++) {
 		const nextDate = new Date(date);
 		nextDate.setDate(date.getDate() + i);
-		const formattedDate = `${daysOfWeek[nextDate.getDay()]},${
-			months[nextDate.getMonth()]
-		}-${nextDate.getDate()}`;
-		dates.push(formattedDate);
+		// const formattedDate = `${daysOfWeek[nextDate.getDay()]},${
+		// 	months[nextDate.getMonth()]
+		// }-${nextDate.getDate()}`;
+		dates.push(formatDate(nextDate));
 	}
 
 	let currentDate = new Date();

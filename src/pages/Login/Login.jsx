@@ -235,7 +235,7 @@ const Login = () => {
 		try {
 			if (showLogin) {
 				const response = await axiosInstance.post(
-					`${import.meta.env.VITE_BASE_URL}/api/user/verify_login_otp`,
+					`${import.meta.env.VITE_BASE_URL}/api/user/verify_otp`,
 					{
 						mobileNumber: loginData.phoneNumber
 							? loginData.phoneNumber
