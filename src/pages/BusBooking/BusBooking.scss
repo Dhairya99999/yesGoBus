@@ -62,14 +62,14 @@
 			.dates {
 				display: flex;
 				gap: 10px;
-				padding: 20px 10px 10px;
+				padding: 10px;
 				.date {
 					background-color: #fd5901;
 					color: #fff;
 					border: 1px solid #d0d0d0;
-					padding: 10px;
+					padding: 5px;
 					min-width: 100px;
-					border-radius: 10px;
+					border-radius: 15px;
 					text-align: center;
 					&:hover {
 						cursor: pointer;
@@ -195,17 +195,33 @@
 			background-color: rgb(241, 241, 241);
 			margin-bottom: 40px;
 			.right {
+				.hadder {
+					position: fixed;
+					top: 50px;
+					left: 0;
+					z-index: 1000;
+					width: 92%;
+					padding: 15px;
+					background-color: white;
+					border-radius: 5px;
+					border: 1px solid rgb(202, 202, 202);
+				}
 				.wrapper {
-					padding: 0px;
+					padding-top: 190px;
 					display: flex;
 					flex-direction: column;
 					gap: 15px;
-					.wrapper-hadder {
-						padding: 15px;
-						background-color: white;
-						border-radius: 5px;
-						border: 1px solid rgb(202, 202, 202);
-					}
+					// .wrapper-hadder {
+					// 	position: fixed;
+					// 	top: 50px;
+					// 	left: 0;
+					// 	z-index: 1000;
+					// 	width: 92%;
+					// 	padding: 15px;
+					// 	background-color: white;
+					// 	border-radius: 5px;
+					// 	border: 1px solid rgb(202, 202, 202);
+					// }
 				}
 				.filter {
 					position: fixed;
@@ -223,6 +239,10 @@
 				}
 				.filter-wrapper {
 					background-color: white;
+					margin-top: 193px;
+					position: fixed;
+					z-index: 1000;
+					width: 100%;
 					// max-height: 500px;
 					.filter-title {
 						display: flex;

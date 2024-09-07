@@ -58,7 +58,7 @@ const Seats = ({
   const [selectedPriceFilter, setSelectedPriceFilter] = useState(null);
   const [selectedTab, setSelectedTab] = useState("seats");
   const [prices, setPrices] = useState([]);
-  const [open, setOpen] = useState(false);
+
   useEffect(() => {
     const fareArray = Array.isArray(fare) ? fare : [fare];
     setPrices(fareArray);
@@ -179,19 +179,14 @@ const Seats = ({
         ladiesSeat: newLadiesSeat,
       };
 
-      localStorage.setItem(
-        "bookingDetails",
-        JSON.stringify(updatedBookingDetails)
-      );
+      localStorage.setItem('bookingDetails', JSON.stringify(updatedBookingDetails));
 
       return updatedBookingDetails;
     });
   };
 
   useEffect(() => {
-    const storedBookingDetails = JSON.parse(
-      localStorage.getItem("bookingDetails")
-    );
+    const storedBookingDetails = JSON.parse(localStorage.getItem('bookingDetails'));
     if (storedBookingDetails) {
       setBookingDetails(storedBookingDetails);
     }
@@ -200,13 +195,13 @@ const Seats = ({
   const lowerTierSeats = isVrl
     ? seatDetails.filter((seat) => seat.UpLowBerth === "LB")
     : isSrs
-    ? seatDetails.coach_details.filter((seat) => seat.z_index === 0)
-    : seatDetails.filter((seat) => seat.zIndex === "0");
+      ? seatDetails.coach_details.filter((seat) => seat.z_index === 0)
+      : seatDetails.filter((seat) => seat.zIndex === "0");
   const upperTierSeats = isVrl
     ? seatDetails.filter((seat) => seat.UpLowBerth === "UB")
     : isSrs
-    ? seatDetails.coach_details.filter((seat) => seat.z_index === 1)
-    : seatDetails.filter((seat) => seat.zIndex === "1");
+      ? seatDetails.coach_details.filter((seat) => seat.z_index === 1)
+      : seatDetails.filter((seat) => seat.zIndex === "1");
 
   const renderSeatTable = (seats, selectedSeats) => {
     if (isVrl) {
@@ -242,9 +237,8 @@ const Seats = ({
                 seatRow.push(
                   <td key={seat.SeatNo}>
                     <div
-                      className={`seat_____container ${
-                        isHighlighted ? "highlighted_____seat" : ""
-                      } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                      className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
                         onClick={() =>
@@ -276,9 +270,8 @@ const Seats = ({
                   seatRow.push(
                     <td key={seat.SeatNo}>
                       <div
-                        className={`seat_____container ${
-                          isHighlighted ? "highlighted_____seat" : ""
-                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                        className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+                          } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                       >
                         <img
                           onClick={() =>
@@ -309,9 +302,8 @@ const Seats = ({
                   seatRow.push(
                     <td key={seat.SeatNo}>
                       <div
-                        className={`seat_____container ${
-                          isHighlighted ? "highlighted_____seat" : ""
-                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                        className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+                          } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                       >
                         <img
                           onClick={() =>
@@ -426,9 +418,8 @@ const Seats = ({
                 seatRow.push(
                   <td key={seat.seatName}>
                     <div
-                      className={`seat_____container ${
-                        isHighlighted ? "highlighted_____seat" : ""
-                      } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                      className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
                         onClick={() =>
@@ -438,20 +429,19 @@ const Seats = ({
                             seatDetails.available_gst[seat.seatName] || 0,
                             0,
                             parseFloat(seatDetails.available[seat.seatName]) +
-                              parseFloat(
-                                seatDetails.available_gst[seat.seatName] || 0
-                              ),
+                            parseFloat(
+                              seatDetails.available_gst[seat.seatName] || 0
+                            ),
                             seatDetails.ladies_seats?.includes(seat.seatName)
                             // seat.ac,
                             // seat.sleeper
                           )
                         }
-                        title={`ID: ${seat.seatName}\nFare: ₹${
-                          seatDetails.available[seat.seatName]
-                        }`}
+                        title={`ID: ${seat.seatName}\nFare: ₹${seatDetails.available[seat.seatName]
+                          }`}
                         src={seat.width === 1 ? singleselected : selectedFill}
                         alt="selected seat"
-                        // className={(seat.width == "2") ? "vertical" : ""}
+                      // className={(seat.width == "2") ? "vertical" : ""}
                       />
                     </div>
                   </td>
@@ -461,9 +451,8 @@ const Seats = ({
                   seatRow.push(
                     <td key={seat.seatName}>
                       <div
-                        className={`seat_____container ${
-                          isHighlighted ? "highlighted_____seat" : ""
-                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                        className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+                          } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                       >
                         <img
                           onClick={() =>
@@ -473,24 +462,23 @@ const Seats = ({
                               seatDetails.available_gst[seat.seatName] || 0,
                               0,
                               parseFloat(seatDetails.available[seat.seatName]) +
-                                parseFloat(
-                                  seatDetails.available_gst[seat.seatName] || 0
-                                ),
+                              parseFloat(
+                                seatDetails.available_gst[seat.seatName] || 0
+                              ),
                               seatDetails.ladies_seats?.includes(seat.seatName)
                               // seat.ac,
                               // seat.sleeper
                             )
                           }
-                          title={`ID: ${seat.seatName}\nFare: ₹${
-                            seatDetails.available_gst[seat.seatName]
-                          }`}
+                          title={`ID: ${seat.seatName}\nFare: ₹${seatDetails.available_gst[seat.seatName]
+                            }`}
                           src={
                             seat.width === 1
                               ? singleladiesavailable
                               : ladiesavailable
                           }
                           alt="available ladies"
-                          // className={(seat.width == "2") ? "vertical" : ""}
+                        // className={(seat.width == "2") ? "vertical" : ""}
                         />
                       </div>
                     </td>
@@ -499,9 +487,8 @@ const Seats = ({
                   seatRow.push(
                     <td key={seat.seatName}>
                       <div
-                        className={`seat_____container ${
-                          isHighlighted ? "highlighted_____seat" : ""
-                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                        className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+                          } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                       >
                         <img
                           onClick={() =>
@@ -511,20 +498,19 @@ const Seats = ({
                               seatDetails.available_gst[seat.seatName] || 0,
                               0,
                               parseFloat(seatDetails.available[seat.seatName]) +
-                                parseFloat(
-                                  seatDetails.available_gst[seat.seatName] || 0
-                                ),
+                              parseFloat(
+                                seatDetails.available_gst[seat.seatName] || 0
+                              ),
                               seatDetails.ladies_seats?.includes(seat.seatName)
                               // seat.ac,
                               // seat.sleeper
                             )
                           }
-                          title={`ID: ${seat.seatName}\nFare: ₹${
-                            seatDetails.available[seat.seatName]
-                          }`}
+                          title={`ID: ${seat.seatName}\nFare: ₹${seatDetails.available[seat.seatName]
+                            }`}
                           src={seat.width === 1 ? singleavailable : available}
                           alt="available"
-                          // className={(seat.width == "2") ? "vertical" : ""}
+                        // className={(seat.width == "2") ? "vertical" : ""}
                         />
                       </div>
                     </td>
@@ -536,9 +522,8 @@ const Seats = ({
                 seatRow.push(
                   <td key={seat.seatName}>
                     <div
-                      className={`seat_____container ${
-                        isHighlighted ? "highlighted_____seat" : ""
-                      } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                      className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
                         title={`ID: ${seat.seatName}`}
@@ -546,7 +531,7 @@ const Seats = ({
                           seat.width === 1 ? singleladiesbooked : ladiesbooked
                         }
                         alt="ladiesbooked"
-                        // className={(seat.width == "2") ? "vertical" : ""}
+                      // className={(seat.width == "2") ? "vertical" : ""}
                       />
                     </div>
                   </td>
@@ -555,15 +540,14 @@ const Seats = ({
                 seatRow.push(
                   <td key={seat.seatName}>
                     <div
-                      className={`seat_____container ${
-                        isHighlighted ? "highlighted_____seat" : ""
-                      } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                      className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
                         title={`ID: ${seat.seatName}`}
                         src={seat.width === 1 ? singlebooked : booked}
                         alt="booked"
-                        // className={(seat.width == "2") ? "vertical" : ""}
+                      // className={(seat.width == "2") ? "vertical" : ""}
                       />
                     </div>
                   </td>
@@ -614,9 +598,8 @@ const Seats = ({
                 seatRow.push(
                   <td key={seat.name}>
                     <div
-                      className={`seat_____container ${
-                        isHighlighted ? "highlighted_____seat" : ""
-                      } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                      className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
                         onClick={() =>
@@ -648,9 +631,8 @@ const Seats = ({
                   seatRow.push(
                     <td key={seat.name}>
                       <div
-                        className={`seat_____container ${
-                          isHighlighted ? "highlighted_____seat" : ""
-                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                        className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+                          } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                       >
                         <img
                           onClick={() =>
@@ -681,9 +663,8 @@ const Seats = ({
                   seatRow.push(
                     <td key={seat.name}>
                       <div
-                        className={`seat_____container ${
-                          isHighlighted ? "highlighted_____seat" : ""
-                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                        className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+                          } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                       >
                         <img
                           onClick={() =>
@@ -717,9 +698,8 @@ const Seats = ({
                 seatRow.push(
                   <td key={seat.name}>
                     <div
-                      className={`seat_____container ${
-                        isHighlighted ? "" : ""
-                      } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                      className={`seat_____container ${isHighlighted ? "" : ""
+                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
                         title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
@@ -738,9 +718,8 @@ const Seats = ({
                 seatRow.push(
                   <td key={seat.name}>
                     <div
-                      className={`seat_____container ${
-                        isHighlighted ? "" : ""
-                      } ${highlightedPrice ? "priceOptionSelected" : ""}`}
+                      className={`seat_____container ${isHighlighted ? "" : ""
+                        } ${highlightedPrice ? "priceOptionSelected" : ""}`}
                     >
                       <img
                         title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
@@ -803,9 +782,7 @@ const Seats = ({
   const handleContinue = () => {
     if (
       bookingDetails.boardingPoint.bpId &&
-      (bookingDetails.droppingPoint.bpId ||
-        dropLocationOne[0] === undefined ||
-        dropLocationOne[0]?.bpName === undefined) &&
+      (bookingDetails.droppingPoint.bpId || dropLocationOne[0] === undefined || dropLocationOne[0]?.bpName === undefined) &&
       bookingDetails.selectedSeats.length !== 0
     ) {
       // Add GST 5 %
@@ -875,11 +852,7 @@ const Seats = ({
         if (bookingDetails?.droppingPoint?.bpId) {
           setError(null);
           handleContinue();
-        }
-        if (
-          dropLocationOne[0] === undefined ||
-          dropLocationOne[0]?.bpName === undefined
-        ) {
+        } if (dropLocationOne[0] === undefined || dropLocationOne[0]?.bpName === undefined) {
           setError(null);
           handleContinue();
         } else {
@@ -937,13 +910,12 @@ const Seats = ({
               img={ladiesbooked}
             />
           </div>
-          {/* {prices.length > 1 && (
+          {prices.length > 1 && (
             <div className="filters">
-              <p className="tag">Seat Price:</p>
+              {/* <p className="tag">Seat Price:</p> */}
               <button
-                className={`filter ${
-                  selectedPriceFilter === null ? "highlighted" : ""
-                }`}
+                className={`filter ${selectedPriceFilter === null ? "highlighted" : ""
+                  }`}
                 onClick={() => setSelectedPriceFilter(null)}
               >
                 All
@@ -951,9 +923,8 @@ const Seats = ({
               {prices.map((price) => (
                 <button
                   key={price}
-                  className={`filter ${
-                    selectedPriceFilter === price ? "highlighted" : ""
-                  }`}
+                  className={`filter ${selectedPriceFilter === price ? "highlighted" : ""
+                    }`}
                   onClick={() => setSelectedPriceFilter(price)}
                 >
                   ₹{price}
@@ -963,12 +934,12 @@ const Seats = ({
                 {"No seats available"}
               </p>
             </div>
-          )} */}
+          )}
           <div
             className="bus-container"
             style={
               upperTierSeats.length === 0
-                ? { marginBottom: "130px", marginTop: "130px" }
+                ? { marginBottom: "170px", marginTop: "150px" }
                 : {}
             }
           >
@@ -987,8 +958,7 @@ const Seats = ({
             </div>
             {upperTierSeats.length > 0 && (
               <div className="bus">
-                <div className="driver" style={{ zIndex: 999 }}>
-                  <img src={driver} alt="driver" style={{ opacity: 0 }} />
+                <div className="driver">
                   <h4 className="tier-label">Upper Tier</h4>
                 </div>
                 <div className="gridContainer">
@@ -999,20 +969,25 @@ const Seats = ({
                       bookingDetails.selectedSeats
                     )}
                   </>
+                  
                 </div>
+                
               </div>
+              
             )}
+            
           </div>
-
           <div className="price">
-            <div className="selectedSeat">
-              <span>Selected Seat(s):</span>
-              <p>
-                {bookingDetails.selectedSeats.join(", ") || "None Selected"}
-              </p>
-            </div>
-            <p>₹ {bookingDetails.fare}</p>
-          </div>
+                    <div className="selectedSeat">
+                      <span>Seleted Seat(s):</span>
+                      <p>
+                        {bookingDetails.selectedSeats.join(", ") || "None Selected"}
+                      </p>
+                    </div>
+                    <p>₹ {bookingDetails.fare}</p>
+                  </div>
+
+          
           {error && <div className="alert">{error}</div>}
           <div className="continue">
             <Button
@@ -1031,39 +1006,35 @@ const Seats = ({
         <div className="seatMobileRight">
           <div className="drop-pickup-points-mobile">
             <span className="title">DROP POINT</span>
-            {dropLocationOne.length > 0 &&
-              dropLocationOne?.map((droppingPoint, index) => (
-                <PickUpAndDropPoints
-                  highlight={
-                    bookingDetails?.droppingPoint?.bpId === droppingPoint?.bpId
-                  }
-                  key={droppingPoint?.bpId}
-                  time={
-                    isVrl || isSrs
-                      ? droppingPoint?.time
-                      : convertMinutesToTime(droppingPoint?.time)
-                  }
-                  locationOne={droppingPoint?.bpName}
-                  locationTwo={droppingPoint?.address}
-                  onClick={() => {
-                    if (droppingPoint?.bpName) {
-                      setBookingDetails((prev) => {
-                        const updatedBookingDetails = {
-                          ...prev,
-                          droppingPoint,
-                        };
+            {dropLocationOne.length > 0 && dropLocationOne?.map((droppingPoint, index) => (
+              <PickUpAndDropPoints
+                highlight={
+                  bookingDetails?.droppingPoint?.bpId === droppingPoint?.bpId
+                }
+                key={droppingPoint?.bpId}
+                time={
+                  isVrl || isSrs
+                    ? droppingPoint?.time
+                    : convertMinutesToTime(droppingPoint?.time)
+                }
+                locationOne={droppingPoint?.bpName}
+                locationTwo={droppingPoint?.address}
+                onClick={() => {
+                  if (droppingPoint?.bpName) {
+                    setBookingDetails((prev) => {
+                      const updatedBookingDetails = {
+                        ...prev,
+                        droppingPoint,
+                      };
 
-                        localStorage.setItem(
-                          "bookingDetails",
-                          JSON.stringify(updatedBookingDetails)
-                        );
+                      localStorage.setItem('bookingDetails', JSON.stringify(updatedBookingDetails));
 
-                        return updatedBookingDetails;
-                      });
-                    }
-                  }}
-                />
-              ))}
+                      return updatedBookingDetails;
+                    });
+                  }
+                }}
+              />
+            ))}
           </div>
           {error && <div className="alert">{error}</div>}
 
@@ -1108,10 +1079,7 @@ const Seats = ({
                     boardingPoint,
                   };
 
-                  localStorage.setItem(
-                    "bookingDetails",
-                    JSON.stringify(updatedBookingDetails)
-                  );
+                  localStorage.setItem('bookingDetails', JSON.stringify(updatedBookingDetails));
 
                   return updatedBookingDetails;
                 })
@@ -1141,6 +1109,74 @@ const Seats = ({
         <div className="mobile-seats">{renderMobileContent()}</div>
         {/* <div className="desktop-seats-layout"> */}
 
+        <div className="seatsLeft">
+          <h5>Select Pickup and Drop Points</h5>
+          <div className="pickup-and-drop-container">
+            <div className="seatsLeftContainer">
+              <span className="title">PICKUP POINT</span>
+              {pickUpLocationOne?.map((boardingPoint, index) => (
+                <PickUpAndDropPoints
+                  key={boardingPoint.bpId}
+                  time={
+                    isVrl || isSrs
+                      ? boardingPoint.time
+                      : convertMinutesToTime(boardingPoint.time)
+                  }
+                  locationOne={boardingPoint.bpName}
+                  locationTwo={boardingPoint.address}
+                  highlight={
+                    bookingDetails.boardingPoint.bpId === boardingPoint.bpId
+                  }
+                  onClick={() =>
+                    setBookingDetails((prev) => {
+                      const updatedBookingDetails = {
+                        ...prev,
+                        boardingPoint,
+                      };
+
+                      localStorage.setItem('bookingDetails', JSON.stringify(updatedBookingDetails));
+
+                      return updatedBookingDetails;
+                    })
+                  }
+                />
+              ))}
+            </div>
+            <div className="seatsLeftContainer">
+              <span className="title">DROP POINT</span>
+              {dropLocationOne.length > 0 && dropLocationOne?.map((droppingPoint, index) => (
+                <PickUpAndDropPoints
+                  highlight={
+                    bookingDetails.droppingPoint.bpId === droppingPoint?.bpId
+                  }
+                  key={droppingPoint?.bpId}
+                  time={
+                    isVrl || isSrs
+                      ? droppingPoint?.time
+                      : convertMinutesToTime(droppingPoint?.time)
+                  }
+                  locationOne={droppingPoint?.bpName}
+                  locationTwo={droppingPoint?.address}
+                  onClick={() => {
+                    if (droppingPoint?.bpName) {
+                      setBookingDetails((prev) => {
+                        const updatedBookingDetails = {
+                          ...prev,
+                          droppingPoint,
+                        };
+
+                        localStorage.setItem('bookingDetails', JSON.stringify(updatedBookingDetails));
+
+                        return updatedBookingDetails;
+                      });
+                    }
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
         <div className="seatsRight">
           <h5>Selected Seats</h5>
           <div className="legend">
@@ -1162,9 +1198,8 @@ const Seats = ({
           {prices.length > 1 && (
             <div className="filters">
               <button
-                className={`filter ${
-                  selectedPriceFilter === null ? "highlighted" : ""
-                }`}
+                className={`filter ${selectedPriceFilter === null ? "highlighted" : ""
+                  }`}
                 onClick={() => setSelectedPriceFilter(null)}
               >
                 All
@@ -1172,9 +1207,8 @@ const Seats = ({
               {prices.map((price) => (
                 <button
                   key={price}
-                  className={`filter ${
-                    selectedPriceFilter === price ? "highlighted" : ""
-                  }`}
+                  className={`filter ${selectedPriceFilter === price ? "highlighted" : ""
+                    }`}
                   onClick={() => setSelectedPriceFilter(price)}
                 >
                   ₹{price}
@@ -1186,18 +1220,18 @@ const Seats = ({
             </div>
           )}
 
-          {/*<div className="bus">
+          <div className="bus">
             <div className="driver">
-              {upperTierSeats.length > 0 && <h4>Lower Tier</h4>}
               <img src={driver} alt="driver" />
-              <h4>Upper Tier</h4>
             </div>
 
             <div className="gridContainer">
+              {upperTierSeats.length > 0 && <h4>Lower Tier</h4>}
               {renderSeatTable(lowerTierSeats, bookingDetails.selectedSeats)}
 
               {upperTierSeats.length > 0 && (
                 <>
+                  <h4>Upper Tier</h4>
                   {renderSeatTable(
                     upperTierSeats,
                     bookingDetails.selectedSeats
@@ -1205,154 +1239,10 @@ const Seats = ({
                 </>
               )}
             </div>
-          </div>*/}
-          {!open ? (
-            <div
-              className="bus-container"
-              style={
-                upperTierSeats.length === 0
-                  ? { marginBottom: "130px", marginTop: "130px" }
-                  : {}
-              }
-            >
-              <div className="bus" style={{ margin: "30px 0" }}>
-                <div className="driver">
-                  <img src={driver} alt="driver" />
-                  {upperTierSeats.length > 0 && (
-                    <h4 className="tier-label">Lower Tier</h4>
-                  )}
-                </div>
+          </div>
 
-                <div className="gridContainer">
-                  {/* {upperTierSeats.length > 0 && <h4>Lower Tier</h4>} */}
-                  {renderSeatTable(
-                    lowerTierSeats,
-                    bookingDetails.selectedSeats
-                  )}
-                </div>
-              </div>
-              {upperTierSeats.length > 0 && (
-                <div className="bus">
-                  <div className="driver" style={{ zIndex: 999 }}>
-                    <img src={driver} alt="driver" style={{ opacity: 0 }} />
-                    <h4 className="tier-label">Upper Tier</h4>
-                  </div>
-                  <div className="gridContainer">
-                    <>
-                      {/* <h4>Upper Tier</h4> */}
-                      {renderSeatTable(
-                        upperTierSeats,
-                        bookingDetails.selectedSeats
-                      )}
-                    </>
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="seatsLeft">
-              <h5>Select Pickup and Drop Points</h5>
-              <div className="pickup-and-drop-container">
-                <div className="seatsLeftContainer">
-                  <span className="title">PICKUP POINT</span>
-                  {pickUpLocationOne?.map((boardingPoint, index) => (
-                    <PickUpAndDropPoints
-                      key={boardingPoint.bpId}
-                      time={
-                        isVrl || isSrs
-                          ? boardingPoint.time
-                          : convertMinutesToTime(boardingPoint.time)
-                      }
-                      locationOne={boardingPoint.bpName}
-                      locationTwo={boardingPoint.address}
-                      highlight={
-                        bookingDetails.boardingPoint.bpId === boardingPoint.bpId
-                      }
-                      onClick={() =>
-                        setBookingDetails((prev) => {
-                          const updatedBookingDetails = {
-                            ...prev,
-                            boardingPoint,
-                          };
-
-                          localStorage.setItem(
-                            "bookingDetails",
-                            JSON.stringify(updatedBookingDetails)
-                          );
-
-                          return updatedBookingDetails;
-                        })
-                      }
-                    />
-                  ))}
-                </div>
-                <div className="seatsLeftContainer">
-                  <span className="title">DROP POINT</span>
-                  {dropLocationOne.length > 0 &&
-                    dropLocationOne?.map((droppingPoint, index) => (
-                      <PickUpAndDropPoints
-                        highlight={
-                          bookingDetails.droppingPoint.bpId ===
-                          droppingPoint?.bpId
-                        }
-                        key={droppingPoint?.bpId}
-                        time={
-                          isVrl || isSrs
-                            ? droppingPoint?.time
-                            : convertMinutesToTime(droppingPoint?.time)
-                        }
-                        locationOne={droppingPoint?.bpName}
-                        locationTwo={droppingPoint?.address}
-                        onClick={() => {
-                          if (droppingPoint?.bpName) {
-                            setBookingDetails((prev) => {
-                              const updatedBookingDetails = {
-                                ...prev,
-                                droppingPoint,
-                              };
-
-                              localStorage.setItem(
-                                "bookingDetails",
-                                JSON.stringify(updatedBookingDetails)
-                              );
-
-                              return updatedBookingDetails;
-                            });
-                          }
-                        }}
-                      />
-                    ))}
-                </div>
-              </div>
-            </div>
-          )}
           <div className="continue">
-            {!open ? (
-              <Button
-                onClicked={() => {
-                  if (bookingDetails.selectedSeats.length > 0) {
-                    setError(null);
-                    setOpen("pickup");
-                  } else {
-                    setError("Please select at least one seat.");
-                  }
-                }}
-                text={"Select Pickup and Drop Points"}
-              />
-            ) : (
-              <div style={{display:"flex",alignItems:"center"}}>
-                              <Button
-                  onClicked={() => setOpen(false)}
-                  text={"Back"}
-                />
-                <div style={{marginLeft:"10px"}}>
-                <Button
-                  onClicked={() => handleContinue()}
-                  text={"Fill Passenger Detail"}
-                />
-                </div>
-              </div>
-            )}
+            <Button onClicked={() => handleContinue()} text={"Continue"} />
           </div>
 
           <div className="price">

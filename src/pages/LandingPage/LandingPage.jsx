@@ -41,7 +41,6 @@ const LandingPage = () => {
 				alert("Source and destination cities cannot be the same.");
 				return;
 			}
-
 			navigate(
 				`/busbooking?from=${fromLocation}&to=${toLocation}&date=${selectedDate}`
 			);
@@ -82,20 +81,6 @@ const LandingPage = () => {
 			clearTimeout(debounceTimer);
 		};
 	}, [fromLocation, toLocation]);
-
-	// const formatDate = (dateValue) => {
-	// 	let date;
-	// 	if (typeof dateValue === "string") {
-	// 		const [day, month, year] = dateValue.split("-");
-	// 		date = new Date(`${year}-${month}-${day}T00:00:00.000Z`);
-	// 	} else {
-	// 		date = new Date(dateValue);
-	// 	}
-	// 	const year = date.getFullYear();
-	// 	const month = date.toLocaleString("default", { month: "2-digit" });
-	// 	const day = date.toLocaleString("default", { day: "2-digit" });
-	// 	return `${day}-${month}-${year}`;
-	// };
 
 	return (
 		<div className="landingPage">

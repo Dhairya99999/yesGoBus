@@ -472,13 +472,13 @@ const BusBooking = () => {
 	return (
 		<div className="busBooking">
 			<Navbar />
-			<BusRoute
+			{/* <BusRoute
 				locationOne={fromLocation}
 				locationTwo={toLocation}
 				departureDate={selectedDate}
 				returnDate={"- - -"}
 				onSearch={handleSearch}
-			/>
+			/> */}
 			<div className="busBooking-container">
 				<div className="left">
 					<LeftFilter
@@ -557,8 +557,7 @@ const BusBooking = () => {
             </div>
           </div> */}
 					<Spin spinning={loading}>
-						<div className="wrapper">
-							<div className="wrapper-hadder">
+							<div className="hadder">
 								{/* Bus route title */}
 								<RoutesTitle
 									locationOne={fromLocation}
@@ -589,6 +588,7 @@ const BusBooking = () => {
 									))}
 								</div>
 							</div>
+						<div className="wrapper">
 
 							{/* Render Bus list */}
 							{sortedBusList?.map((bus) => {

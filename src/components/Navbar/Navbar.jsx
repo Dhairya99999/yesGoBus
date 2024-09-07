@@ -9,11 +9,11 @@ import { useNavigate, Link } from "react-router-dom";
 import { RiCustomerService2Fill } from "react-icons/ri";
 import { MdLogout, MdLogin } from "react-icons/md";
 import { MdOutlinePolicy } from "react-icons/md";
-import "./Navbar.scss";
 import { blacklogo } from "../../assets/homepage";
 import UserIcon from "../SvgIcons/UserIcon";
 import { useSelector } from "react-redux";
 import { selectIsMobileApp } from "../../stores/slices/designSlice";
+import "./Navbar.scss";
 
 const Navbar = ({ page }) => {
 	const isMobileApp = useSelector(selectIsMobileApp);

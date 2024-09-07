@@ -670,6 +670,12 @@ const BusBookingCard = ({
 		handleSeatSelectionHistory();
 	}, [ReferenceNumber, isSrs, isVrl, scheduleId]);
 
+	function formatTravelTime(travelTime) {
+		const [hours, minutes] = travelTime.split(":").map(Number);
+
+		return `${hours > 0 ? `${hours}h ` : ""}${minutes}m`;
+	}
+
 	return (
 		<div className={`BusBookingCard`}>
 			<h1>{title}</h1>
@@ -698,7 +704,51 @@ const BusBookingCard = ({
             />
           </div>
         </div>*/}
+
 				<div
+					className={`card-wrapper-mobile`}
+					onClick={() => {
+						localStorage.removeItem("bookingDetails");
+						fetchSeatData();
+					}}
+				>
+					{/* <h6 className="title">
+						<span className="text-orange">YESGO</span>BUS
+					</h6> */}
+					<div className="time-and-price">
+						<h4>
+							<span className="pickup-time">{pickUpTime}</span> ─{" "}
+							<span className="reach-time">{reachTime}</span>
+						</h4>
+						<span className="price-container">
+							<p className="price">₹ {(+price).toFixed(2)}</p>
+							<span>Onwards</span>
+						</span>
+					</div>
+					<div className="duration-and-seats-left">
+						<span className="duration">{formatTravelTime(travelTime)}</span>
+						<span className="seats-left text-orange">
+							{availableSeats} Seats
+						</span>
+					</div>
+					<div className="bus-details-container">
+						<div className="bus-details">
+							<h4>{busName}</h4>
+							<h4 className="lighter">{busType}</h4>
+						</div>
+						<div className="ratings-container">
+							<div className="ratings">
+								<span>★</span>
+								<span>{(Math.random() * 1 + 4).toFixed(1)}</span>
+							</div>
+							<div className="count">
+								{Math.floor(Math.random() * 101) + 37}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				{/* <div
 					className={`card-wrapper-mobile`}
 					onClick={() => {
 						localStorage.removeItem("bookingDetails");
@@ -745,7 +795,7 @@ const BusBookingCard = ({
 					<div className="seats-left-container">
 						<span className="seats-left">{availableSeats} Seats</span>
 					</div>
-				</div>
+				</div> */}
 				{/* <hr />
         <div style={{ marginBottom: "10px" }} className="liveLocation">
           <img src={livelocation} alt="" />
