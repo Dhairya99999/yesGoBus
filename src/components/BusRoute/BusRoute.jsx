@@ -19,19 +19,7 @@ const BusRoute = ({ locationOne, locationTwo, departureDate, onSearch }) => {
 	const [openCalendar, setOpenCalendar] = useState(false);
 	const token = localStorage.getItem("token");
 
-	// const formatDate = (dateValue) => {
-	// 	let date;
-	// 	if (typeof dateValue === "string") {
-	// 		const [day, month, year] = dateValue.split("-");
-	// 		date = new Date(`${year}-${month}-${day}`);
-	// 	} else {
-	// 		date = new Date(dateValue);
-	// 	}
-	// 	const year = date.getFullYear();
-	// 	const month = String(date.getMonth() + 1).padStart(2, "0");
-	// 	const day = String(date.getDate()).padStart(2, "0");
-	// 	return `${day}-${month}-${year}`;
-	// };
+	const [isSwapped, setIsSwapped] = useState(false);
 
 	const handleDateChange = (isToday) => {
 		const currentDate = new Date();
@@ -85,21 +73,6 @@ const BusRoute = ({ locationOne, locationTwo, departureDate, onSearch }) => {
 
 		return () => clearTimeout(debounceTimer);
 	}, [locationOneQuery, locationTwoQuery]);
-
-	// const handleSearch = async () => {
-	// 	if (sourceCity && destinationCity && doj) {
-	// 		let formattedDate;
-	// 		if (/^\d{2}-\d{2}-\d{4}$/.test(doj)) {
-	// 			const [day, month, year] = doj.split("-");
-	// 			formattedDate = `${year}-${month}-${day}`;
-	// 		} else {
-	// 			formattedDate = doj;
-	// 		}
-	// 		onSearch(sourceCity, destinationCity, formattedDate);
-	// 	} else {
-	// 		alert("Please enter values for all fields");
-	// 	}
-	// };
 
 	const handleSearch = async () => {
 		if (sourceCity && destinationCity && doj) {
@@ -162,6 +135,14 @@ const BusRoute = ({ locationOne, locationTwo, departureDate, onSearch }) => {
 		}
 	}, []);
 
+	const handleSwap = () => {
+		console.log("handleSwap called");
+		setIsSwapped(!isSwapped);
+		// let temp = sourceCity;
+		// setSourceCity(destinationCity);
+		// setDestinationCity(temp);
+	};
+
 	return (
 		<>
 			<div className="BusRoute">
@@ -220,17 +201,14 @@ const BusRoute = ({ locationOne, locationTwo, departureDate, onSearch }) => {
 								suggestions={locationOneSuggestions}
 								loading={loading}
 								setLocationQuery={setLocationOneQuery}
-								setData={setSourceCity}
+								setData={isSwapped ? setDestinationCity : setSourceCity}
+								value={isSwapped ? destinationCity : sourceCity}
 							/>
 							<div className="img_rotater">
 								<div
 									className="reverse-img"
 									width={23}
-									onClick={() => {
-										setDestinationCity(sourceCity);
-										setSourceCity(destinationCity);
-										onSearch(destinationCity, sourceCity, doj);
-									}}
+									onClick={() => handleSwap()}
 								>
 									<LuArrowUpDown />
 								</div>
@@ -241,7 +219,8 @@ const BusRoute = ({ locationOne, locationTwo, departureDate, onSearch }) => {
 								suggestions={locationTwoSuggestions}
 								loading={loading}
 								setLocationQuery={setLocationTwoQuery}
-								setData={setDestinationCity}
+								setData={isSwapped ? setSourceCity : setDestinationCity}
+								value={isSwapped ? sourceCity : destinationCity}
 							/>
 							<hr />
 							<div className="date-input">

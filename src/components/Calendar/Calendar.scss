@@ -9,7 +9,7 @@
 	max-width: 768px;
 	background-color: white;
 	// padding: 10px;
-	z-index: 1001;
+	z-index: 999;
 	.header {
 		display: flex;
 		align-items: center;
@@ -135,7 +135,7 @@
 		}
 	}
 }
-@media (max-width: 426px) {
+@media (max-width: 435px) {
 	.calender-container {
 		display: block;
 	}

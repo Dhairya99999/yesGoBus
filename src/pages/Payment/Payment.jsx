@@ -15,6 +15,7 @@ import { vrlBlockSeat, vrlBookSeat } from "../../api/vrlBusesApis";
 import { srsBlockSeat, srsConfirmBooking } from "../../api/srsBusesApis";
 import { verifyAgentCode } from "../../api/admin";
 import axios from "axios";
+// import {offer} from
 import PassengerInput from "../../components/PassengerInput/PassengerInput";
 
 const Payment = () => {
@@ -37,6 +38,7 @@ const Payment = () => {
 		gender: "M",
 		idType: "PAN",
 		agentCode: "",
+		offerCode: "",
 	});
 
 	const [countdown, setCountdown] = useState(10);
@@ -67,7 +69,7 @@ const Payment = () => {
 						},
 					}
 				);
-				console.log(getBookingHistory.data[0]);
+				// console.log(getBookingHistory.data[0]);
 				setBookingHistory(getBookingHistory.data);
 			} catch (error) {
 				console.log(error);
@@ -1468,6 +1470,22 @@ const Payment = () => {
 						</div>
 					)}
 
+					{/* Offer Code */}
+					<div className="agent-details">
+						<h4>Enter Offer Code (Optional)</h4>
+						<div className="detailsContainer">
+							<Input
+								title={"Offer Code"}
+								type={"text"}
+								placeholder={"YGBNEW"}
+								onChanged={handleInputChange}
+								givenName={"offerCode"}
+								value={userData.offerCode}
+							/>
+							<button>Verify</button>
+						</div>
+					</div>
+
 					{/* Picode Details */}
 					{/* <div className="details">
             <div class="label-container">
@@ -1534,6 +1552,95 @@ const Payment = () => {
 							</div>
 						</div>
 					</div>
+					<div className="fare-breakdown">
+						<Popover
+							content={() => {
+								return (
+									<>
+										<div className="price flex items-center justify-between">
+											<p>Total Basefare</p>
+											<p>{"₹" + parseFloat(bookingDetails?.fare).toFixed(2)}</p>
+										</div>
+										<hr className="border-none h-[1px] bg-[#dadada]" />
+										{bookingDetails?.serviceTax !== 0 && (
+											<>
+												<div className="price flex items-center justify-between">
+													<p>Service Tax</p>
+													<p>
+														₹{parseFloat(bookingDetails?.serviceTax).toFixed(2)}
+													</p>
+												</div>
+												<hr className="border-none h-[1px] bg-[#dadada]" />
+											</>
+										)}
+
+										{bookingDetails?.operatorTax !== 0 && (
+											<>
+												<div className="price flex items-center justify-between">
+													<p>Operator Tax</p>
+													<p>
+														₹
+														{parseFloat(bookingDetails?.operatorTax).toFixed(2)}
+													</p>
+												</div>
+												<hr className="border-none h-[1px] bg-[#dadada]" />
+											</>
+										)}
+
+										<div className="price flex items-center justify-between">
+											<p>Total</p>
+											<p>₹{parseFloat(bookingDetails?.totalFare).toFixed(2)}</p>
+										</div>
+										<hr className="border-none h-[1px] bg-[#dadada]" />
+									</>
+								);
+							}}
+							title="Fare Breakdown"
+							trigger="click"
+							overlayStyle={{
+								minWidth: "250px",
+							}}
+							placement="bottom"
+						>
+							<AntButton type="link" style={{ paddingInline: "0" }}>
+								<span className="text-primary hover:underline">
+									Show Fare Breakdown
+								</span>
+							</AntButton>
+						</Popover>
+
+						<div className="price">
+							<p>Total Basefare</p>
+							<p>{"₹" + parseFloat(bookingDetails?.fare).toFixed(2)}</p>
+						</div>
+						<hr />
+
+						{bookingDetails?.serviceTax !== 0 && (
+							<>
+								<div className="price">
+									<p>Service Tax</p>
+									<p>₹{parseFloat(bookingDetails?.serviceTax).toFixed(2)}</p>
+								</div>
+								<hr />
+							</>
+						)}
+
+						{bookingDetails?.operatorTax !== 0 && (
+							<>
+								<div className="price">
+									<p>Operator Tax</p>
+									<p>₹{parseFloat(bookingDetails?.operatorTax).toFixed(2)}</p>
+								</div>
+								<hr />
+							</>
+						)}
+
+						{/* GST */}
+						<div className="price">
+							<p>GST</p>
+							<p>₹{parseFloat(bookingDetails?.gst).toFixed(2)}</p>
+						</div>
+					</div>
 					<Button
 						text={`Pay Amount ₹${parseFloat(bookingDetails?.totalFare).toFixed(
 							2
@@ -1542,142 +1649,42 @@ const Payment = () => {
 						style={{ height: "50px", width: "100%", borderRadius: "0" }}
 					/>
 				</div>
-				{/* <hr /> */}
-
-				{/* Show Fare Breakdown */}
-				{/* <Popover
-								content={() => {
-									return (
-										<>
-											<div className="price flex items-center justify-between">
-												<p>Total Basefare</p>
-												<p>
-													{"₹" + parseFloat(bookingDetails?.fare).toFixed(2)}
-												</p>
-											</div>
-											<hr className="border-none h-[1px] bg-[#dadada]" />
-											{bookingDetails?.serviceTax !== 0 && (
-												<>
-													<div className="price flex items-center justify-between">
-														<p>Service Tax</p>
-														<p>
-															₹
-															{parseFloat(bookingDetails?.serviceTax).toFixed(
-																2
-															)}
-														</p>
-													</div>
-													<hr className="border-none h-[1px] bg-[#dadada]" />
-												</>
-											)}
-
-											{bookingDetails?.operatorTax !== 0 && (
-												<>
-													<div className="price flex items-center justify-between">
-														<p>Operator Tax</p>
-														<p>
-															₹
-															{parseFloat(bookingDetails?.operatorTax).toFixed(
-																2
-															)}
-														</p>
-													</div>
-													<hr className="border-none h-[1px] bg-[#dadada]" />
-												</>
-											)}
-
-											<div className="price flex items-center justify-between">
-												<p>Total</p>
-												<p>
-													₹{parseFloat(bookingDetails?.totalFare).toFixed(2)}
-												</p>
-											</div>
-											<hr className="border-none h-[1px] bg-[#dadada]" />
-										</>
-									);
-								}}
-								title="Fare Breakdown"
-								trigger="click"
-								overlayStyle={{
-									minWidth: "250px",
-								}}
-								placement="bottom"
-							>
-								<AntButton type="link" style={{ paddingInline: "0" }}>
-									<span className="text-primary hover:underline">
-										Show Fare Breakdown
-									</span>
-								</AntButton>
-							</Popover> */}
-
-				{/* <div className="price">
-                <p>Total Basefare</p>
-                <p>{"₹" + parseFloat(bookingDetails?.fare).toFixed(2)}</p>
-              </div>
-              <hr /> */}
-
-				{/* {bookingDetails?.serviceTax !== 0 && (
-                <>
-                  <div className="price">
-                    <p>Service Tax</p>
-                    <p>₹{parseFloat(bookingDetails?.serviceTax).toFixed(2)}</p>
-                  </div>
-                  <hr />
-                </>
-              )} */}
-
-				{/* {bookingDetails?.operatorTax !== 0 && (
-                <>
-                  <div className="price">
-                    <p>Operator Tax</p>
-                    <p>₹{parseFloat(bookingDetails?.operatorTax).toFixed(2)}</p>
-                  </div>
-                  <hr />
-                </>
-              )} */}
-
-				{/* GST */}
-				{/* <div className="price">
-                <p>GST</p>
-                <p>₹{parseFloat(bookingDetails?.gst).toFixed(2)}</p>
-              </div>
-              <hr /> */}
-
-				{/* <div className="paymentCard">
-            <h2>OFFERS</h2>
-            <div className="promo">
-              <div className="heading">
-                <img src={offer} alt="" />
-                <p>Enter Promo Code</p>
-              </div>
-              <hr />
-              <input type="text" name="" id="" placeholder="Enter your code" />
-            </div>
-          </div> */}
 			</div>
-			{/* <div className="popularBusRoutes">
-        <Title title={"Popular Bus Routes"} subtitle={"View More"} />
 
-        <div className="popularBusRoutesContainer">
-          <PopularRoutes busname={"Mumbai Bus"} to={"Goa, Pune, Bangalore"} />
-          <PopularRoutes
-            busname={"Hyderabad Bus"}
-            to={"Ananthapur, Kurnool, Shadnagar"}
-          />
-          <PopularRoutes
-            busname={"Chennai Bus"}
-            to={"Bangarapet, Jolarpettai, Katpadi"}
-          />
-          <PopularRoutes
-            busname={"Trivandrum Bus"}
-            to={"Salem, Coimbatore, Kochi"}
-          />
-          <PopularRoutes
-            busname={"Mangalore Bus"}
-            to={"Kunigal, Hassan, Sakaleshpura"}
-          />
-        </div>
-      </div> */}
+			{/* <div className="paymentCard">
+					<h2>OFFERS</h2>
+					<div className="promo">
+						<div className="heading">
+							<img src={offer} alt="" />
+							<p>Enter Promo Code</p>
+						</div>
+						<hr />
+						<input type="text" name="" id="" placeholder="Enter your code" />
+					</div>
+				</div> */}
+			{/* <div className="popularBusRoutes">
+				<Title title={"Popular Bus Routes"} subtitle={"View More"} />
+
+				<div className="popularBusRoutesContainer">
+					<PopularRoutes busname={"Mumbai Bus"} to={"Goa, Pune, Bangalore"} />
+					<PopularRoutes
+						busname={"Hyderabad Bus"}
+						to={"Ananthapur, Kurnool, Shadnagar"}
+					/>
+					<PopularRoutes
+						busname={"Chennai Bus"}
+						to={"Bangarapet, Jolarpettai, Katpadi"}
+					/>
+					<PopularRoutes
+						busname={"Trivandrum Bus"}
+						to={"Salem, Coimbatore, Kochi"}
+					/>
+					<PopularRoutes
+						busname={"Mangalore Bus"}
+						to={"Kunigal, Hassan, Sakaleshpura"}
+					/>
+				</div>
+			</div> */}
 
 			{loading ? (
 				<div className="loading-spinner">

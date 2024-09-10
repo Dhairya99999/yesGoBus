@@ -349,28 +349,58 @@ const BusBooking = () => {
 	};
 
 	const handleDateFilter = (date) => {
-		const monthMap = {
-			Jan: 0,
-			Feb: 1,
-			Mar: 2,
-			Apr: 3,
-			May: 4,
-			Jun: 5,
-			Jul: 6,
-			Aug: 7,
-			Sep: 8,
-			Oct: 9,
-			Nov: 10,
-			Dec: 11,
-		};
-		const parts = date.split(",");
-		const dateParts = parts[1].split("-");
-		const day = parseInt(dateParts[1]);
-		const month = monthMap[dateParts[0]];
-		const year = parseInt(new Date().getFullYear());
-		const newDate = new Date(Date.UTC(year, month, day));
-		const formattedDateString = newDate.toISOString().split("T")[0];
-		handleSearch(fromLocation, toLocation, formattedDateString);
+		// const monthMap = {
+		// 	Jan: 0,
+		// 	Feb: 1,
+		// 	Mar: 2,
+		// 	Apr: 3,
+		// 	May: 4,
+		// 	Jun: 5,
+		// 	Jul: 6,
+		// 	Aug: 7,
+		// 	Sep: 8,
+		// 	Oct: 9,
+		// 	Nov: 10,
+		// 	Dec: 11,
+		// };
+		// const parts = date.split(",");
+		// const dateParts = parts[1].split("-");
+		// const day = parseInt(dateParts[1]);
+		// const month = monthMap[dateParts[0]];
+		// const year = parseInt(new Date().getFullYear());
+		// const newDate = new Date(Date.UTC(year, month, day));
+		// const formattedDateString = newDate.toISOString().split("T")[0];
+		let formattedDate;
+		if (/^\w+, \d{1,2}-\w+$/.test(date)) {
+			const [dayOfWeek, dayMonth] = date.split(", ");
+			const [dayOfMonth, monthName] = dayMonth.split("-");
+			const months = [
+				"Jan",
+				"Feb",
+				"Mar",
+				"Apr",
+				"May",
+				"Jun",
+				"Jul",
+				"Aug",
+				"Sep",
+				"Oct",
+				"Nov",
+				"Dec",
+			];
+			const monthIndex = months.indexOf(monthName) + 1;
+			const year = new Date().getFullYear();
+			formattedDate = `${year}-${monthIndex
+				.toString()
+				.padStart(2, "0")}-${dayOfMonth.padStart(2, "0")}`;
+		} else {
+			const [day, month, year] = date.split("-");
+			formattedDate = `${year}-${month.padStart(2, "0")}-${day.padStart(
+				2,
+				"0"
+			)}`;
+		}
+		handleSearch(fromLocation, toLocation, formattedDate);
 	};
 
 	const priceToDisplay = (fare) => {
@@ -557,39 +587,36 @@ const BusBooking = () => {
             </div>
           </div> */}
 					<Spin spinning={loading}>
-							<div className="hadder">
-								{/* Bus route title */}
-								<RoutesTitle
-									locationOne={fromLocation}
-									locationTwo={toLocation}
-									date={selectedDate}
-									onDateChange={handleDate}
-								/>
+						<div className="hadder">
+							{/* Bus route title */}
+							<RoutesTitle
+								locationOne={fromLocation}
+								locationTwo={toLocation}
+								date={selectedDate}
+								onDateChange={handleDate}
+							/>
 
-								{/* No of buses */}
-								<ColumnNames
-									noOfBuses={
-										// noOfBuses +
-										noOfVrlBuses + noOfSrsBuses
-									}
-								/>
-								{/* dates filter */}
-								<div className="dates">
-									{dates.map((date) => (
-										<p
-											key={date}
-											className={`date ${
-												date === selectedDate ? "active" : ""
-											}`}
-											onClick={() => handleDateFilter(date)}
-										>
-											{date.replace(/,/g, ", ")}
-										</p>
-									))}
-								</div>
+							{/* No of buses */}
+							<ColumnNames
+								noOfBuses={
+									// noOfBuses +
+									noOfVrlBuses + noOfSrsBuses
+								}
+							/>
+							{/* dates filter */}
+							<div className="dates">
+								{dates.map((date) => (
+									<p
+										key={date}
+										className={`date ${date === selectedDate ? "active" : ""}`}
+										onClick={() => handleDateFilter(date)}
+									>
+										{date.replace(/,/g, ", ")}
+									</p>
+								))}
 							</div>
+						</div>
 						<div className="wrapper">
-
 							{/* Render Bus list */}
 							{sortedBusList?.map((bus) => {
 								const isVrl = bus.type === "vrl" ? true : false;

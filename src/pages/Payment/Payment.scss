@@ -422,6 +422,7 @@
 				background-color: white;
 				margin-top: 10px;
 				width: 100%;
+				padding-top: 3px;
 				h4 {
 					font-size: 15px;
 					font-weight: 600;
@@ -498,7 +499,7 @@
 			background-color: white;
 			// align-items: end;
 			width: 95%;
-			gap: 10px;
+			// gap: 10px;
 			// padding: 30px;
 
 			.paymentCard {
@@ -576,6 +577,16 @@
 					// 	border: 1px solid #dadada;
 					// }
 				}
+			}
+			.fare-breakdown {
+				display: flex;
+				flex-direction: column;
+				padding: 20px;
+				padding-top: 0;
+				// justify-content: center;
+				// align-items: center;
+				// border: 1px solid red;
+				// width: 100%;
 			}
 		}
 	}
@@ -1026,7 +1037,7 @@
 			background-color: white;
 			// align-items: end;
 			width: 100%;
-			gap: 10px;
+			// gap: 10px;
 			margin: 10px 0 0 0;
 			padding: 10px 0 0 0;
 
