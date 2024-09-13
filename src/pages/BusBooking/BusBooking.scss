@@ -197,17 +197,31 @@
 			.right {
 				.hadder {
 					position: fixed;
-					top: 50px;
+					top: 0;
 					left: 0;
 					z-index: 1000;
 					width: 92%;
 					padding: 15px;
+					padding-top: 0px;
 					background-color: white;
 					border-radius: 5px;
-					border: 1px solid rgb(202, 202, 202);
+					// border: 1px solid rgb(202, 202, 202);
+					.hadder-top {
+						display: flex;
+						gap: 10px;
+						align-items: center;
+						.back-arrow {
+							display: flex;
+							align-items: center;
+							padding-top: 20px;
+							img {
+								width: 25px;
+							}
+						}
+					}
 				}
 				.wrapper {
-					padding-top: 190px;
+					padding-top: 130px;
 					display: flex;
 					flex-direction: column;
 					gap: 15px;
@@ -239,10 +253,12 @@
 				}
 				.filter-wrapper {
 					background-color: white;
-					margin-top: 193px;
+					margin-top: 132px;
 					position: fixed;
 					z-index: 1000;
 					width: 100%;
+					border-radius: 0 0 30px 30px;
+					box-shadow: 0 5px 10px rgba(227, 160, 84, 0.551);
 					// max-height: 500px;
 					.filter-title {
 						display: flex;

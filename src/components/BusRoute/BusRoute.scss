@@ -76,8 +76,10 @@
 
 		.date-input {
 			.date-label {
-				color: black;
+				color: gray;
 				margin-left: 10px;
+				font-weight: 500;
+				font-size: 15px;
 			}
 			.date-container {
 				display: flex;
@@ -88,7 +90,7 @@
 				color: "#fd5901";
 				input {
 					color: #110803;
-					font-size: 20px;
+					font-size: 16px;
 					width: 100%;
 					font-weight: 700;
 					background: none;

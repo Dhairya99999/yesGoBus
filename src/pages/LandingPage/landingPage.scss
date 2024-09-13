@@ -182,9 +182,13 @@
 
 				img {
 					height: 50px;
+					width: 50px;
 					padding: 20px;
+					// margin: 10px;
 					background-color: white;
-					border-radius: 50%;
+					border-radius: 50px;
+					overflow: visible;
+					box-shadow: #fd59016d 0px 5px 15px;
 				}
 
 				.infotitle {

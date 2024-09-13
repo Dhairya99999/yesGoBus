@@ -33,9 +33,10 @@ const Payment = () => {
 	const [userData, setUserData] = useState({
 		firstName_0: firstName || "",
 		lastName_0: lastName || "",
+		age_0: loggedInUser.age || "",
 		email: loggedInUser.email || "",
 		mobile: loggedInUser.phoneNumber || "",
-		gender: "M",
+		gender_0: "M",
 		idType: "PAN",
 		agentCode: "",
 		offerCode: "",
@@ -460,11 +461,20 @@ const Payment = () => {
 			setErrorMessage("Seat is reserved for ladies");
 			return;
 		}
-
-		if (Object.keys(errors).length > 0) {
-			alert("Please fill in all the traveler details.");
+		const str = Object.values(errors).join(", ");
+		if (str) {
+			setErrorMessage(str);
 			return;
 		}
+		// if (Object.keys(errors).length > 0) {
+		// 	alert("Please fill in all the passenger details.");
+		// 	return;
+		// }
+		// for(const key in errors) {
+		// 	setErrorMessage(errors[key]);
+		// 	return;
+		// }
+
 		setStartCountdown(true);
 		setLoadingModalVisible(true);
 		localStorage.removeItem("bookingDetails");
@@ -1088,19 +1098,21 @@ const Payment = () => {
 			const genderKey = `gender_${index}`;
 
 			if (!userData[firstNameKey]?.trim()) {
-				errors[firstNameKey] = `First name for Traveler ${
+				errors[firstNameKey] = `First name for passenger ${
 					index + 1
 				} is required`;
 			}
 			if (!userData[lastNameKey]?.trim()) {
-				errors[lastNameKey] = `Last name for Traveler ${index + 1} is required`;
+				errors[lastNameKey] = `Last name for passenger ${
+					index + 1
+				} is required`;
 			}
-			console.log(typeof userData[ageKey]);
+
 			if (!userData[ageKey]?.toString().trim()) {
-				errors[ageKey] = `Age for Traveler ${index + 1} is required`;
+				errors[ageKey] = `Age for passenger ${index + 1} is required`;
 			}
 			if (!userData[genderKey]?.trim()) {
-				errors[genderKey] = `Gender for Traveler ${index + 1} is required`;
+				errors[genderKey] = `Gender for passenger ${index + 1} is required`;
 			}
 			if (
 				bookingDetails.ladiesSeat[index] === true &&
@@ -1108,6 +1120,7 @@ const Payment = () => {
 			) {
 				errors.femaleReserved = true;
 			}
+			console.log("errors", errors);
 		}
 
 		if (!userData.email?.trim()) {
@@ -1336,7 +1349,79 @@ const Payment = () => {
 						{bookingDetails?.selectedSeats?.map((seat, index) => (
 							<div key={index} className="traveler-Details">
 								<span>Passenger {index + 1}</span>
-								{/* <br /> */}
+								<div className="detailsContainer">
+									<Input
+										className="input-element"
+										title={"First Name *"}
+										type={"text"}
+										placeholder={"First name"}
+										onChanged={(e) =>
+											handleInputChange(e, `firstName_${index}`)
+										}
+										givenName={`firstName_${index}`}
+										value={userData[`firstName_${index}`] || ""}
+										required
+									/>
+									{userData[`firstName_${index}`] === "" && (
+										<div style={{ color: "red" }}>First name is required</div>
+									)}
+									<Input
+										className="input-element"
+										title={"Last Name *"}
+										type={"text"}
+										placeholder={"Last name"}
+										onChanged={(e) => handleInputChange(e, `lastName_${index}`)}
+										givenName={`lastName_${index}`}
+										value={userData[`lastName_${index}`] || ""}
+										required
+									/>
+									{userData[`lastName_${index}`] === "" && (
+										<div style={{ color: "red" }}>Last name is required</div>
+									)}
+									<div className="age-gender">
+										<div className="ageContainer">
+											<Input
+												className="input-element"
+												title={"Age *"}
+												type={"number"}
+												placeholder={"Enter Age"}
+												onChanged={(e) => handleInputChange(e, `age_${index}`)}
+												givenName={`age_${index}`}
+												value={userData[`age_${index}`] || ""}
+												required
+											/>
+											{userData[`age_${index}`] === "" && (
+												<div style={{ color: "red" }}>Age is required</div>
+											)}
+										</div>
+										<div className="genderContainer">
+											<select
+												name={`gender_${index}`}
+												id={`gender_${index}`}
+												value={userData[`gender_${index}`] || ""}
+												onChange={(e) =>
+													handleInputChange(e, `gender_${index}`)
+												}
+												required
+											>
+												<option value="">Gender</option>
+												<option value="M">Male</option>
+												<option value="F">Female</option>
+											</select>
+											{userData[`gender_${index}`] === "" && (
+												<div style={{ color: "red" }}>Gender is required</div>
+											)}
+										</div>
+									</div>
+								</div>
+							</div>
+						))}
+					</div>
+					{/* <div className="TravelerDetails">
+						<h4>Add Passengers</h4>
+						{bookingDetails?.selectedSeats?.map((seat, index) => (
+							<div key={index} className="traveler-Details">
+								<span>Passenger {index + 1}</span>
 								<div className="detailsContainer">
 									<Input
 										className="input-element"
@@ -1369,7 +1454,6 @@ const Payment = () => {
 											value={userData[`age_${index}`] || ""}
 										/>
 										<div className="genderContainer">
-											{/* <label htmlFor={`gender_${index}`}>Gender *</label> */}
 											<select
 												name={`gender_${index}`}
 												id={`gender_${index}`}
@@ -1387,7 +1471,7 @@ const Payment = () => {
 								</div>
 							</div>
 						))}
-					</div>
+					</div> */}
 
 					{/* Traveller details */}
 					{/* < className="details">
@@ -1547,75 +1631,85 @@ const Payment = () => {
 
 						<div className="prices">
 							<div className="price">
-								<p>Total</p>
+								<p>Total:</p>
 								<p>₹{parseFloat(bookingDetails?.totalFare).toFixed(2)}</p>
+							</div>
+							<div className="fare-breakdown">
+								<Popover
+									content={() => {
+										return (
+											<>
+												<div className="price flex items-center justify-between">
+													<p>Total Basefare</p>
+													<p>
+														{"₹" + parseFloat(bookingDetails?.fare).toFixed(2)}
+													</p>
+												</div>
+												<hr className="border-none h-[1px] bg-[#dadada]" />
+												{bookingDetails?.serviceTax !== 0 && (
+													<>
+														<div className="price flex items-center justify-between">
+															<p>Service Tax</p>
+															<p>
+																₹
+																{parseFloat(bookingDetails?.serviceTax).toFixed(
+																	2
+																)}
+															</p>
+														</div>
+														<hr className="border-none h-[1px] bg-[#dadada]" />
+													</>
+												)}
+
+												{bookingDetails?.operatorTax !== 0 && (
+													<>
+														<div className="price flex items-center justify-between">
+															<p>Operator Tax</p>
+															<p>
+																₹
+																{parseFloat(
+																	bookingDetails?.operatorTax
+																).toFixed(2)}
+															</p>
+														</div>
+														<hr className="border-none h-[1px] bg-[#dadada]" />
+													</>
+												)}
+
+												<div className="price flex items-center justify-between">
+													<p>Total</p>
+													<p>
+														₹{parseFloat(bookingDetails?.totalFare).toFixed(2)}
+													</p>
+												</div>
+												<hr className="border-none h-[1px] bg-[#dadada]" />
+											</>
+										);
+									}}
+									title="Fare Breakdown"
+									trigger="click"
+									overlayStyle={{
+										minWidth: "250px",
+									}}
+									placement="bottom"
+								>
+									<AntButton type="link" style={{ paddingInline: "0" }}>
+										<span className="text-primary hover:underline">
+											Show Fare Breakdown
+										</span>
+									</AntButton>
+								</Popover>
 							</div>
 						</div>
 					</div>
-					<div className="fare-breakdown">
-						<Popover
-							content={() => {
-								return (
-									<>
-										<div className="price flex items-center justify-between">
-											<p>Total Basefare</p>
-											<p>{"₹" + parseFloat(bookingDetails?.fare).toFixed(2)}</p>
-										</div>
-										<hr className="border-none h-[1px] bg-[#dadada]" />
-										{bookingDetails?.serviceTax !== 0 && (
-											<>
-												<div className="price flex items-center justify-between">
-													<p>Service Tax</p>
-													<p>
-														₹{parseFloat(bookingDetails?.serviceTax).toFixed(2)}
-													</p>
-												</div>
-												<hr className="border-none h-[1px] bg-[#dadada]" />
-											</>
-										)}
 
-										{bookingDetails?.operatorTax !== 0 && (
-											<>
-												<div className="price flex items-center justify-between">
-													<p>Operator Tax</p>
-													<p>
-														₹
-														{parseFloat(bookingDetails?.operatorTax).toFixed(2)}
-													</p>
-												</div>
-												<hr className="border-none h-[1px] bg-[#dadada]" />
-											</>
-										)}
-
-										<div className="price flex items-center justify-between">
-											<p>Total</p>
-											<p>₹{parseFloat(bookingDetails?.totalFare).toFixed(2)}</p>
-										</div>
-										<hr className="border-none h-[1px] bg-[#dadada]" />
-									</>
-								);
-							}}
-							title="Fare Breakdown"
-							trigger="click"
-							overlayStyle={{
-								minWidth: "250px",
-							}}
-							placement="bottom"
-						>
-							<AntButton type="link" style={{ paddingInline: "0" }}>
-								<span className="text-primary hover:underline">
-									Show Fare Breakdown
-								</span>
-							</AntButton>
-						</Popover>
-
-						<div className="price">
+					{/* <div className="price">
 							<p>Total Basefare</p>
 							<p>{"₹" + parseFloat(bookingDetails?.fare).toFixed(2)}</p>
 						</div>
-						<hr />
+						<hr /> */}
 
-						{bookingDetails?.serviceTax !== 0 && (
+					{/* {bookingDetails?.serviceTax !== 0 && (
 							<>
 								<div className="price">
 									<p>Service Tax</p>
@@ -1623,9 +1717,9 @@ const Payment = () => {
 								</div>
 								<hr />
 							</>
-						)}
+						)} */}
 
-						{bookingDetails?.operatorTax !== 0 && (
+					{/* {bookingDetails?.operatorTax !== 0 && (
 							<>
 								<div className="price">
 									<p>Operator Tax</p>
@@ -1633,14 +1727,14 @@ const Payment = () => {
 								</div>
 								<hr />
 							</>
-						)}
+						)} */}
 
-						{/* GST */}
-						<div className="price">
+					{/* GST */}
+					{/* <div className="price">
 							<p>GST</p>
 							<p>₹{parseFloat(bookingDetails?.gst).toFixed(2)}</p>
-						</div>
-					</div>
+						</div> */}
+					{/* </div> */}
 					<Button
 						text={`Pay Amount ₹${parseFloat(bookingDetails?.totalFare).toFixed(
 							2
@@ -1706,10 +1800,10 @@ const Payment = () => {
 			{errorMessage && (
 				<div className="modal" onClick={() => setErrorMessage("")}>
 					<div className="modal-content" onClick={(e) => e.stopPropagation()}>
+						<p className="error-message">{errorMessage}</p>
 						<span className="close" onClick={() => setErrorMessage("")}>
 							Close
 						</span>
-						<p className="error-message">{errorMessage}</p>
 					</div>
 				</div>
 			)}

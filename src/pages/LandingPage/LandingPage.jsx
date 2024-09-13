@@ -61,6 +61,18 @@ const LandingPage = () => {
 	};
 
 	useEffect(() => {
+		const queryParams = new URLSearchParams(location.search);
+		const sourceCity = queryParams.get("from");
+		//  || localStorage.getItem("sourceCity");
+		const destinationCity = queryParams.get("to");
+		// || localStorage.getItem("destinationCity");
+		if (sourceCity && destinationCity) {
+			setFromLocation(sourceCity);
+			setToLocation(destinationCity);
+		}
+	}, [fromLocation, toLocation]);
+
+	useEffect(() => {
 		let debounceTimer;
 
 		const handleQueryChange = () => {

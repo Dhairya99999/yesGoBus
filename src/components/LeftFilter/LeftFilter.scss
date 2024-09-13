@@ -1,14 +1,17 @@
 .leftFilter {
+	// border-radius:0 0 30px 30px;
 	& > h4 {
 		@media (max-width: 420px) {
 			display: none;
 		}
 	}
 	.filters {
+		// border-radius:0 0 30px 30px;
 		.priceRange {
 			// margin-top: 30px;
 			padding: 15px 17px;
 			border: 1px solid #dadada;
+			border-radius: 0 0 30px 30px;
 			.label {
 				font-weight: 600;
 				font-size: 16px;

@@ -17,25 +17,27 @@ import singlebooked from "./singlebooked.svg";
 import singleladiesavailable from "./singleladiesavailable.svg";
 import singleladiesbooked from "./singleladiesbooked.svg";
 import singleselected from "./singleselected.svg";
+import leftArrow from "./leftArrow.png";
 
 export {
-  twowayarrow,
-  downarrow,
-  rightarrow,
-  whitestar,
-  livelocation,
-  downsunfilledarrow,
-  available,
-  booked,
-  ladiesavailable,
-  ladiesbooked,
-  selected,
-  driver,
-  selectedFill,
-  filterIcon,
-  singleavailable,
-  singlebooked,
-  singleladiesavailable,
-  singleladiesbooked,
-  singleselected,
+	twowayarrow,
+	downarrow,
+	rightarrow,
+	whitestar,
+	livelocation,
+	downsunfilledarrow,
+	available,
+	booked,
+	ladiesavailable,
+	ladiesbooked,
+	selected,
+	driver,
+	selectedFill,
+	filterIcon,
+	singleavailable,
+	singlebooked,
+	singleladiesavailable,
+	singleladiesbooked,
+	singleselected,
+  leftArrow
 };

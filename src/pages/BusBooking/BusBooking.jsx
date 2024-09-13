@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import "./BusBooking.scss";
 import {
 	Navbar,
@@ -10,18 +11,19 @@ import {
 	BusBookingCard,
 	//Footer,
 } from "../../components";
+import { formatDate } from "../../utils/BusBookingHelpers";
+import { useNavigate } from "react-router-dom";
 // import {
 //   fromto
 // } from "../../assets/homepage";
 // import { offer1 } from "../../assets/homepage";
-import { useEffect, useState } from "react";
 //import axiosInstance from "../../utils/service";
-import { formatDate } from "../../utils/BusBookingHelpers";
 
 import { Spin } from "antd";
 import { useLocation, Navigate } from "react-router-dom";
 import { cityMapping } from "../../utils/cityMapping";
 import { filterIcon } from "../../assets/busbooking";
+import { leftArrow } from "../../assets/busbooking";
 import { getVrlBuses } from "../../api/vrlBusesApis";
 import { getSrsBuses } from "../../api/srsBusesApis";
 import BusSortBy from "../../components/BusSortBy/BusSortBy";
@@ -31,6 +33,7 @@ import {
 } from "../../utils/BusBookingHelpers";
 
 const BusBooking = () => {
+	const navigate = useNavigate();
 	const loggedInUser = localStorage.getItem("loggedInUser");
 
 	const location = useLocation();
@@ -50,21 +53,21 @@ const BusBooking = () => {
 
 	//dates
 	const date = new Date();
-	const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-	const months = [
-		"Jan",
-		"Feb",
-		"Mar",
-		"Apr",
-		"May",
-		"Jun",
-		"Jul",
-		"Aug",
-		"Sep",
-		"Oct",
-		"Nov",
-		"Dec",
-	];
+	// const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+	// const months = [
+	// 	"Jan",
+	// 	"Feb",
+	// 	"Mar",
+	// 	"Apr",
+	// 	"May",
+	// 	"Jun",
+	// 	"Jul",
+	// 	"Aug",
+	// 	"Sep",
+	// 	"Oct",
+	// 	"Nov",
+	// 	"Dec",
+	// ];
 	const dates = [];
 
 	for (let i = 0; i <= 6; i++) {
@@ -501,7 +504,7 @@ const BusBooking = () => {
 	console.log(sortedBusList);
 	return (
 		<div className="busBooking">
-			<Navbar />
+			{/* <Navbar /> */}
 			{/* <BusRoute
 				locationOne={fromLocation}
 				locationTwo={toLocation}
@@ -509,6 +512,7 @@ const BusBooking = () => {
 				returnDate={"- - -"}
 				onSearch={handleSearch}
 			/> */}
+
 			<div className="busBooking-container">
 				<div className="left">
 					<LeftFilter
@@ -588,14 +592,24 @@ const BusBooking = () => {
           </div> */}
 					<Spin spinning={loading}>
 						<div className="hadder">
-							{/* Bus route title */}
-							<RoutesTitle
-								locationOne={fromLocation}
-								locationTwo={toLocation}
-								date={selectedDate}
-								onDateChange={handleDate}
-							/>
-
+							<div className="hadder-top">
+								<div className="back-arrow">
+									<img
+										src={leftArrow}
+										alt="back arrow"
+										onClick={() =>
+											navigate(`/?from=${fromLocation}&to=${toLocation}`)
+										}
+									/>
+								</div>
+								{/* Bus route title */}
+								<RoutesTitle
+									locationOne={fromLocation}
+									locationTwo={toLocation}
+									date={selectedDate}
+									onDateChange={handleDate}
+								/>
+							</div>
 							{/* No of buses */}
 							<ColumnNames
 								noOfBuses={

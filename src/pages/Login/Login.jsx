@@ -31,6 +31,7 @@ const Login = () => {
 		fullName: "",
 		email: "",
 		phoneNumber: "",
+		gender: "",
 	});
 	const [showOTP, setShowOTP] = useState(false);
 	const [orderId, setOrderId] = useState("");
@@ -126,6 +127,26 @@ const Login = () => {
 						},
 					});
 					setShowOtp(true);
+				}
+				// for testing purpose
+				if (response.status === 203) {
+					toast.dismiss(loadingToast);
+					const token = response.data.data.token;
+					const loggedInUser = response.data.data.user;
+					localStorage.setItem("token", token);
+					localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
+					// const message = showLogin ? "Login Successful" : "Signup Successful";
+					toast.success(response.message, {
+						duration: 2000,
+						position: "top-center",
+						style: {
+							background: "green",
+							color: "white",
+						},
+					});
+					setTimeout(() => {
+						navigate("/");
+					}, 2000);
 				} else {
 					toast.error("Invalid credentials", {
 						duration: 2000,
@@ -455,6 +476,25 @@ const Login = () => {
 						}}
 						givenName={"email"}
 					/>
+					<div className="genderContainer">
+						{/* <label htmlFor={`gender_${index}`}>Gender *</label> */}
+						<select
+							// name={`gender_${index}`}
+							// id={`gender_${index}`}
+							// value={userData[`gender_${index}`] || ""}
+							// onChange={(e) => handleInputChange(e, `gender`)}
+							onChange={(e) => {
+								setCreateAccountData({
+									...createAccountData,
+									gender: e.target.value,
+								});
+							}}
+						>
+							<option value="">Gender</option>
+							<option value="M">Male</option>
+							<option value="F">Female</option>
+						</select>
+					</div>
 				</>
 			)}
 			{showOtp && (
