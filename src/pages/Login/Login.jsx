@@ -98,6 +98,24 @@ const Login = () => {
 						mobileNumber: loginData.phoneNumber,
 					}
 				);
+
+				if (response.status === 200) {
+					toast.dismiss(loadingToast);
+					setOrderId(response.data.data.orderId);
+					// const token = response.data.token;
+					// const loggedInUser = response.data.data;
+					// localStorage.setItem("token", token);
+					// localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
+					toast.success(response.data.message, {
+						duration: 2000,
+						position: "top-center",
+						style: {
+							background: "green",
+							color: "white",
+						},
+					});
+					setShowOtp(true);
+				}
 				if (response.status === 201) {
 					handleLoginChange();
 					toast.dismiss(loadingToast);
@@ -110,23 +128,6 @@ const Login = () => {
 						},
 					});
 					return;
-				}
-				if (response.status === 200) {
-					toast.dismiss(loadingToast);
-					setOrderId(response.data.data.orderId);
-					// const token = response.data.token;
-					// const loggedInUser = response.data.data;
-					// localStorage.setItem("token", token);
-					// localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
-					toast.success("OTP send Successful", {
-						duration: 2000,
-						position: "top-center",
-						style: {
-							background: "green",
-							color: "white",
-						},
-					});
-					setShowOtp(true);
 				}
 				// for testing purpose
 				if (response.status === 203) {
@@ -148,16 +149,6 @@ const Login = () => {
 						navigate("/");
 					}, 2000);
 				}
-				//  else {
-				// 	toast.error("Invalid credentials", {
-				// 		duration: 2000,
-				// 		position: "top-center",
-				// 		style: {
-				// 			background: "red",
-				// 			color: "white",
-				// 		},
-				// 	});
-				// }
 			} catch (error) {
 				toast.error("Invalid credentials", {
 					duration: 2000,
