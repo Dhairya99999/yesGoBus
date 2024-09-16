@@ -23,6 +23,7 @@ const Payment = () => {
 	const [agentCodeVerified, setAgentCodeVerified] = useState(true);
 	const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
 	const token = localStorage.getItem("token");
+	const [showError, setShowError] = useState(false);
 	if (!loggedInUser) {
 		return <Navigate to="/login" replace />;
 	}
@@ -449,303 +450,157 @@ const Payment = () => {
 
 	//handle payment
 	const handlePayment = async () => {
-		//validate agent code
-		if (!agentCodeVerified && userData.agentCode) {
-			alert("Agent Code is invalid");
-			return;
-		}
-
 		//validate input
 		const errors = validateUserData();
 		if (errors.femaleReserved === true) {
 			setErrorMessage("Seat is reserved for ladies");
 			return;
 		}
-		const str = Object.values(errors).join(", ");
-		if (str) {
-			setErrorMessage(str);
-			return;
-		}
+		// const str = Object.values(errors).join(", ");
+		// if (str) {
+		// 	setErrorMessage(str);
+		// 	return;
+		// }
 		// if (Object.keys(errors).length > 0) {
 		// 	alert("Please fill in all the passenger details.");
 		// 	return;
 		// }
-		// for(const key in errors) {
-		// 	setErrorMessage(errors[key]);
-		// 	return;
-		// }
+		const emptyInputFields = Object.keys(errors);
+		console.log("emptyInputFields", emptyInputFields);
+		// If there are empty input fields, scroll to the first one
+		if (emptyInputFields.length > 0) {
+			const firstEmptyInputField = document.querySelector(
+				`#${emptyInputFields[0]}`
+			);
+			console.log("firstEmptyInputField", firstEmptyInputField);
+			if (firstEmptyInputField) {
+				setShowError(true);
+				const vh = window.innerHeight; // get the viewport height
+				const elementTop = firstEmptyInputField.offsetTop; // get the top position of the element
+				const elementHeight = firstEmptyInputField.offsetHeight; // get the height of the element
 
-		setStartCountdown(true);
-		setLoadingModalVisible(true);
-		localStorage.removeItem("bookingDetails");
-		//seats data
-		if (isVrl) {
-			try {
-				const totalPassenger = bookingDetails?.selectedSeats?.length;
+				// calculate the scroll position to center the element vertically
+				const scrollPosition = elementTop - (vh - elementHeight) / 2;
 
-				const seatAndGenderArray = bookingDetails?.selectedSeats?.map(
-					(seat, index) => `${seat},${userData[`gender_${index}`]}`
-				);
-				const resultSeatString = seatAndGenderArray.join("|");
-				const seatDetailsWithName = bookingDetails?.selectedSeats?.map(
-					(seat, index) =>
-						`${seat},${userData[`firstName_${index}`]},${userData.mobile},${
-							userData[`age_${index}`]
-						}`
-				);
-				const resultseatDetailsWithNameString = seatDetailsWithName.join("|");
+				window.scrollTo({
+					top: scrollPosition,
+					behavior: "smooth",
+					duration: 5000,
+				});
+			}
+			// firstEmptyInputField.scrollIntoView({ behavior: "smooth" });
+			// firstEmptyInputField.focus();
+		} else {
+			// If all input fields are filled, proceed with payment
+			// Your payment logic here
 
-				const blockSeatRequestBody = {
-					referenceNumber: ReferenceNumber,
-					passengerName: userData[`firstName_0`],
-					seatNames: resultSeatString,
-					email: userData.email,
-					phone: userData.mobile,
-					pickupID: parseInt(bookingDetails?.boardingPoint?.bpId),
-					payableAmount: bookingDetails?.totalFare - bookingDetails?.gst,
-					totalPassengers: totalPassenger,
-				};
-				console.log(blockSeatRequestBody);
-				let { data: vrlBlockSeatResponse } = await vrlBlockSeat(
-					blockSeatRequestBody
-				);
-				vrlBlockSeatResponse = vrlBlockSeatResponse[0];
+			//validate agent code
+			if (!agentCodeVerified && userData.agentCode) {
+				alert("Agent Code is invalid");
+				return;
+			}
 
-				const seatObjects = bookingDetails?.selectedSeats?.map(
-					(seatId, index) => {
-						const title = userData[`gender_${index}`] === "M" ? "M" : "F";
-						return {
-							seatName: seatId + "," + title,
-							paxName:
-								userData[`firstName_${index}`] +
-								" " +
-								userData[`lastName_${index}`],
-							mobileNo: userData.mobile,
-							paxAge: userData[`age_${index}`],
-							baseFare: bookingDetails?.seatFares[index],
-							gstFare: bookingDetails?.seatTaxes[index],
-							totalFare: bookingDetails?.seatTotalFares[index],
-							idProofId: 0,
-							idProofDetails: "",
-						};
-					}
-				);
-				const bookingReservationDetails = {
-					referenceNumber: ReferenceNumber,
-					passengerName: userData[`firstName_0`],
-					seatNames: resultSeatString,
-					email: userData.email,
-					phone: userData.mobile,
-					pickUpID: bookingDetails?.boardingPoint?.bpId,
-					dropID: bookingDetails?.droppingPoint?.bpId,
-					payableAmount: bookingDetails?.totalFare - bookingDetails?.gst,
-					totalPassengers: totalPassenger,
-					seatDetails: resultseatDetailsWithNameString,
-					discount: 0,
-					paxDetails: seatObjects,
-					gstState: 0,
-					gstCompanyName: "",
-					gstRegNo: "",
-					apipnrNo: vrlBlockSeatResponse.BlockID,
-				};
+			setStartCountdown(true);
+			setLoadingModalVisible(true);
+			localStorage.removeItem("bookingDetails");
+			//seats data
+			if (isVrl) {
+				try {
+					const totalPassenger = bookingDetails?.selectedSeats?.length;
 
-				if (vrlBlockSeatResponse.Status === 1) {
-					const { data: bookResponse } = await axios.post(
-						`${import.meta.env.VITE_BASE_URL}/api/busBooking/bookBus`,
-						{
-							reservationSchema: bookingReservationDetails,
-							blockKey: vrlBlockSeatResponse.BlockID,
-							userId: loggedInUser._id,
-							totalAmount: bookingDetails?.totalFare,
-							busOperator: busName,
-							busType: busType,
-							selectedSeats: bookingDetails.selectedSeats?.join(", "),
-							pickUpTime: pickUpTime,
-							reachTime: reachTime,
-							cancellationPolicy: cancellationPolicy,
-							sourceCity: sourceCity,
-							destinationCity: destinationCity,
-							doj: doj,
-							customerName: firstName,
-							customerLastName: lastName,
-							customerEmail: userData.email,
-							customerPhone: userData.mobile,
-							customerAddress: userData.address,
-							isVrl: isVrl,
-							boardingPoint: bookingDetails?.boardingPoint?.bpName,
-							droppingPoint: bookingDetails?.droppingPoint?.bpName,
-							driverNumber: bookingDetails?.boardingPoint?.number,
-							agentCode: userData.agentCode,
-						},
-						{
-							headers: {
-								Authorization: `Bearer ${token}`,
-								"Content-Type": "application/json", // Set the content type to JSON
-							},
-						}
+					const seatAndGenderArray = bookingDetails?.selectedSeats?.map(
+						(seat, index) => `${seat},${userData[`gender_${index}`]}`
 					);
-
-					const checkAgent = await axios.get(
-						`${import.meta.env.VITE_BASE_URL}/api/agent/isAgent/${
-							loggedInUser.userId
-						}`,
-						{},
-						{
-							headers: {
-								Authorization: `Bearer ${token}`,
-								"Content-Type": "application/json", // Set the content type to JSON
-							},
-						}
+					const resultSeatString = seatAndGenderArray.join("|");
+					const seatDetailsWithName = bookingDetails?.selectedSeats?.map(
+						(seat, index) =>
+							`${seat},${userData[`firstName_${index}`]},${userData.mobile},${
+								userData[`age_${index}`]
+							}`
 					);
+					const resultseatDetailsWithNameString = seatDetailsWithName.join("|");
 
-					if (checkAgent.data.isAgent) {
-						setLoadingModalVisible(false);
-						setStartCountdown(false);
-						setCountdown(10);
-						if (!checkAgent.data.isBookable) {
-							alert("Max Limit Exceeded, Come back tomorrow");
-							return;
-						}
-						const isConfirmed = window.confirm(
-							"Do you want to confirm the booking?"
-						);
-						if (!isConfirmed) {
-							return;
-						}
-						setLoading(true);
-						// get bookings
-						const getBookingDetails = await axios.get(
-							`${import.meta.env.VITE_BASE_URL}/api/busBooking/getBookingById/${
-								bookResponse.data._id
-							}`,
-							{},
-							{
-								headers: {
-									Authorization: `Bearer ${token}`,
-									"Content-Type": "application/json", // Set the content type to JSON
-								},
-							}
-						);
-						if (getBookingDetails?.data?.data.isVrl) {
-							const requestbody = {
-								...getBookingDetails?.data?.data.reservationSchema[0],
+					const blockSeatRequestBody = {
+						referenceNumber: ReferenceNumber,
+						passengerName: userData[`firstName_0`],
+						seatNames: resultSeatString,
+						email: userData.email,
+						phone: userData.mobile,
+						pickupID: parseInt(bookingDetails?.boardingPoint?.bpId),
+						payableAmount: bookingDetails?.totalFare - bookingDetails?.gst,
+						totalPassengers: totalPassenger,
+					};
+					console.log(blockSeatRequestBody);
+					let { data: vrlBlockSeatResponse } = await vrlBlockSeat(
+						blockSeatRequestBody
+					);
+					vrlBlockSeatResponse = vrlBlockSeatResponse[0];
+
+					const seatObjects = bookingDetails?.selectedSeats?.map(
+						(seatId, index) => {
+							const title = userData[`gender_${index}`] === "M" ? "M" : "F";
+							return {
+								seatName: seatId + "," + title,
+								paxName:
+									userData[`firstName_${index}`] +
+									" " +
+									userData[`lastName_${index}`],
+								mobileNo: userData.mobile,
+								paxAge: userData[`age_${index}`],
+								baseFare: bookingDetails?.seatFares[index],
+								gstFare: bookingDetails?.seatTaxes[index],
+								totalFare: bookingDetails?.seatTotalFares[index],
+								idProofId: 0,
+								idProofDetails: "",
 							};
-							let { data: vrlBookSeatResponse } = await vrlBookSeat(
-								requestbody
-							);
-							vrlBookSeatResponse = vrlBookSeatResponse[0];
-							if (vrlBookSeatResponse.Status === 1) {
-								const { data: updatePaymentDetails } = await axios.patch(
-									`${
-										import.meta.env.VITE_BASE_URL
-									}/api/busBooking/updateBooking/${bookResponse.data._id}`,
-									{
-										bookingStatus: "paid",
-										opPNR: vrlBookSeatResponse?.PNRNO,
-										buspnr: vrlBookSeatResponse?.PNRNO,
-									},
-									{
-										headers: {
-											Authorization: `Bearer ${token}`,
-											"Content-Type": "application/json", // Set the content type to JSON
-										},
-									}
-								);
-								if (updatePaymentDetails) {
-									const mailBody = {
-										fullName: updatePaymentDetails?.data.customerName,
-										sourceCity: updatePaymentDetails?.data.sourceCity,
-										destinationCity: updatePaymentDetails?.data.destinationCity,
-										seats: updatePaymentDetails?.data.selectedSeats,
-										amount: updatePaymentDetails?.data.totalAmount,
-										pickUpLocation: updatePaymentDetails?.data.boardingPoint,
-										opPNR: updatePaymentDetails?.data.opPNR,
-										doj:
-											formatDate(updatePaymentDetails?.data.doj) +
-											" " +
-											updatePaymentDetails?.data.pickUpTime,
-										to: updatePaymentDetails?.data.customerEmail,
-										contact: updatePaymentDetails?.data?.driverNumber,
-									};
-									await axios.post(
-										`${
-											import.meta.env.VITE_BASE_URL
-										}/api/busBooking/sendBookingConfirmationEmail`,
-										mailBody,
-										{
-											headers: {
-												Authorization: `Bearer ${token}`,
-												"Content-Type": "application/json", // Set the content type to JSON
-											},
-										}
-									);
-									const fullName =
-										updatePaymentDetails.data.reservationSchema[0].paxDetails[0]
-											.paxName;
-									//send sms
-									const messageBody = {
-										fullName:
-											fullName || updatePaymentDetails?.data.customerName,
-										sourceCity: updatePaymentDetails?.data.sourceCity,
-										destinationCity: updatePaymentDetails?.data.destinationCity,
-										seats: updatePaymentDetails?.data.selectedSeats,
-										amount: updatePaymentDetails?.data.totalAmount,
-										pickUpLocation: updatePaymentDetails?.data.boardingPoint,
-										opPNR: updatePaymentDetails?.data.opPNR,
-										doj:
-											formatDate(updatePaymentDetails?.data.doj) +
-											" " +
-											updatePaymentDetails?.data.pickUpTime,
-										to: updatePaymentDetails?.data.customerPhone,
-										contact: updatePaymentDetails?.data?.driverNumber,
-									};
-									await axios.post(
-										`${
-											import.meta.env.VITE_BASE_URL
-										}/api/busBooking/sendBookingConfirmationMessage`,
-										messageBody,
-										{
-											headers: {
-												Authorization: `Bearer ${token}`,
-												"Content-Type": "application/json", // Set the content type to JSON
-											},
-										}
-									);
-								}
-								setLoading(false);
-								navigate(
-									`/busbooking/payment/success?bookingId=${bookResponse.data._id}`
-								);
-							} else {
-								setLoading(false);
-								navigate("/busbooking/payment/failure");
-							}
-						}
-						return;
-					}
-
-					const response = await axios.post(
-						`${import.meta.env.VITE_BASE_URL}/api/payment/initiatePayment`,
-						{
-							amount: bookingDetails?.totalFare,
-							redirectUrl: `https://yesgobus.com/busbooking/payment?blockTicketId=${vrlBlockSeatResponse.BlockID}&bookingId=${bookResponse.data._id}&paymentVerify=1`,
-						},
-						{
-							headers: {
-								Authorization: `Bearer ${token}`,
-								"Content-Type": "application/json", // Set the content type to JSON
-							},
 						}
 					);
+					const bookingReservationDetails = {
+						referenceNumber: ReferenceNumber,
+						passengerName: userData[`firstName_0`],
+						seatNames: resultSeatString,
+						email: userData.email,
+						phone: userData.mobile,
+						pickUpID: bookingDetails?.boardingPoint?.bpId,
+						dropID: bookingDetails?.droppingPoint?.bpId,
+						payableAmount: bookingDetails?.totalFare - bookingDetails?.gst,
+						totalPassengers: totalPassenger,
+						seatDetails: resultseatDetailsWithNameString,
+						discount: 0,
+						paxDetails: seatObjects,
+						gstState: 0,
+						gstCompanyName: "",
+						gstRegNo: "",
+						apipnrNo: vrlBlockSeatResponse.BlockID,
+					};
 
-					if (response.status === 200) {
-						// update merchantTransactionId
-						const updatePaymentDetails = await axios.patch(
-							`${import.meta.env.VITE_BASE_URL}/api/busBooking/updateBooking/${
-								bookResponse.data._id
-							}`,
+					if (vrlBlockSeatResponse.Status === 1) {
+						const { data: bookResponse } = await axios.post(
+							`${import.meta.env.VITE_BASE_URL}/api/busBooking/bookBus`,
 							{
-								merchantTransactionId: response.data.data.merchantTransactionId,
+								reservationSchema: bookingReservationDetails,
+								blockKey: vrlBlockSeatResponse.BlockID,
+								userId: loggedInUser._id,
+								totalAmount: bookingDetails?.totalFare,
+								busOperator: busName,
+								busType: busType,
+								selectedSeats: bookingDetails.selectedSeats?.join(", "),
+								pickUpTime: pickUpTime,
+								reachTime: reachTime,
+								cancellationPolicy: cancellationPolicy,
+								sourceCity: sourceCity,
+								destinationCity: destinationCity,
+								doj: doj,
+								customerName: firstName,
+								customerLastName: lastName,
+								customerEmail: userData.email,
+								customerPhone: userData.mobile,
+								customerAddress: userData.address,
+								isVrl: isVrl,
+								boardingPoint: bookingDetails?.boardingPoint?.bpName,
+								droppingPoint: bookingDetails?.droppingPoint?.bpName,
+								driverNumber: bookingDetails?.boardingPoint?.number,
+								agentCode: userData.agentCode,
 							},
 							{
 								headers: {
@@ -754,155 +609,10 @@ const Payment = () => {
 								},
 							}
 						);
-						if (updatePaymentDetails.status === 200) {
-							setLoadingModalVisible(false);
-							setStartCountdown(false);
-							setCountdown(10);
-							window.open(
-								response.data.data.instrumentResponse.redirectInfo.url,
-								"_blank",
-								"noopener noreferrer"
-							);
-						}
-					} else {
-						setLoading(false);
-						setStartCountdown(false);
-						setCountdown(10);
-						setErrorMessage("Please try with other seat or bus.");
-					}
-				} else {
-					setLoadingModalVisible(false);
-					setStartCountdown(false);
-					setCountdown(10);
-					setErrorMessage(vrlBlockSeatResponse.Message);
-				}
-			} catch (error) {
-				setLoadingModalVisible(false);
-				console.log(error);
-				console.error("Something went wrong:", error);
-			}
-		}
-		if (isSrs) {
-			try {
-				const seatObjects = bookingDetails?.selectedSeats?.map(
-					(seatId, index) => {
-						const isPrimary = index === 0;
-						const title = userData[`gender_${index}`] === "M" ? "Mr" : "Ms";
-						return {
-							seat_number: seatId,
-							fare: bookingDetails?.seatFares[index],
-							title: title,
-							name:
-								userData[`firstName_${index}`] +
-								" " +
-								userData[`lastName_${index}`],
-							age: userData[`age_${index}`],
-							sex: userData[`gender_${index}`],
-							is_primary: isPrimary,
-							id_card_type: "1",
-							id_card_number: "111111111",
-							id_card_issued_by: "oneone",
-						};
-					}
-				);
 
-				const srsBlockSeatBody = {
-					book_ticket: {
-						seat_details: {
-							seat_detail: seatObjects,
-						},
-						contact_detail: {
-							mobile_number: userData.mobile,
-							emergency_name: userData[`firstName_0`],
-							email: userData.email,
-						},
-					},
-					origin_id: sourceCityId,
-					destination_id: destinationCityId,
-					boarding_at: bookingDetails?.boardingPoint?.bpId,
-					drop_of: bookingDetails?.droppingPoint?.bpId,
-					no_of_seats: bookingDetails?.selectedSeats?.length,
-					travel_date: doj,
-					customer_company_gst: {
-						name: "Yesgobus",
-						gst_id: "T123DT",
-						address: "Test",
-					},
-				};
-
-				let srsBlockSeatResponse = await srsBlockSeat(
-					scheduleId,
-					srsBlockSeatBody
-				);
-				if (srsBlockSeatResponse.result) {
-					const srsResponse = srsBlockSeatResponse.result.ticket_details;
-
-					const { data: bookResponse } = await axios.post(
-						`${import.meta.env.VITE_BASE_URL}/api/busBooking/bookBus`,
-						{
-							srsBlockSeatDetails: srsBlockSeatBody,
-							blockKey: srsResponse.pnr_number,
-							userId: loggedInUser._id,
-							totalAmount: bookingDetails?.totalFare,
-							busOperator: busName,
-							busType: busType,
-							selectedSeats: bookingDetails.selectedSeats?.join(", "),
-							pickUpTime: pickUpTime,
-							reachTime: reachTime,
-							cancellationPolicy: cancellationPolicy,
-							sourceCity: sourceCity,
-							destinationCity: destinationCity,
-							doj: doj,
-							customerName: firstName,
-							customerLastName: lastName,
-							customerEmail: userData.email,
-							customerPhone: userData.mobile,
-							customerAddress: userData.address,
-							isSrs: isSrs,
-							boardingPoint: bookingDetails?.boardingPoint?.bpName,
-							droppingPoint: bookingDetails?.droppingPoint?.bpName,
-							driverNumber: bookingDetails?.boardingPoint?.number,
-							agentCode: userData.agentCode,
-						},
-						{
-							headers: {
-								Authorization: `Bearer ${token}`,
-								"Content-Type": "application/json", // Set the content type to JSON
-							},
-						}
-					);
-					const checkAgent = await axios.get(
-						`${import.meta.env.VITE_BASE_URL}/api/agent/isAgent/${
-							loggedInUser.userId
-						}`,
-						{},
-						{
-							headers: {
-								Authorization: `Bearer ${token}`,
-								"Content-Type": "application/json", // Set the content type to JSON
-							},
-						}
-					);
-
-					if (checkAgent.data.isAgent) {
-						setLoadingModalVisible(false);
-						setStartCountdown(false);
-						setCountdown(10);
-						if (!checkAgent.data.isBookable) {
-							alert("Max Limit Exceeded, Come back tomorrow");
-							return;
-						}
-						const isConfirmed = window.confirm(
-							"Do you want to confirm the booking?"
-						);
-						if (!isConfirmed) {
-							return;
-						}
-						setLoading(true);
-						// get bookings
-						const getBookingDetails = await axios.get(
-							`${import.meta.env.VITE_BASE_URL}/api/busBooking/getBookingById/${
-								bookResponse.data._id
+						const checkAgent = await axios.get(
+							`${import.meta.env.VITE_BASE_URL}/api/agent/isAgent/${
+								loggedInUser.userId
 							}`,
 							{},
 							{
@@ -912,131 +622,140 @@ const Payment = () => {
 								},
 							}
 						);
-						if (getBookingDetails?.data?.data.isSrs) {
-							let srsBookSeatResponse = await srsConfirmBooking(
-								srsResponse.pnr_number
-							);
 
-							if (srsBookSeatResponse.result) {
-								const { data: updatePaymentDetails } = await axios.patch(
-									`${
-										import.meta.env.VITE_BASE_URL
-									}/api/busBooking/updateBooking/${bookResponse.data._id}`,
-									{
-										bookingStatus: "paid",
-										opPNR:
-											srsBookSeatResponse?.result.ticket_details.operator_pnr,
-										buspnr:
-											srsBookSeatResponse?.result.ticket_details
-												.travel_operator_pnr,
-										cancellationPolicy:
-											srsBookSeatResponse?.result.ticket_details
-												.ts_cancellation_policies,
-									},
-									{
-										headers: {
-											Authorization: `Bearer ${token}`,
-											"Content-Type": "application/json", // Set the content type to JSON
-										},
-									}
-								);
-								if (updatePaymentDetails) {
-									const mailBody = {
-										fullName: updatePaymentDetails?.data.customerName,
-										sourceCity: updatePaymentDetails?.data.sourceCity,
-										destinationCity: updatePaymentDetails?.data.destinationCity,
-										seats: updatePaymentDetails?.data.selectedSeats,
-										amount: updatePaymentDetails?.data.totalAmount,
-										pickUpLocation: updatePaymentDetails?.data.boardingPoint,
-										opPNR: updatePaymentDetails?.data.opPNR,
-										doj:
-											formatDate(updatePaymentDetails?.data.doj) +
-											" " +
-											updatePaymentDetails?.data.pickUpTime,
-										to: updatePaymentDetails?.data.customerEmail,
-										contact: updatePaymentDetails?.data?.driverNumber,
-									};
-									await axios.post(
-										`${
-											import.meta.env.VITE_BASE_URL
-										}/api/busBooking/sendBookingConfirmationEmail`,
-										mailBody,
-										{
-											headers: {
-												Authorization: `Bearer ${token}`,
-												"Content-Type": "application/json", // Set the content type to JSON
-											},
-										}
-									);
-
-									const fullName =
-										updatePaymentDetails?.data.srsBlockSeatDetails.book_ticket
-											.seat_details.seat_detail[0].name;
-
-									//send sms
-									const messageBody = {
-										fullName:
-											fullName || updatePaymentDetails?.data.customerName,
-										sourceCity: updatePaymentDetails?.data.sourceCity,
-										destinationCity: updatePaymentDetails?.data.destinationCity,
-										seats: updatePaymentDetails?.data.selectedSeats,
-										amount: updatePaymentDetails?.data.totalAmount,
-										pickUpLocation: updatePaymentDetails?.data.boardingPoint,
-										opPNR: updatePaymentDetails?.data.opPNR,
-										doj:
-											formatDate(updatePaymentDetails?.data.doj) +
-											" " +
-											updatePaymentDetails?.data.pickUpTime,
-										to: updatePaymentDetails?.data.customerPhone,
-										contact: updatePaymentDetails?.data?.driverNumber,
-									};
-									await axios.post(
-										`${
-											import.meta.env.VITE_BASE_URL
-										}/api/busBooking/sendBookingConfirmationMessage`,
-										messageBody,
-										{
-											headers: {
-												Authorization: `Bearer ${token}`,
-												"Content-Type": "application/json", // Set the content type to JSON
-											},
-										}
-									);
-								}
-								setLoading(false);
-								navigate(
-									`/busbooking/payment/success?bookingId=${bookResponse.data._id}`
-								);
-							} else {
-								setLoading(false);
-								navigate("/busbooking/payment/failure");
+						if (checkAgent.data.isAgent) {
+							setLoadingModalVisible(false);
+							setStartCountdown(false);
+							setCountdown(10);
+							if (!checkAgent.data.isBookable) {
+								alert("Max Limit Exceeded, Come back tomorrow");
+								return;
 							}
+							const isConfirmed = window.confirm(
+								"Do you want to confirm the booking?"
+							);
+							if (!isConfirmed) {
+								return;
+							}
+							setLoading(true);
+							// get bookings
+							const getBookingDetails = await axios.get(
+								`${
+									import.meta.env.VITE_BASE_URL
+								}/api/busBooking/getBookingById/${bookResponse.data._id}`,
+								{},
+								{
+									headers: {
+										Authorization: `Bearer ${token}`,
+										"Content-Type": "application/json", // Set the content type to JSON
+									},
+								}
+							);
+							if (getBookingDetails?.data?.data.isVrl) {
+								const requestbody = {
+									...getBookingDetails?.data?.data.reservationSchema[0],
+								};
+								let { data: vrlBookSeatResponse } = await vrlBookSeat(
+									requestbody
+								);
+								vrlBookSeatResponse = vrlBookSeatResponse[0];
+								if (vrlBookSeatResponse.Status === 1) {
+									const { data: updatePaymentDetails } = await axios.patch(
+										`${
+											import.meta.env.VITE_BASE_URL
+										}/api/busBooking/updateBooking/${bookResponse.data._id}`,
+										{
+											bookingStatus: "paid",
+											opPNR: vrlBookSeatResponse?.PNRNO,
+											buspnr: vrlBookSeatResponse?.PNRNO,
+										},
+										{
+											headers: {
+												Authorization: `Bearer ${token}`,
+												"Content-Type": "application/json", // Set the content type to JSON
+											},
+										}
+									);
+									if (updatePaymentDetails) {
+										const mailBody = {
+											fullName: updatePaymentDetails?.data.customerName,
+											sourceCity: updatePaymentDetails?.data.sourceCity,
+											destinationCity:
+												updatePaymentDetails?.data.destinationCity,
+											seats: updatePaymentDetails?.data.selectedSeats,
+											amount: updatePaymentDetails?.data.totalAmount,
+											pickUpLocation: updatePaymentDetails?.data.boardingPoint,
+											opPNR: updatePaymentDetails?.data.opPNR,
+											doj:
+												formatDate(updatePaymentDetails?.data.doj) +
+												" " +
+												updatePaymentDetails?.data.pickUpTime,
+											to: updatePaymentDetails?.data.customerEmail,
+											contact: updatePaymentDetails?.data?.driverNumber,
+										};
+										await axios.post(
+											`${
+												import.meta.env.VITE_BASE_URL
+											}/api/busBooking/sendBookingConfirmationEmail`,
+											mailBody,
+											{
+												headers: {
+													Authorization: `Bearer ${token}`,
+													"Content-Type": "application/json", // Set the content type to JSON
+												},
+											}
+										);
+										const fullName =
+											updatePaymentDetails.data.reservationSchema[0]
+												.paxDetails[0].paxName;
+										//send sms
+										const messageBody = {
+											fullName:
+												fullName || updatePaymentDetails?.data.customerName,
+											sourceCity: updatePaymentDetails?.data.sourceCity,
+											destinationCity:
+												updatePaymentDetails?.data.destinationCity,
+											seats: updatePaymentDetails?.data.selectedSeats,
+											amount: updatePaymentDetails?.data.totalAmount,
+											pickUpLocation: updatePaymentDetails?.data.boardingPoint,
+											opPNR: updatePaymentDetails?.data.opPNR,
+											doj:
+												formatDate(updatePaymentDetails?.data.doj) +
+												" " +
+												updatePaymentDetails?.data.pickUpTime,
+											to: updatePaymentDetails?.data.customerPhone,
+											contact: updatePaymentDetails?.data?.driverNumber,
+										};
+										await axios.post(
+											`${
+												import.meta.env.VITE_BASE_URL
+											}/api/busBooking/sendBookingConfirmationMessage`,
+											messageBody,
+											{
+												headers: {
+													Authorization: `Bearer ${token}`,
+													"Content-Type": "application/json", // Set the content type to JSON
+												},
+											}
+										);
+									}
+									setLoading(false);
+									navigate(
+										`/busbooking/payment/success?bookingId=${bookResponse.data._id}`
+									);
+								} else {
+									setLoading(false);
+									navigate("/busbooking/payment/failure");
+								}
+							}
+							return;
 						}
-						return;
-					}
 
-					const response = await axios.post(
-						`${import.meta.env.VITE_BASE_URL}/api/payment/initiatePayment`,
-						{
-							amount: bookingDetails?.totalFare,
-							redirectUrl: `https://yesgobus.com/busbooking/payment?blockTicketId=${srsResponse.pnr_number}&bookingId=${bookResponse.data._id}&paymentVerify=1`,
-						},
-						{
-							headers: {
-								Authorization: `Bearer ${token}`,
-								"Content-Type": "application/json", // Set the content type to JSON
-							},
-						}
-					);
-
-					if (response.status === 200) {
-						// update merchantTransactionId
-						const updatePaymentDetails = await axios.patch(
-							`${import.meta.env.VITE_BASE_URL}/api/busBooking/updateBooking/${
-								bookResponse.data._id
-							}`,
+						const response = await axios.post(
+							`${import.meta.env.VITE_BASE_URL}/api/payment/initiatePayment`,
 							{
-								merchantTransactionId: response.data.data.merchantTransactionId,
+								amount: bookingDetails?.totalFare,
+								redirectUrl: `https://yesgobus.com/busbooking/payment?blockTicketId=${vrlBlockSeatResponse.BlockID}&bookingId=${bookResponse.data._id}&paymentVerify=1`,
 							},
 							{
 								headers: {
@@ -1045,38 +764,351 @@ const Payment = () => {
 								},
 							}
 						);
-						if (updatePaymentDetails.status === 200) {
+
+						if (response.status === 200) {
+							// update merchantTransactionId
+							const updatePaymentDetails = await axios.patch(
+								`${
+									import.meta.env.VITE_BASE_URL
+								}/api/busBooking/updateBooking/${bookResponse.data._id}`,
+								{
+									merchantTransactionId:
+										response.data.data.merchantTransactionId,
+								},
+								{
+									headers: {
+										Authorization: `Bearer ${token}`,
+										"Content-Type": "application/json", // Set the content type to JSON
+									},
+								}
+							);
+							if (updatePaymentDetails.status === 200) {
+								setLoadingModalVisible(false);
+								setStartCountdown(false);
+								setCountdown(10);
+								window.open(
+									response.data.data.instrumentResponse.redirectInfo.url,
+									"_blank",
+									"noopener noreferrer"
+								);
+							}
+						} else {
+							setLoading(false);
+							setStartCountdown(false);
+							setCountdown(10);
+							setErrorMessage("Please try with other seat or bus.");
+						}
+					} else {
+						setLoadingModalVisible(false);
+						setStartCountdown(false);
+						setCountdown(10);
+						setErrorMessage(vrlBlockSeatResponse.Message);
+					}
+				} catch (error) {
+					setLoadingModalVisible(false);
+					console.log(error);
+					console.error("Something went wrong:", error);
+				}
+			}
+			if (isSrs) {
+				try {
+					const seatObjects = bookingDetails?.selectedSeats?.map(
+						(seatId, index) => {
+							const isPrimary = index === 0;
+							const title = userData[`gender_${index}`] === "M" ? "Mr" : "Ms";
+							return {
+								seat_number: seatId,
+								fare: bookingDetails?.seatFares[index],
+								title: title,
+								name:
+									userData[`firstName_${index}`] +
+									" " +
+									userData[`lastName_${index}`],
+								age: userData[`age_${index}`],
+								sex: userData[`gender_${index}`],
+								is_primary: isPrimary,
+								id_card_type: "1",
+								id_card_number: "111111111",
+								id_card_issued_by: "oneone",
+							};
+						}
+					);
+
+					const srsBlockSeatBody = {
+						book_ticket: {
+							seat_details: {
+								seat_detail: seatObjects,
+							},
+							contact_detail: {
+								mobile_number: userData.mobile,
+								emergency_name: userData[`firstName_0`],
+								email: userData.email,
+							},
+						},
+						origin_id: sourceCityId,
+						destination_id: destinationCityId,
+						boarding_at: bookingDetails?.boardingPoint?.bpId,
+						drop_of: bookingDetails?.droppingPoint?.bpId,
+						no_of_seats: bookingDetails?.selectedSeats?.length,
+						travel_date: doj,
+						customer_company_gst: {
+							name: "Yesgobus",
+							gst_id: "T123DT",
+							address: "Test",
+						},
+					};
+
+					let srsBlockSeatResponse = await srsBlockSeat(
+						scheduleId,
+						srsBlockSeatBody
+					);
+					if (srsBlockSeatResponse.result) {
+						const srsResponse = srsBlockSeatResponse.result.ticket_details;
+
+						const { data: bookResponse } = await axios.post(
+							`${import.meta.env.VITE_BASE_URL}/api/busBooking/bookBus`,
+							{
+								srsBlockSeatDetails: srsBlockSeatBody,
+								blockKey: srsResponse.pnr_number,
+								userId: loggedInUser._id,
+								totalAmount: bookingDetails?.totalFare,
+								busOperator: busName,
+								busType: busType,
+								selectedSeats: bookingDetails.selectedSeats?.join(", "),
+								pickUpTime: pickUpTime,
+								reachTime: reachTime,
+								cancellationPolicy: cancellationPolicy,
+								sourceCity: sourceCity,
+								destinationCity: destinationCity,
+								doj: doj,
+								customerName: firstName,
+								customerLastName: lastName,
+								customerEmail: userData.email,
+								customerPhone: userData.mobile,
+								customerAddress: userData.address,
+								isSrs: isSrs,
+								boardingPoint: bookingDetails?.boardingPoint?.bpName,
+								droppingPoint: bookingDetails?.droppingPoint?.bpName,
+								driverNumber: bookingDetails?.boardingPoint?.number,
+								agentCode: userData.agentCode,
+							},
+							{
+								headers: {
+									Authorization: `Bearer ${token}`,
+									"Content-Type": "application/json", // Set the content type to JSON
+								},
+							}
+						);
+						const checkAgent = await axios.get(
+							`${import.meta.env.VITE_BASE_URL}/api/agent/isAgent/${
+								loggedInUser.userId
+							}`,
+							{},
+							{
+								headers: {
+									Authorization: `Bearer ${token}`,
+									"Content-Type": "application/json", // Set the content type to JSON
+								},
+							}
+						);
+
+						if (checkAgent.data.isAgent) {
 							setLoadingModalVisible(false);
 							setStartCountdown(false);
 							setCountdown(10);
-							window.open(
-								response.data.data.instrumentResponse.redirectInfo.url,
-								"_blank",
-								"noopener noreferrer"
+							if (!checkAgent.data.isBookable) {
+								alert("Max Limit Exceeded, Come back tomorrow");
+								return;
+							}
+							const isConfirmed = window.confirm(
+								"Do you want to confirm the booking?"
 							);
+							if (!isConfirmed) {
+								return;
+							}
+							setLoading(true);
+							// get bookings
+							const getBookingDetails = await axios.get(
+								`${
+									import.meta.env.VITE_BASE_URL
+								}/api/busBooking/getBookingById/${bookResponse.data._id}`,
+								{},
+								{
+									headers: {
+										Authorization: `Bearer ${token}`,
+										"Content-Type": "application/json", // Set the content type to JSON
+									},
+								}
+							);
+							if (getBookingDetails?.data?.data.isSrs) {
+								let srsBookSeatResponse = await srsConfirmBooking(
+									srsResponse.pnr_number
+								);
+
+								if (srsBookSeatResponse.result) {
+									const { data: updatePaymentDetails } = await axios.patch(
+										`${
+											import.meta.env.VITE_BASE_URL
+										}/api/busBooking/updateBooking/${bookResponse.data._id}`,
+										{
+											bookingStatus: "paid",
+											opPNR:
+												srsBookSeatResponse?.result.ticket_details.operator_pnr,
+											buspnr:
+												srsBookSeatResponse?.result.ticket_details
+													.travel_operator_pnr,
+											cancellationPolicy:
+												srsBookSeatResponse?.result.ticket_details
+													.ts_cancellation_policies,
+										},
+										{
+											headers: {
+												Authorization: `Bearer ${token}`,
+												"Content-Type": "application/json", // Set the content type to JSON
+											},
+										}
+									);
+									if (updatePaymentDetails) {
+										const mailBody = {
+											fullName: updatePaymentDetails?.data.customerName,
+											sourceCity: updatePaymentDetails?.data.sourceCity,
+											destinationCity:
+												updatePaymentDetails?.data.destinationCity,
+											seats: updatePaymentDetails?.data.selectedSeats,
+											amount: updatePaymentDetails?.data.totalAmount,
+											pickUpLocation: updatePaymentDetails?.data.boardingPoint,
+											opPNR: updatePaymentDetails?.data.opPNR,
+											doj:
+												formatDate(updatePaymentDetails?.data.doj) +
+												" " +
+												updatePaymentDetails?.data.pickUpTime,
+											to: updatePaymentDetails?.data.customerEmail,
+											contact: updatePaymentDetails?.data?.driverNumber,
+										};
+										await axios.post(
+											`${
+												import.meta.env.VITE_BASE_URL
+											}/api/busBooking/sendBookingConfirmationEmail`,
+											mailBody,
+											{
+												headers: {
+													Authorization: `Bearer ${token}`,
+													"Content-Type": "application/json", // Set the content type to JSON
+												},
+											}
+										);
+
+										const fullName =
+											updatePaymentDetails?.data.srsBlockSeatDetails.book_ticket
+												.seat_details.seat_detail[0].name;
+
+										//send sms
+										const messageBody = {
+											fullName:
+												fullName || updatePaymentDetails?.data.customerName,
+											sourceCity: updatePaymentDetails?.data.sourceCity,
+											destinationCity:
+												updatePaymentDetails?.data.destinationCity,
+											seats: updatePaymentDetails?.data.selectedSeats,
+											amount: updatePaymentDetails?.data.totalAmount,
+											pickUpLocation: updatePaymentDetails?.data.boardingPoint,
+											opPNR: updatePaymentDetails?.data.opPNR,
+											doj:
+												formatDate(updatePaymentDetails?.data.doj) +
+												" " +
+												updatePaymentDetails?.data.pickUpTime,
+											to: updatePaymentDetails?.data.customerPhone,
+											contact: updatePaymentDetails?.data?.driverNumber,
+										};
+										await axios.post(
+											`${
+												import.meta.env.VITE_BASE_URL
+											}/api/busBooking/sendBookingConfirmationMessage`,
+											messageBody,
+											{
+												headers: {
+													Authorization: `Bearer ${token}`,
+													"Content-Type": "application/json", // Set the content type to JSON
+												},
+											}
+										);
+									}
+									setLoading(false);
+									navigate(
+										`/busbooking/payment/success?bookingId=${bookResponse.data._id}`
+									);
+								} else {
+									setLoading(false);
+									navigate("/busbooking/payment/failure");
+								}
+							}
+							return;
+						}
+
+						const response = await axios.post(
+							`${import.meta.env.VITE_BASE_URL}/api/payment/initiatePayment`,
+							{
+								amount: bookingDetails?.totalFare,
+								redirectUrl: `https://yesgobus.com/busbooking/payment?blockTicketId=${srsResponse.pnr_number}&bookingId=${bookResponse.data._id}&paymentVerify=1`,
+							},
+							{
+								headers: {
+									Authorization: `Bearer ${token}`,
+									"Content-Type": "application/json", // Set the content type to JSON
+								},
+							}
+						);
+
+						if (response.status === 200) {
+							// update merchantTransactionId
+							const updatePaymentDetails = await axios.patch(
+								`${
+									import.meta.env.VITE_BASE_URL
+								}/api/busBooking/updateBooking/${bookResponse.data._id}`,
+								{
+									merchantTransactionId:
+										response.data.data.merchantTransactionId,
+								},
+								{
+									headers: {
+										Authorization: `Bearer ${token}`,
+										"Content-Type": "application/json", // Set the content type to JSON
+									},
+								}
+							);
+							if (updatePaymentDetails.status === 200) {
+								setLoadingModalVisible(false);
+								setStartCountdown(false);
+								setCountdown(10);
+								window.open(
+									response.data.data.instrumentResponse.redirectInfo.url,
+									"_blank",
+									"noopener noreferrer"
+								);
+							}
+						} else {
+							setLoading(false);
+							setStartCountdown(false);
+							setCountdown(10);
+							setErrorMessage("Please try with other seat or bus.");
 						}
 					} else {
-						setLoading(false);
+						setLoadingModalVisible(false);
 						setStartCountdown(false);
 						setCountdown(10);
-						setErrorMessage("Please try with other seat or bus.");
+						setErrorMessage(srsBlockSeatResponse.response.message);
 					}
-				} else {
+				} catch (error) {
 					setLoadingModalVisible(false);
-					setStartCountdown(false);
-					setCountdown(10);
-					setErrorMessage(srsBlockSeatResponse.response.message);
+					console.log(error);
+					console.error("Something went wrong:", error);
 				}
-			} catch (error) {
+			} else if (!isSrs && !isVrl) {
 				setLoadingModalVisible(false);
-				console.log(error);
-				console.error("Something went wrong:", error);
+				setStartCountdown(false);
+				setCountdown(10);
+				setErrorMessage("Under Development...");
 			}
-		} else if (!isSrs && !isVrl) {
-			setLoadingModalVisible(false);
-			setStartCountdown(false);
-			setCountdown(10);
-			setErrorMessage("Under Development...");
 		}
 	};
 
@@ -1120,7 +1152,7 @@ const Payment = () => {
 			) {
 				errors.femaleReserved = true;
 			}
-			console.log("errors", errors);
+			// console.log("errors", errors);
 		}
 
 		if (!userData.email?.trim()) {
@@ -1155,6 +1187,8 @@ const Payment = () => {
 			console.error("Error", error);
 		}
 	};
+	const errors = validateUserData();
+	const errorFields = Object.keys(errors);
 
 	// function to handle checkbox change
 	const handleTravellerSelect = (e, booking, index) => {
@@ -1350,36 +1384,42 @@ const Payment = () => {
 							<div key={index} className="traveler-Details">
 								<span>Passenger {index + 1}</span>
 								<div className="detailsContainer">
-									<Input
-										className="input-element"
-										title={"First Name *"}
-										type={"text"}
-										placeholder={"First name"}
-										onChanged={(e) =>
-											handleInputChange(e, `firstName_${index}`)
-										}
-										givenName={`firstName_${index}`}
-										value={userData[`firstName_${index}`] || ""}
-										required
-									/>
-									{userData[`firstName_${index}`] === "" && (
-										<div style={{ color: "red" }}>First name is required</div>
-									)}
-									<Input
-										className="input-element"
-										title={"Last Name *"}
-										type={"text"}
-										placeholder={"Last name"}
-										onChanged={(e) => handleInputChange(e, `lastName_${index}`)}
-										givenName={`lastName_${index}`}
-										value={userData[`lastName_${index}`] || ""}
-										required
-									/>
-									{userData[`lastName_${index}`] === "" && (
-										<div style={{ color: "red" }}>Last name is required</div>
-									)}
+									<div id={`firstName_${index}`} className="first-name">
+										<Input
+											className="input-element"
+											title={"First Name *"}
+											type={"text"}
+											placeholder={"First name"}
+											onChanged={(e) =>
+												handleInputChange(e, `firstName_${index}`)
+											}
+											givenName={`firstName_${index}`}
+											value={userData[`firstName_${index}`] || ""}
+											required
+										/>
+										{showError && errorFields.includes(`firstName_${index}`) && (
+											<div style={{ color: "red" }}>First name is required</div>
+										)}
+									</div>
+									<div id={`lastName_${index}`} className="last-name">
+										<Input
+											className="input-element"
+											title={"Last Name *"}
+											type={"text"}
+											placeholder={"Last name"}
+											onChanged={(e) =>
+												handleInputChange(e, `lastName_${index}`)
+											}
+											givenName={`lastName_${index}`}
+											value={userData[`lastName_${index}`] || ""}
+											required
+										/>
+										{showError && errorFields.includes(`lastName_${index}`) && (
+											<div style={{ color: "red" }}>Last name is required</div>
+										)}
+									</div>
 									<div className="age-gender">
-										<div className="ageContainer">
+										<div id={`age_${index}`} className="ageContainer">
 											<Input
 												className="input-element"
 												title={"Age *"}
@@ -1390,11 +1430,11 @@ const Payment = () => {
 												value={userData[`age_${index}`] || ""}
 												required
 											/>
-											{userData[`age_${index}`] === "" && (
+											{showError && errorFields.includes(`age_${index}`) && (
 												<div style={{ color: "red" }}>Age is required</div>
 											)}
 										</div>
-										<div className="genderContainer">
+										<div id={`gender_${index}`} className="genderContainer">
 											<select
 												name={`gender_${index}`}
 												id={`gender_${index}`}
@@ -1408,7 +1448,7 @@ const Payment = () => {
 												<option value="M">Male</option>
 												<option value="F">Female</option>
 											</select>
-											{userData[`gender_${index}`] === "" && (
+											{showError && errorFields.includes(`gender_${index}`) && (
 												<div style={{ color: "red" }}>Gender is required</div>
 											)}
 										</div>

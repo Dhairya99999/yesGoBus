@@ -147,16 +147,17 @@ const Login = () => {
 					setTimeout(() => {
 						navigate("/");
 					}, 2000);
-				} else {
-					toast.error("Invalid credentials", {
-						duration: 2000,
-						position: "top-center",
-						style: {
-							background: "red",
-							color: "white",
-						},
-					});
 				}
+				//  else {
+				// 	toast.error("Invalid credentials", {
+				// 		duration: 2000,
+				// 		position: "top-center",
+				// 		style: {
+				// 			background: "red",
+				// 			color: "white",
+				// 		},
+				// 	});
+				// }
 			} catch (error) {
 				toast.error("Invalid credentials", {
 					duration: 2000,
