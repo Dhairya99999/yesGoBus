@@ -716,21 +716,24 @@ const BusBookingCard = ({
 						<span className="text-orange">YESGO</span>BUS
 					</h6> */}
 					<div className="time-and-price">
-						<h4>
-							<span className="pickup-time">{pickUpTime}</span> ─{" "}
-							<span className="reach-time">{reachTime}</span>
-						</h4>
+						<div className="time-duration-seat">
+							<div className="time-container">
+								<span className="pickup-time">{pickUpTime}</span> ─{" "}
+								<span className="reach-time">{reachTime}</span>
+							</div>
+							<div className="duration-and-seats-left">
+								<span className="duration">{formatTravelTime(travelTime)}</span>
+								<span className="seats-left text-orange">
+									{availableSeats} Seats
+								</span>
+							</div>
+						</div>
 						<span className="price-container">
 							<p className="price">₹ {(+price).toFixed(2)}</p>
 							<span>Onwards</span>
 						</span>
 					</div>
-					<div className="duration-and-seats-left">
-						<span className="duration">{formatTravelTime(travelTime)}</span>
-						<span className="seats-left text-orange">
-							{availableSeats} Seats
-						</span>
-					</div>
+
 					<div className="bus-details-container">
 						<div className="bus-details">
 							<h4>{busName}</h4>

@@ -74,15 +74,17 @@
 					&:hover {
 						cursor: pointer;
 						background-color: rgb(222, 219, 219);
+						border: 1px solid #fd5901;
+						color: black;
 					}
 				}
 			}
 
-			& > .dates {
-				// @media (max-width: 426px) {
-				//   display: none;
-				// }
-			}
+			// & > .dates {
+			// 	// @media (max-width: 426px) {
+			// 	//   display: none;
+			// 	// }
+			// }
 
 			.exclusiveOffers {
 				padding: 50px;

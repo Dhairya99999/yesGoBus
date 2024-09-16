@@ -53,24 +53,9 @@ const BusBooking = () => {
 
 	//dates
 	const date = new Date();
-	// const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-	// const months = [
-	// 	"Jan",
-	// 	"Feb",
-	// 	"Mar",
-	// 	"Apr",
-	// 	"May",
-	// 	"Jun",
-	// 	"Jul",
-	// 	"Aug",
-	// 	"Sep",
-	// 	"Oct",
-	// 	"Nov",
-	// 	"Dec",
-	// ];
 	const dates = [];
 
-	for (let i = 0; i <= 6; i++) {
+	for (let i = 1; i <= 7; i++) {
 		const nextDate = new Date(date);
 		nextDate.setDate(date.getDate() + i);
 		// const formattedDate = `${daysOfWeek[nextDate.getDay()]},${

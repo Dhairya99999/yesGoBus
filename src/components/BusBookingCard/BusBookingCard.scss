@@ -228,17 +228,39 @@
 					display: flex;
 					justify-content: space-between;
 					align-items: center;
-					.pickup-time {
-						font-size: 16px;
-						font-weight: 700;
+					.time-duration-seat {
+						display: flex;
+						align-items: center;
+						flex-direction: column;
+						gap: 2px;
+						.time-container {
+							.pickup-time {
+								font-size: 16px;
+								font-weight: 700;
+							}
+							.reach-time {
+								font-size: 16px;
+								font-weight: 500;
+							}
+						}
+						.duration-and-seats-left {
+							display: flex;
+							gap: 10px;
+							// margin-top: -30px;
+							align-items: center;
+							.duration {
+								font-size: 14px;
+								color: gray;
+							}
+							.seats-left {
+								font-size: 14px;
+								color: gray;
+								padding-left: 0;
+							}
+						}
 					}
-					.reach-time {
-						font-size: 16px;
-						font-weight: 500;
-					}
-
 					.price-container {
-						padding: 3px 5px;
+						// padding: 3px 5px;
 						font-size: 11px;
 						font-weight: 100;
 						display: flex;
@@ -247,6 +269,7 @@
 						background-color: white;
 						display: flex;
 						flex-direction: column;
+						gap: 2px;
 						p {
 							display: inline;
 						}
@@ -264,25 +287,10 @@
 					}
 				}
 
-				.duration-and-seats-left {
-					display: flex;
-					gap: 10px;
-					margin-top: -20px;
-
-					.duration {
-						font-size: 14px;
-						color: gray;
-					}
-					.seats-left {
-						font-size: 14px;
-						color: gray;
-						padding-left: 0;
-					}
-				}
-
 				.bus-details-container {
 					display: flex;
 					justify-content: space-between;
+					align-items: center;
 
 					.bus-details {
 						.lighter {
