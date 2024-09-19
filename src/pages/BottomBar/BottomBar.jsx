@@ -18,7 +18,7 @@ const BottomBar = () => {
 
 	// Function to handle phone call initiation
 	const handleCallJustdial = () => {
-		window.location.href = "tel:+919888417555";
+		window.location.href = "tel:9888417555,,+91";
 		setTimeout(() => {
 			// Redirect back to home page
 			navigate("/");
