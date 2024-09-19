@@ -18,7 +18,7 @@ const BottomBar = () => {
 
 	// Function to handle phone call initiation
 	const handleCallJustdial = () => {
-			 const phoneNumber = "+919888417555";
+			 const phoneNumber = "9888417555";
 			navigate(`/travel-app/?tel=${phoneNumber}`);
 	};
 
