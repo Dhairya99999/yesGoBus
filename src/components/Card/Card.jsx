@@ -10,7 +10,7 @@ const Card = ({ img, title, subtitle, text, link }) => {
 
   const send = () => {
     if (text === "Send Mail") window.location.href = `mailto:${link}`;
-    else if (text === "Call Us") navigate(`/contactus/tel:${link}`);
+    else if (text === "Call Us") navigate(`/contactus/?tel:${link}`);
   };
   return (
     <div className="card">
