@@ -9,7 +9,7 @@ const Card = ({ img, title, subtitle, text, link }) => {
   const navigate = useNavigate();
 
   const send = () => {
-    if (text === "Send Mail") window.location.href = `mailto:${link}`;
+    if (text === "Send Mail") navigate(`/contactus/?mailto=${link}`);
     else if (text === "Call Us") navigate(`/contactus/?tel:${link}`);
   };
   return (
