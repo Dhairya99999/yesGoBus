@@ -20,9 +20,9 @@ const BottomBar = () => {
 	const handleCallJustdial = () => {
 			 const phoneNumber = "+919888417555";
 			// console.log(`Dialing: ${phoneNumber}`); // Log the number
-			 window.location.href = `tel:${phoneNumber}`;
+			// window.location.href = `tel:${phoneNumber}`;
 			// Redirect back to home page
-			navigate("/");
+			navigate(`tel:${phoneNumber}`);
 	};
 
 	return (
