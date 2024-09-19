@@ -22,7 +22,7 @@ const BottomBar = () => {
 			// console.log(`Dialing: ${phoneNumber}`); // Log the number
 			// window.location.href = `tel:${phoneNumber}`;
 			// Redirect back to home page
-			navigate(`tel:${phoneNumber}`);
+			navigate(`/tel:${phoneNumber}`);
 	};
 
 	return (
