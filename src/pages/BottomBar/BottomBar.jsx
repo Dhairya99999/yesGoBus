@@ -15,15 +15,11 @@ import { useNavigate } from "react-router-dom";
 
 const BottomBar = () => {
 	const navigate = useNavigate();
+
 	// Function to handle phone call initiation
 	const handleCallJustdial = () => {
 			 const phoneNumber = "+919888417555";
-			// console.log(`Dialing: ${phoneNumber}`); // Log the number
-			 window.location.href = `tel:${phoneNumber}`;
-			 setTimeout(() => {
-				navigate('/travel-app'); 
-			  }, 500); 
-			 
+			navigate(`/travel-app/?tel:${phoneNumber}`);
 	};
 
 	return (
