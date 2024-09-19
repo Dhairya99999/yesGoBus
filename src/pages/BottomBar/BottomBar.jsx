@@ -18,9 +18,11 @@ const BottomBar = () => {
 
 	// Function to handle phone call initiation
 	const handleCallJustdial = () => {
-			console.log(`Dialing: ${phoneNumber}`);
-			window.open("tel:+919888417555");
+			const phoneNumber = "+919888417555";
+			console.log(`Dialing: ${phoneNumber}`); // Log the number
+			window.location.href = `tel:${phoneNumber}`;
 		setTimeout(() => {
+			// Redirect back to home page
 			navigate("/");
 		}, 200);
 	};
