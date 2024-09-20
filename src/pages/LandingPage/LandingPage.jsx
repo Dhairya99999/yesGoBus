@@ -14,7 +14,7 @@ import BottomBar from "../BottomBar/BottomBar.jsx"; // Import the BottomBar comp
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./landingPage.scss";
-import RecentSearch from "../../components/Recent Search/ReacentSearch.jsx";
+import RecentSearch from "../../components/Recent Search/RecentSearch.jsx";
 // import Banner from "../../components/IntroHome/Banner.jsx";
 import { formatDate } from "../../utils/BusBookingHelpers.js";
 
