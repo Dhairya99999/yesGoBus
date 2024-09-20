@@ -12,10 +12,10 @@
 		padding-bottom: 0px;
 		.toandfrom {
 			display: flex;
-			gap: 10px;
+			// gap: 10px;
 			max-width: 160px;
-			align-items: center;
-			justify-content: space-between;
+			// align-items: center;
+			// justify-content: space-between;
 			flex-wrap: wrap;
 		}
 		h1 {
@@ -62,17 +62,18 @@
 		flex-direction: column;
 		.locations {
 			flex-direction: row;
-			align-items: center;
+			// align-items: center;
 			justify-content: space-between;
 			// gap: 20px;
-			h1 {
+			span {
 				font-size: 15px;
 				font-weight: 500;
 				line-height: 30px;
 			}
 			img {
+				margin: 0 10px;
 				width: 15px;
-				color: gray;
+				filter: invert(40%);
 			}
 			hr {
 				display: none;

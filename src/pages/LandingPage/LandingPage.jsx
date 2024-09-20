@@ -14,6 +14,7 @@ import BottomBar from "../BottomBar/BottomBar.jsx"; // Import the BottomBar comp
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./landingPage.scss";
+import RecentSearch from "../../components/Recent Search/ReacentSearch.jsx";
 // import Banner from "../../components/IntroHome/Banner.jsx";
 import { formatDate } from "../../utils/BusBookingHelpers.js";
 
@@ -33,6 +34,26 @@ const LandingPage = () => {
 	const [locationOneSuggestions, setLocationOneSuggestions] = useState([]);
 	const [locationTwoSuggestions, setLocationTwoSuggestions] = useState([]);
 
+	const [data, setData] = useState(() => {
+		const storedData = localStorage.getItem("recentSearch");
+		try {
+			return storedData ? JSON.parse(storedData) : [];
+		} catch (error) {
+			return [];
+		}
+	});
+
+	const handleSave = (from, to, doj) => {
+		const newData = [from, to, doj];
+		const updatedData = [...data];
+		if (updatedData.length >= 4) {
+			updatedData.shift(); // remove the oldest entry
+		}
+		updatedData.push(newData);
+		setData(updatedData);
+		localStorage.setItem("recentSearch", JSON.stringify(updatedData));
+	};
+
 	const handleSearchClick = (fromLocation, toLocation, selectedDate) => {
 		if (fromLocation && toLocation && selectedDate) {
 			if (
@@ -41,6 +62,7 @@ const LandingPage = () => {
 				alert("Source and destination cities cannot be the same.");
 				return;
 			}
+			handleSave(fromLocation, toLocation, selectedDate);
 			navigate(
 				`/busbooking?from=${fromLocation}&to=${toLocation}&date=${selectedDate}`
 			);
@@ -105,6 +127,7 @@ const LandingPage = () => {
 				returnDate=""
 				onSearch={handleSearchClick}
 			/>
+			{data && <RecentSearch data={data} />}
 			<div className="popularBusTicket">
 				<span className="popularBusTicketTitle">Popular Bus Ticket</span>
 				<div className="wrapper">

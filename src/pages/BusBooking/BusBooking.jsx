@@ -52,15 +52,13 @@ const BusBooking = () => {
 	const [sortBy, setSortBy] = useState(null);
 
 	//dates
-	const date = new Date();
+	const queryParams = new URLSearchParams(location.search);
+	const dateString = queryParams.get("date");
 	const dates = [];
 
 	for (let i = 1; i <= 7; i++) {
-		const nextDate = new Date(date);
-		nextDate.setDate(date.getDate() + i);
-		// const formattedDate = `${daysOfWeek[nextDate.getDay()]},${
-		// 	months[nextDate.getMonth()]
-		// }-${nextDate.getDate()}`;
+		const nextDate = new Date(dateString);
+		nextDate.setDate(nextDate.getDate() + i);
 		dates.push(formatDate(nextDate));
 	}
 
@@ -189,6 +187,7 @@ const BusBooking = () => {
 			(filters.busPartners.length > 0 ||
 				filters.boardingPoints.length > 0 ||
 				filters.droppingPoints.length > 0 ||
+				filters.busType.length > 0 ||
 				(filters.minPrice && filters.maxPrice))
 		) {
 			isFilter = true;
@@ -214,6 +213,58 @@ const BusBooking = () => {
 					)
 				);
 			}
+
+			// WORKING FOR ALL EXCEPT NON-AC BUSES
+			// if (filters.busType.length > 0) {
+			// 	const filterCriteria = filters.busType.map((type) =>
+			// 		type.split(/[;,]/).map((subType) => new RegExp(subType, "i"))
+			// 	);
+			// 	filteredBuses = filteredBuses.filter((bus) => {
+			// 		const busType = bus.bus_type;
+			// 		return filterCriteria.every((criteria) =>
+			// 			criteria.every((subCriteria) => subCriteria.test(busType))
+			// 		);
+			// 	});
+			// 	console.log("filteredBuses with filter", filteredBuses);
+			// }
+			if (filters.busType.length > 0 && filters.busType.length !== 4) {
+				const filterCriteria = filters.busType.map((type) => {
+					if (type.toLowerCase() === "non ac") {
+						return [new RegExp("^(?!.*ac).*$", "i")]; // matches any string that does not contain 'ac'
+					} else {
+						return type
+							.split(/[;,]/)
+							.map((subType) => new RegExp(subType, "i"));
+					}
+				});
+				const originalBuses = [...filteredBuses]; // store the original buses array
+				filteredBuses = filteredBuses.filter((bus) => {
+					const busType = bus.bus_type;
+					return filterCriteria.every((criteria) =>
+						criteria.every((subCriteria) => subCriteria.test(busType))
+					);
+				});
+				if (
+					filteredBuses.length === 0 &&
+					filters.busType.some((type) => type.toLowerCase() === "non ac")
+				) {
+					filteredBuses = originalBuses; // return all buses if no Non-AC buses are found
+				}
+				console.log("filteredBuses with filter", filteredBuses);
+			}
+
+			// if (filters.minPrice && filters.maxPrice) {
+			// 	setVrlBuses([]);
+			// 	setNoVrlOfBuses(0);
+			// 	filteredBuses = filteredBuses.filter((bus) => {
+			// 		const prices = bus.show_fare_screen
+			// 			.split("/")
+			// 			.map((price) => parseFloat(price));
+			// 		return prices.some(
+			// 			(price) => price >= filters.minPrice && price <= filters.maxPrice
+			// 		);
+			// 	});
+			// }
 			if (filters.minPrice && filters.maxPrice) {
 				setVrlBuses([]);
 				setNoVrlOfBuses(0);
@@ -221,10 +272,11 @@ const BusBooking = () => {
 					const prices = bus.show_fare_screen
 						.split("/")
 						.map((price) => parseFloat(price));
-					return prices.some(
+					return prices.every(
 						(price) => price >= filters.minPrice && price <= filters.maxPrice
 					);
 				});
+				// console.log("filteredBuses with filter price", filteredBuses);
 			}
 			const uniqueBusesSet = new Set(filteredBuses.map((bus) => bus.id));
 			filteredBuses = Array.from(uniqueBusesSet, (id) =>

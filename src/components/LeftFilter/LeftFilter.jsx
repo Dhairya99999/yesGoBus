@@ -23,11 +23,13 @@ const LeftFilter = ({
 	const [filters, setFilters] = useState([]);
 	const [boardingPointsFilter, setBoardingPointsFilter] = useState([]);
 	const [droppingPointsFilter, setDroppingPointsFilter] = useState([]);
-	const [busType, setBusType] = useState(["AC", "Non AC"]);
+	const [busType, setBusType] = useState(["AC", "Non AC", "Sleeper", "Seater"]);
 	const [busPartnerFilter, setBusPartnerFilter] = useState([]);
 	const [selectedBoardingPoints, setSelectedBoardingPoints] = useState([]);
 	const [selectedDroppingPoints, setSelectedDroppingPoints] = useState([]);
+	const terms = ["AC", "NON AC", "Sleeper", "Seater"];
 
+	// for price range change
 	const handleSliderChangeCommitted = (event, newRange) => {
 		// setRange(newRange);
 		onFilterChange({
@@ -171,7 +173,7 @@ const LeftFilter = ({
 		let updatedBoardingPointsFilter = boardingPointsFilter;
 		let updatedDroppingPointsFilter = droppingPointsFilter;
 		let updatedBusPartnerFilter = busPartnerFilter;
-
+		let updatedBusTypeFilter = busType;
 		if (filterName === "boardingPoints") {
 			updatedBoardingPointsFilter = selectedFilters;
 		}
@@ -181,14 +183,29 @@ const LeftFilter = ({
 		if (filterName === "busPartners") {
 			updatedBusPartnerFilter = selectedFilters;
 		}
+		if (filterName === "busType") {
+			updatedBusTypeFilter = selectedFilters;
+		}
 		onFilterChange({
 			boardingPoints: updatedBoardingPointsFilter,
 			droppingPoints: updatedDroppingPointsFilter,
 			busPartners: updatedBusPartnerFilter,
+			busType: updatedBusTypeFilter,
 		});
 		setBoardingPointsFilter(updatedBoardingPointsFilter);
 		setDroppingPointsFilter(updatedDroppingPointsFilter);
 		setBusPartnerFilter(updatedBusPartnerFilter);
+		setBusType(updatedBusTypeFilter);
+	};
+
+	const [openFilter, setOpenFilter] = useState(null);
+
+	const handleFilterClick = (filterName) => {
+		if (openFilter === filterName) {
+			setOpenFilter(null);
+		} else {
+			setOpenFilter(filterName);
+		}
 	};
 
 	return (
@@ -206,6 +223,8 @@ const LeftFilter = ({
 					destinationCity={destinationCity}
 					key={"Boarding-Points"}
 					doj={doj}
+					isOpen={openFilter === "boardingPoints"}
+					onClick={() => handleFilterClick("boardingPoints")}
 				/>
 				<LeftFilterBox
 					title={"Drop Points"}
@@ -218,6 +237,8 @@ const LeftFilter = ({
 					destinationCity={destinationCity}
 					key={"Drop-Points"}
 					doj={doj}
+					isOpen={openFilter === "droppingPoints"}
+					onClick={() => handleFilterClick("droppingPoints")}
 				/>
 				<LeftFilterBox
 					title={"Bus Partner"}
@@ -229,10 +250,12 @@ const LeftFilter = ({
 					destinationCity={destinationCity}
 					key={"Bus-Partner"}
 					doj={doj}
+					isOpen={openFilter === "busPartners"}
+					onClick={() => handleFilterClick("busPartners")}
 				/>
 				<LeftFilterBox
 					title={"Bus Type"}
-					points={filters.busType}
+					points={terms}
 					count={[12, 16, 78]}
 					name={"busType"}
 					onFilterChange={handleFilterChange}
@@ -240,6 +263,8 @@ const LeftFilter = ({
 					destinationCity={destinationCity}
 					key={"Bus-Partner"}
 					doj={doj}
+					isOpen={openFilter === "busType"}
+					onClick={() => handleFilterClick("busType")}
 				/>
 				{/* <LeftFilterBox
           title={"Bus Type"}

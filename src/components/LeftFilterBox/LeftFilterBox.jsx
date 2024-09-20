@@ -11,8 +11,10 @@ const LeftFilterBox = ({
 	sourceCity,
 	destinationCity,
 	doj,
+	isOpen,
+	onClick,
 }) => {
-	const [showPoints, setShowPoints] = useState(false);
+	// const [showPoints, setShowPoints] = useState(false);
 	const [selectedPoints, setSelectedPoints] = useState([]);
 	const [searchTerm, setSearchTerm] = useState("");
 
@@ -49,11 +51,11 @@ const LeftFilterBox = ({
 	return (
 		<div className="LeftFilterBox">
 			<div className="leftFilterContainer">
-				<div onClick={() => setShowPoints(!showPoints)} className="title">
+				<div onClick={onClick} className="title">
 					<p>{title}</p>
 					<img src={downarrow} alt="" />
 				</div>
-				{showPoints && (
+				{isOpen && (
 					<div>
 						<input
 							type="text"

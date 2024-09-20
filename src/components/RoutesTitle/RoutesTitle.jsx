@@ -19,9 +19,9 @@ const RoutesTitle = ({ locationOne, locationTwo, date, onDateChange }) => {
 		<div className="RoutesTitle">
 			<div className="locations">
 				<div className="toandfrom">
-					<h1>{locationOne}</h1>
+					<span>{locationOne}</span>
 					<img src={rightarrow} alt="" />
-					<h1>{locationTwo}</h1>
+					<span>{locationTwo}</span>
 				</div>
 				<hr />
 				<h3>{formatDate(date)}</h3>
