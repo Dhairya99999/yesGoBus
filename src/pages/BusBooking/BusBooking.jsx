@@ -68,7 +68,6 @@ const BusBooking = () => {
 	const day = String(currentDate.getDate()).padStart(2, "0");
 	currentDate = `${year}-${month}-${day}`;
 
-	const queryParams = new URLSearchParams(location.search);
 	const sourceCity =
 		queryParams.get("from") || localStorage.getItem("sourceCity");
 	const destinationCity =
