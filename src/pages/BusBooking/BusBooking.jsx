@@ -50,7 +50,7 @@ const BusBooking = () => {
 	const [minPrice, setMinPrice] = useState();
 	const [maxPrice, setMaxPrice] = useState();
 
-	console.log(minPrice, maxPrice);
+	// console.log(minPrice, maxPrice);
 	// SortState
 	const [sortBy, setSortBy] = useState(null);
 
@@ -215,6 +215,7 @@ const BusBooking = () => {
 				filters.busType.length > 0 ||
 				(filters.minPrice && filters.maxPrice))
 		) {
+			// console.log("filters", filters);
 			isFilter = true;
 			let filteredBuses = srsBusesForFilter;
 			if (filters.busPartners.length > 0) {
@@ -240,17 +241,47 @@ const BusBooking = () => {
 			}
 
 			// filter using Bus Type
+			// if (filters.busType.length > 0 && filters.busType.length !== 4) {
+			// 	const filterCriteria = filters.busType.map((type) =>
+			// 		type.split(/[;,]/).map((subType) => new RegExp(subType, "i"))
+			// 	);
+			// 	filteredBuses = filteredBuses.filter((bus) => {
+			// 		const busType = bus.bus_type;
+			// 		return filterCriteria.every((criteria) =>
+			// 			criteria.every((subCriteria) => subCriteria.test(busType))
+			// 		);
+			// 	});
+			// 	console.log("filteredBuses with filter", filteredBuses);
+			// }
 			if (filters.busType.length > 0 && filters.busType.length !== 4) {
 				const filterCriteria = filters.busType.map((type) =>
 					type.split(/[;,]/).map((subType) => new RegExp(subType, "i"))
 				);
-				filteredBuses = filteredBuses.filter((bus) => {
-					const busType = bus.bus_type;
-					return filterCriteria.every((criteria) =>
-						criteria.every((subCriteria) => subCriteria.test(busType))
-					);
-				});
-				console.log("filteredBuses with filter", filteredBuses);
+
+				if (
+					filterCriteria.some((criteria) =>
+						criteria.some((subCriteria) => subCriteria.test("ac"))
+					)
+				) {
+					// FilterCriteria is "Ac", so apply additional filtering logic
+					filteredBuses = filteredBuses.filter((bus) => {
+						const busType = bus.bus_type;
+						return (
+							busType.toLowerCase().includes("ac") &&
+							!busType.toLowerCase().includes("non-ac")
+						);
+					});
+				} else {
+					// FilterCriteria is not "Ac", so use the original filtering logic
+					filteredBuses = filteredBuses.filter((bus) => {
+						const busType = bus.bus_type;
+						return filterCriteria.every((criteria) =>
+							criteria.every((subCriteria) => subCriteria.test(busType))
+						);
+					});
+				}
+
+				// console.log("filteredBuses with filter", filteredBuses);
 			}
 			// if (filters.busType.length > 0 && filters.busType.length !== 4) {
 			// 	const filterCriteria = filters.busType.map((type) => {
@@ -307,7 +338,23 @@ const BusBooking = () => {
 			filteredBuses = Array.from(uniqueBusesSet, (id) =>
 				filteredBuses.find((bus) => bus.id === id)
 			);
+			// console.log("filteredBuses", filteredBuses);
+			// console.log("type of filteredBuses", typeof filteredBuses);
 
+			// code for dynamic price range in filter wrapper
+			if (!filters.minPrice && !filters.maxPrice) {
+				const prices = filteredBuses.map((obj) => {
+					const fareScreenValues = obj.show_fare_screen.split("/");
+					return fareScreenValues.map((value) => parseFloat(value));
+				});
+				const flatPrices = []
+					.concat(...prices)
+					.filter((price) => !isNaN(price));
+				const minPrice = Math.min(...flatPrices);
+				const maxPrice = Math.max(...flatPrices);
+				setMinPrice(minPrice);
+				setMaxPrice(maxPrice);
+			}
 			setSrsBuses(filteredBuses);
 			setNoSrsOfBuses(filteredBuses?.length);
 		} else {
@@ -706,6 +753,7 @@ const BusBooking = () => {
 									// priceRange={[minPrice, maxPrice]}
 									minPrice={minPrice}
 									maxPrice={maxPrice}
+									setSortBy={setSortBy}
 									key={"mobile-left-filter"}
 								/>
 							</div>
@@ -714,7 +762,11 @@ const BusBooking = () => {
 							{/* If no buses found then display message  */}
 							{!sortedBusList?.length && (
 								<div className="no-buses-found">
-									<img src={nobusesfound} style={{ width: "100%", borderRadius: "10px" }} alt="no buses found" />
+									<img
+										src={nobusesfound}
+										style={{ width: "100%", borderRadius: "10px" }}
+										alt="no buses found"
+									/>
 									{/* <p>No buses found</p> */}
 								</div>
 							)}

@@ -21,6 +21,7 @@ const LeftFilter = ({
 	allSrsBusOperators,
 	minPrice,
 	maxPrice,
+	setSortBy,
 }) => {
 	// console.log("minPrice maxPrice", minPrice, maxPrice);
 	const [range, setRange] = useState([100, 6000]);
@@ -215,6 +216,20 @@ const LeftFilter = ({
 		}
 	};
 
+	const handleClearClick = () => {
+		onFilterChange({
+			boardingPoints: [],
+			droppingPoints: [],
+			busPartners: [],
+			busType: [],
+		});
+		setBoardingPointsFilter([]);
+		setDroppingPointsFilter([]);
+		setBusPartnerFilter([]);
+		setBusType([]);
+		setSortBy(null);
+	};
+
 	return (
 		<div className="leftFilter">
 			{/* <h4>Filter</h4> */}
@@ -300,6 +315,9 @@ const LeftFilter = ({
 						className="slider"
 					/>
 				</div>
+				<button onClick={handleClearClick} className="clear-all">
+					Clear All
+				</button>
 			</div>
 		</div>
 	);
