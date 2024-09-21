@@ -18,6 +18,7 @@ import singleladiesavailable from "./singleladiesavailable.svg";
 import singleladiesbooked from "./singleladiesbooked.svg";
 import singleselected from "./singleselected.svg";
 import leftArrow from "./leftArrow.png";
+import nobusesfound from "./nobusesfound.png";
 
 export {
 	twowayarrow,
@@ -39,5 +40,6 @@ export {
 	singleladiesavailable,
 	singleladiesbooked,
 	singleselected,
-  leftArrow
+	leftArrow,
+	nobusesfound,
 };

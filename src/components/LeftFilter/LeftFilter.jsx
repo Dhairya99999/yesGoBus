@@ -10,6 +10,7 @@ import { getVrlBusFilters } from "../../api/vrlBusesApis";
 import { getSrsBuseFilters } from "../../api/srsBusesApis";
 import { sortPartners } from "../../utils/BusBookingHelpers";
 import axios from "axios";
+import { getSrsBuses } from "../../api/srsBusesApis";
 
 const LeftFilter = ({
 	sourceCity,
@@ -18,8 +19,11 @@ const LeftFilter = ({
 	onFilterChange,
 	isSrs,
 	allSrsBusOperators,
+	minPrice,
+	maxPrice,
 }) => {
-	const [range, setRange] = useState([100, 4000]);
+	// console.log("minPrice maxPrice", minPrice, maxPrice);
+	const [range, setRange] = useState([100, 6000]);
 	const [filters, setFilters] = useState([]);
 	const [boardingPointsFilter, setBoardingPointsFilter] = useState([]);
 	const [droppingPointsFilter, setDroppingPointsFilter] = useState([]);
@@ -27,8 +31,11 @@ const LeftFilter = ({
 	const [busPartnerFilter, setBusPartnerFilter] = useState([]);
 	const [selectedBoardingPoints, setSelectedBoardingPoints] = useState([]);
 	const [selectedDroppingPoints, setSelectedDroppingPoints] = useState([]);
-	const terms = ["AC", "NON AC", "Sleeper", "Seater"];
-
+	const terms = ["AC", "Non-AC", "Sleeper", "Seater"];
+	useEffect(() => {
+		setRange([minPrice, maxPrice]);
+	}, [minPrice, maxPrice]);
+	// console.log("range", range);
 	// for price range change
 	const handleSliderChangeCommitted = (event, newRange) => {
 		// setRange(newRange);
@@ -287,9 +294,9 @@ const LeftFilter = ({
 						onChangeCommitted={handleSliderChangeCommitted}
 						onChange={handleSliderChange}
 						valueLabelDisplay="off"
-						min={0}
-						max={4000}
-						step={1}
+						min={minPrice}
+						max={maxPrice}
+						step={10}
 						className="slider"
 					/>
 				</div>

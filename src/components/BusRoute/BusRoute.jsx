@@ -133,7 +133,7 @@ const BusRoute = ({ locationOne, locationTwo, departureDate, onSearch }) => {
 			yourButton.style.display = "none";
 			document.querySelector(".right").appendChild(yourButton);
 		}
-	}, []);
+	}, [locationOne, locationTwo, departureDate]);
 
 	const handleSwap = () => {
 		console.log("handleSwap called");

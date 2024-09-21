@@ -23,7 +23,7 @@ import { Spin } from "antd";
 import { useLocation, Navigate } from "react-router-dom";
 import { cityMapping } from "../../utils/cityMapping";
 import { filterIcon } from "../../assets/busbooking";
-import { leftArrow } from "../../assets/busbooking";
+import { leftArrow, nobusesfound } from "../../assets/busbooking";
 import { getVrlBuses } from "../../api/vrlBusesApis";
 import { getSrsBuses } from "../../api/srsBusesApis";
 import BusSortBy from "../../components/BusSortBy/BusSortBy";
@@ -47,7 +47,10 @@ const BusBooking = () => {
 	const [srsBuses, setSrsBuses] = useState([]);
 	const [srsBusesForFilter, setSrsBusesForFilter] = useState([]);
 	const [allSrsBusOperators, setSrsBusOperators] = useState([]);
+	const [minPrice, setMinPrice] = useState();
+	const [maxPrice, setMaxPrice] = useState();
 
+	console.log(minPrice, maxPrice);
 	// SortState
 	const [sortBy, setSortBy] = useState(null);
 
@@ -121,6 +124,29 @@ const BusBooking = () => {
 		}
 		handleSearch(fromLocation, toLocation, selectedDate);
 	}, [location]);
+	// code for dynamic price range in filter wrapper
+	// useEffect(() => {
+	// 	const getRange = async () => {
+	// 		const srsResponse = await getSrsBuses(
+	// 			fromLocation.trim(),
+	// 			toLocation.trim(),
+	// 			selectedDate
+	// 		);
+	// 		// gives array of object and object contain key value as
+	// 		// """" show_fare_screen : "599.0/799.0/ 999.0" """" we have to focus
+	// 		const prices = srsResponse.map((obj) => {
+	// 			const fareScreenValues = obj.show_fare_screen.split("/");
+	// 			return fareScreenValues.map((value) => parseFloat(value));
+	// 		});
+
+	// 		const flatPrices = [].concat(...prices).filter((price) => !isNaN(price));
+	// 		const minPrice = Math.min(...flatPrices);
+	// 		const maxPrice = Math.max(...flatPrices);
+	// 		setMinPrice(minPrice);
+	// 		setMaxPrice(maxPrice);
+	// 	};
+	// 	getRange();
+	// }, [fromLocation, toLocation, selectedDate]);
 
 	const handleSearch = async (
 		sourceCity,
@@ -213,44 +239,44 @@ const BusBooking = () => {
 				);
 			}
 
-			// WORKING FOR ALL EXCEPT NON-AC BUSES
-			// if (filters.busType.length > 0) {
-			// 	const filterCriteria = filters.busType.map((type) =>
-			// 		type.split(/[;,]/).map((subType) => new RegExp(subType, "i"))
-			// 	);
-			// 	filteredBuses = filteredBuses.filter((bus) => {
-			// 		const busType = bus.bus_type;
-			// 		return filterCriteria.every((criteria) =>
-			// 			criteria.every((subCriteria) => subCriteria.test(busType))
-			// 		);
-			// 	});
-			// 	console.log("filteredBuses with filter", filteredBuses);
-			// }
+			// filter using Bus Type
 			if (filters.busType.length > 0 && filters.busType.length !== 4) {
-				const filterCriteria = filters.busType.map((type) => {
-					if (type.toLowerCase() === "non ac") {
-						return [new RegExp("^(?!.*ac).*$", "i")]; // matches any string that does not contain 'ac'
-					} else {
-						return type
-							.split(/[;,]/)
-							.map((subType) => new RegExp(subType, "i"));
-					}
-				});
-				const originalBuses = [...filteredBuses]; // store the original buses array
+				const filterCriteria = filters.busType.map((type) =>
+					type.split(/[;,]/).map((subType) => new RegExp(subType, "i"))
+				);
 				filteredBuses = filteredBuses.filter((bus) => {
 					const busType = bus.bus_type;
 					return filterCriteria.every((criteria) =>
 						criteria.every((subCriteria) => subCriteria.test(busType))
 					);
 				});
-				if (
-					filteredBuses.length === 0 &&
-					filters.busType.some((type) => type.toLowerCase() === "non ac")
-				) {
-					filteredBuses = originalBuses; // return all buses if no Non-AC buses are found
-				}
 				console.log("filteredBuses with filter", filteredBuses);
 			}
+			// if (filters.busType.length > 0 && filters.busType.length !== 4) {
+			// 	const filterCriteria = filters.busType.map((type) => {
+			// 		if (type.toLowerCase() === "non-ac") {
+			// 			return [new RegExp("^(?!.*ac).*$", "i")]; // matches any string that does not contain 'ac'
+			// 		} else {
+			// 			return type
+			// 				.split(/[;,]/)
+			// 				.map((subType) => new RegExp(subType, "i"));
+			// 		}
+			// 	});
+			// 	const originalBuses = [...filteredBuses]; // store the original buses array
+			// 	filteredBuses = filteredBuses.filter((bus) => {
+			// 		const busType = bus.bus_type;
+			// 		return filterCriteria.every((criteria) =>
+			// 			criteria.every((subCriteria) => subCriteria.test(busType))
+			// 		);
+			// 	});
+			// 	if (
+			// 		filteredBuses.length === 0 &&
+			// 		filters.busType.some((type) => type.toLowerCase() === "non ac")
+			// 	) {
+			// 		filteredBuses = originalBuses; // return all buses if no Non-AC buses are found
+			// 	}
+			// 	console.log("filteredBuses with filter", filteredBuses);
+			// }
 
 			// if (filters.minPrice && filters.maxPrice) {
 			// 	setVrlBuses([]);
@@ -343,6 +369,19 @@ const BusBooking = () => {
 							destinationCity.trim(),
 							doj
 						);
+						// code for dynamic price range in filter wrapper
+						const prices = srsResponse.map((obj) => {
+							const fareScreenValues = obj.show_fare_screen.split("/");
+							return fareScreenValues.map((value) => parseFloat(value));
+						});
+
+						const flatPrices = []
+							.concat(...prices)
+							.filter((price) => !isNaN(price));
+						const minPrice = Math.min(...flatPrices);
+						const maxPrice = Math.max(...flatPrices);
+						setMinPrice(minPrice);
+						setMaxPrice(maxPrice);
 						const filteredBuses = srsResponse.filter(
 							(bus) => bus?.status === "New" || bus.status === "Update"
 						);
@@ -537,7 +576,7 @@ const BusBooking = () => {
 		return <Navigate to="/login" replace />;
 	}
 
-	console.log(sortedBusList);
+	// console.log(sortedBusList);
 	return (
 		<div className="busBooking">
 			{/* <Navbar /> */}
@@ -563,32 +602,6 @@ const BusBooking = () => {
 				</div>
 
 				<div className="right">
-					<div className="mobile-filter">
-						<div className="filter-buttons">
-							<button
-								className="filter"
-								onClick={() => setShowMobileFilters(!showMobileFilters)}
-							>
-								<img src={filterIcon} alt="" /> <span>Sort & Filters</span>
-							</button>
-						</div>
-
-						<div className={`filter-wrapper ${showMobileFilters && "active"}`}>
-							<span className="filter-title">Sort and Filters</span>
-							<BusSortBy
-								handleSortByChange={handleSortByChange}
-								sortBy={sortBy}
-								setSortBy={setSortBy}
-							/>
-							<LeftFilter
-								sourceCity={fromLocation}
-								destinationCity={toLocation}
-								doj={selectedDate}
-								onFilterChange={handleFilter}
-								key={"mobile-left-filter"}
-							/>
-						</div>
-					</div>
 					{/*          <div className="dates">
             {dates.map((date) => (
               <p
@@ -626,6 +639,16 @@ const BusBooking = () => {
               />
             </div>
           </div> */}
+					<div className="mobile-filter">
+						<div className="filter-buttons">
+							<button
+								className="filter"
+								onClick={() => setShowMobileFilters(!showMobileFilters)}
+							>
+								<img src={filterIcon} alt="" /> <span>Sort & Filters</span>
+							</button>
+						</div>
+					</div>
 					<Spin spinning={loading}>
 						<div className="hadder">
 							<div className="hadder-top">
@@ -665,8 +688,36 @@ const BusBooking = () => {
 									</p>
 								))}
 							</div>
+							{/* Filter wrapper */}
+							<div
+								className={`filter-wrapper ${showMobileFilters && "active"}`}
+							>
+								<span className="filter-title">Sort and Filters</span>
+								<BusSortBy
+									handleSortByChange={handleSortByChange}
+									sortBy={sortBy}
+									setSortBy={setSortBy}
+								/>
+								<LeftFilter
+									sourceCity={fromLocation}
+									destinationCity={toLocation}
+									doj={selectedDate}
+									onFilterChange={handleFilter}
+									// priceRange={[minPrice, maxPrice]}
+									minPrice={minPrice}
+									maxPrice={maxPrice}
+									key={"mobile-left-filter"}
+								/>
+							</div>
 						</div>
 						<div className="wrapper">
+							{/* If no buses found then display message  */}
+							{!sortedBusList?.length && (
+								<div className="no-buses-found">
+									<img src={nobusesfound} style={{ width: "100%", borderRadius: "10px" }} alt="no buses found" />
+									{/* <p>No buses found</p> */}
+								</div>
+							)}
 							{/* Render Bus list */}
 							{sortedBusList?.map((bus) => {
 								const isVrl = bus.type === "vrl" ? true : false;

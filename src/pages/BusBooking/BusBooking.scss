@@ -176,6 +176,7 @@
 
 				.dates {
 					overflow-x: scroll;
+					scrollbar-width: none;
 				}
 
 				.exclusiveOffers {
@@ -197,13 +198,17 @@
 			background-color: rgb(241, 241, 241);
 			margin-bottom: 40px;
 			.right {
+				.dates {
+					padding: 20px 10px;
+					margin: 0px 20px;
+				}
 				.hadder {
 					position: fixed;
 					top: 0;
 					left: 0;
 					z-index: 1000;
-					width: 92%;
-					padding: 15px;
+					width: 100%;
+					// padding: 15px;
 					padding-top: 0px;
 					background-color: white;
 					border-radius: 5px;
@@ -212,6 +217,8 @@
 						display: flex;
 						gap: 10px;
 						align-items: center;
+						padding: 15px;
+						padding-bottom: 0px;
 						.back-arrow {
 							display: flex;
 							align-items: center;
@@ -221,12 +228,24 @@
 							}
 						}
 					}
+					.filter-wrapper {
+						display: none;
+						overflow: hidden;
+						max-height: 0;
+						transition: max-height 500ms ease;
+
+						&.active {
+							display: block;
+							max-height: 100%;
+						}
+					}
 				}
 				.wrapper {
-					padding-top: 130px;
+					padding-top: 150px;
 					display: flex;
 					flex-direction: column;
 					gap: 15px;
+					// scrollbar-width: none;
 					// .wrapper-hadder {
 					// 	position: fixed;
 					// 	top: 50px;
@@ -255,13 +274,16 @@
 				}
 				.filter-wrapper {
 					background-color: white;
-					margin-top: 132px;
-					position: fixed;
+					// margin-top: 132px;
+					// position: fixed;
+					// padding: 15px;
 					z-index: 1000;
 					width: 100%;
 					border-radius: 0 0 30px 30px;
 					box-shadow: 0 5px 10px rgba(227, 160, 84, 0.551);
 					// max-height: 500px;
+					// transform: translateX(-145%);
+
 					.filter-title {
 						display: flex;
 						width: 426px;

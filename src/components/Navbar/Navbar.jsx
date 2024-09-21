@@ -71,7 +71,7 @@ const Navbar = ({ page }) => {
 				display: "flex",
 				justifyContent: "center",
 				gap: "10px",
-				marginTop: "20px",
+				marginTop: "10px",
 			}}
 		>
 			<Link to="/busbooking" style={activeButtonStyle}>

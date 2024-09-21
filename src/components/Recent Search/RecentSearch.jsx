@@ -23,7 +23,7 @@ const ReacentSearch = ({ data }) => {
 					>
 						<span className="recent-data">
 							<span>{item[0]}</span>
-							<img src={rightarrow} alt="left arrow" style={{ width: 20 }} />
+							<img src={rightarrow} alt="left arrow" />
 						</span>
 						<span className="recent-data">{item[1]}</span>
 						<span className="recent-data-doj">{formatDate(item[2])}</span>
