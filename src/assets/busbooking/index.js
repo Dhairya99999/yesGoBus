@@ -19,6 +19,7 @@ import singleladiesbooked from "./singleladiesbooked.svg";
 import singleselected from "./singleselected.svg";
 import leftArrow from "./leftArrow.png";
 import nobusesfound from "./nobusesfound.png";
+import busloading from "./busloading.gif";
 
 export {
 	twowayarrow,
@@ -42,4 +43,5 @@ export {
 	singleselected,
 	leftArrow,
 	nobusesfound,
+	busloading,
 };

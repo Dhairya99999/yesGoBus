@@ -1,0 +1,13 @@
+.custom-loader {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	p {
+		margin: 0;
+		padding: 0;
+		font-size: 15px;
+		font-weight: 600;
+		color: #110803;
+	}
+}
