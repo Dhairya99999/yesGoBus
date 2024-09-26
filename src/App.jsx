@@ -38,6 +38,7 @@ import PaymentSuccessful from "./pages/PaymentSuccessful";
 import PaymentFailed from "./pages/PaymentFailed"
 import NotFoundPage from "./pages/Error/NotFoundPage/NotFoundPage";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
+import QueryForm from "./components/QueryForm/QueryFrom";
 
 function App() {
   const dispatch = useDispatch();
@@ -95,6 +96,7 @@ function App() {
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/travel-app" element={<LandingPage/>}/>
+        <Route path="/query" element={<QueryForm />} />
         {/* <Route path="/cabs" element={<ComingSoon />} />
         <Route path="/cabs/kyc" element={<KYC />} />
         <Route path="/cabs/kyc/payment" element={<KycPayments />} /> */}

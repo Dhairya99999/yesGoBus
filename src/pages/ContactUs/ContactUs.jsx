@@ -39,6 +39,15 @@ const ContactUs = () => {
             Nidagundi, Vijayapura, Bijapur - 586213`}
             // text={"Call Us"}
           />
+              <Card
+            img={message}
+            title={"Raise a query"}
+            subtitle={
+              "Raise a query and our agent will revert back to you as soon as possible."
+            }
+            text={"Raise a query"}
+
+          />
         </div>
       </div>
     </div>
