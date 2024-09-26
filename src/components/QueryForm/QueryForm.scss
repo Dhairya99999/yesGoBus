@@ -8,6 +8,12 @@ $query-form-button-hover-color: white;
 $query-form-select-color: white; // Select text color
 $query-form-select-hover-color: white; // Lighter dropdown background color
 
+
+.success {
+  color: red;
+  margin-top: 10px; // Add some space above the message
+}
+
 .query-form {
   background-color: $query-form-background;
   padding: $query-form-padding;

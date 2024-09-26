@@ -7,6 +7,7 @@ const QueryForm = () => {
   const [busBookings, setBusBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
   const [formData, setFormData] = useState({
     userId: '',
     agentId: '',
@@ -79,21 +80,19 @@ const QueryForm = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      // Create a new payload object that only includes necessary fields
       const { userId, agentId, subject, description, bookingId, busBookingId } = formData;
-      
-      // Prepare the payload dynamically
+
       const payload = {
         userId,
         agentId,
         subject,
         description,
-        ...(bookingId && { bookingId }), // Include bookingId if it's not empty
-        ...(busBookingId && { busBookingId }), // Include busBookingId if it's not empty
+        ...(bookingId && { bookingId }),
+        ...(busBookingId && { busBookingId }),
       };
-  
+
       console.log("Payload:", payload);
-  
+
       const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/query/createQuery`, {
         method: 'POST',
         headers: {
@@ -102,16 +101,17 @@ const QueryForm = () => {
         },
         body: JSON.stringify(payload),
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to submit the query');
       }
-  
+
       const result = await response.json();
       console.log("Query submitted successfully:", result);
-  
-      // Reset form data
+
+      setSuccessMessage("Your query has been raised successfully!");
+
       const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
       setFormData({
         userId: loggedInUser._id,
@@ -122,11 +122,16 @@ const QueryForm = () => {
         busBookingId: '',
         bookingType: 'busBookingId',
       });
+
+      setTimeout(() => {
+        setSuccessMessage(null);
+      }, 5000);
     } catch (error) {
       console.log("Submission error:", error);
       setError(error.message);
     }
   };
+
   return (
     <div className="query-form">
       <Navbar />
@@ -172,40 +177,45 @@ const QueryForm = () => {
             <option value="bookingId">Tour Bookings</option>
           </select>
         </label>
-       {formData.bookingType === 'busBookingId' && <label>
-          Bookings:
-          <select
-            name="busBookingId"
-            value={formData.busBookingId}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select a booking</option>
-            {busBookings.map((booking) => (
-              <option key={booking._id} value={booking._id}>
-                {`${booking.sourceCity} ${booking.destinationCity} --- ${booking.doj}`}
-              </option>
-            ))}
-          </select>
-        </label>}
-        {formData.bookingType === 'bookingId' && <label>
-          Bookings:
-          <select
-            name="bookingId"
-            value={formData.bookingId}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select a booking</option>
-            {bookings.map((booking) => (
-              <option key={booking._id} value={booking._id}>
-                {booking.name}
-              </option>
-            ))}
-          </select>
-        </label>}
+        {formData.bookingType === 'busBookingId' && (
+          <label>
+            Bookings:
+            <select
+              name="busBookingId"
+              value={formData.busBookingId}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select a booking</option>
+              {busBookings.map((booking) => (
+                <option key={booking._id} value={booking._id}>
+                  {`${booking.sourceCity} ${booking.destinationCity} --- ${booking.doj}`}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+        {formData.bookingType === 'bookingId' && (
+          <label>
+            Bookings:
+            <select
+              name="bookingId"
+              value={formData.bookingId}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select a booking</option>
+              {bookings.map((booking) => (
+                <option key={booking._id} value={booking._id}>
+                  {booking.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
         <button type="submit">Submit</button>
         {error && <p className="error">{error}</p>}
+        {successMessage && <p className="success">{successMessage}</p>} {/* Render success message in red */}
       </form>
     </div>
   );
