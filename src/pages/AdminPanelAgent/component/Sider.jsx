@@ -34,21 +34,11 @@ const Sider = ({ onSelect }) => {
 					},
 					{
 						key: "3",
-						icon: <UserOutlined />,
-						label: "User",
-					},
-					{
-						key: "4",
-						icon: <DollarOutlined />,
-						label: "Revenue",
-					},
-					{
-						key: "5",
 						icon: <PiTruckBold />,
 						label: "Packages",
 					},
 					{
-						key: "6",
+						key: "4",
 						icon: <PiTruckBold/>,
 						label:"Queries",
 					},

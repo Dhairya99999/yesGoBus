@@ -10,14 +10,12 @@ import {
 import Sidebar from "../component/Sider";
 import { Avatar, Badge } from "antd";
 const { Sider, Header, Content } = Layout;
-import UserList from "../component/UsesList";
 import Dashboard from "../component/Dashboard";
 import Booking from "../component/Booking";
-import Revenue from "../component/Revenue";
 import Packages from "../component/Packages";
 import Queries from "../component/Queries";
 import "./adminlayout.scss";
-const AdminLayout = () => {
+const AdminAgentLayout = () => {
 	const [collapsed, setCollapsed] = useState(false);
 	const [selectedItem, setSelectedItem] = useState("1"); // Add a state to store the selected item
 
@@ -72,10 +70,8 @@ const AdminLayout = () => {
 				<Content className="content">
 					{selectedItem === "1" && <Dashboard />}
 					{selectedItem === "2" && <Booking />}
-					{selectedItem === "3" && <UserList />}
-					{selectedItem === "4" && <Revenue />}
-					{selectedItem === "5" && <Packages />}
-					{selectedItem === "6" && <Queries />}
+					{selectedItem === "3" && <Packages />}
+					{selectedItem === "4" && <Queries />}
 				</Content>
 				{/* <Footer>footer</Footer> */}
 			</Layout>
@@ -83,4 +79,4 @@ const AdminLayout = () => {
 	);
 };
 
-export default AdminLayout;
+export default AdminAgentLayout;

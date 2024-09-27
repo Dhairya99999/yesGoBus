@@ -40,6 +40,7 @@ import NotFoundPage from "./pages/Error/NotFoundPage/NotFoundPage";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import QueryForm from "./components/QueryForm/QueryFrom";
 import AdminLayout from "./pages/AdminTest/AdminLayout/AdminLayout";
+import AdminAgentLayout from "./pages/AdminPanelAgent/AdminLayout/AdminLayout";
 
 function App() {
 	const dispatch = useDispatch();
@@ -77,6 +78,7 @@ function App() {
 					element={isMobileApp ? <BusBooking /> : <LandingPage />}
 				/>
 				<Route path="/admin/test" element={<AdminLayout />} />
+				<Route path="agent/admin/test" element={<AdminAgentLayout />} />
 				<Route path="/busbooking" element={<BusBooking />} />
 				<Route path="/busbooking/payment" element={<Payment />} />
 				<Route path="/payment" element={<TravelingPayment />} />
