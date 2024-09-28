@@ -126,7 +126,7 @@ const Booking = () => {
 	if (!bookings || !Array.isArray(bookings)) {
 		return <div>Loading...</div>;
 	}
-	console.log(bookings);
+	// console.log(bookings);
 
 	// const data = bookings.map((booking, index) => {
 	// 	const name = booking.userId
