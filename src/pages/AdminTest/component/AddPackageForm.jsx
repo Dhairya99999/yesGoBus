@@ -211,7 +211,6 @@ const AddPackageForm = ({ closeForm }) => {
 								))}
 							</Select>
 						</Form.Item>
-
 						<Form.Item
 							label="Check In"
 							name="checkIn"
@@ -276,6 +275,7 @@ const AddPackageForm = ({ closeForm }) => {
 								</>
 							)}
 						</Form.List>
+
 						<Form.List name="plans">
 							{(fields, { add, remove }) => (
 								<>
@@ -366,6 +366,7 @@ const AddPackageForm = ({ closeForm }) => {
 								</>
 							)}
 						</Form.List>
+						
 						<Form.Item
 							name="hotelId"
 							label="Hotel"

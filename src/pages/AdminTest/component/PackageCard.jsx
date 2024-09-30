@@ -3,7 +3,18 @@ import axios from "axios";
 const baseUrl = import.meta.env.VITE_BASE_URL;
 const token = localStorage.getItem("token");
 import "./PackageCard.scss";
-import { Form, Input, Button, Typography, Space, Image } from "antd";
+import {
+	Flex,
+	Form,
+	Input,
+	Button,
+	Typography,
+	Space,
+	Image,
+	message,
+	Upload,
+} from "antd";
+import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
 
@@ -20,7 +31,7 @@ const PackageCard = ({ destination, packageData, closePackage }) => {
 			const formData = {
 				Hotel: {
 					_id: values.hotelId,
-					hotelName: values.roomName,
+					hotelName: values.hotelType,
 					rating: values.rating,
 					// image: values.roomName,
 					address: values.address,
@@ -36,11 +47,10 @@ const PackageCard = ({ destination, packageData, closePackage }) => {
 					duration: values.duration,
 					totalDuration: values.totalDuration,
 					witheFlitePrice: values.witheFlitePrice,
-					withoutFlitePrice: values.withoutFlitePrice,
+					withoutFlitePrice: values.witoutFlitePrice,
 					hotelId: values.hotelId,
 					tripBenifits:
-						(values.tripBenifits &&
-							values.tripBenifits.map((item) => [item])) ||
+						(values.tripBenifit && values.tripBenifit.map((item) => item)) ||
 						[],
 					couponCode: values.couponCode,
 				},
@@ -49,19 +59,19 @@ const PackageCard = ({ destination, packageData, closePackage }) => {
 					destination: values.destination,
 					checkIn: values.checkIn,
 					checkOut: values.checkOut,
-					room_name: values.checkIn,
-					end_of_day_info: values.checkIn,
-					additional_info: values.checkIn,
+					room_name: values.roomName,
+					end_of_day_info: values.end_of_day_info,
+					additional_info: values.additionalInfo,
 					hotelId: values.hotelId,
 					packageId: values.packageId,
 					plans: values.plans.map((plan) => ({
 						title: plan.title,
 						plan: plan.plan,
-						activities: plan.activities,
+						activities: plan.activity,
 						activitiesAddress: plan.activitiesAddress,
-						activitiesHour: plan.activitiesHour,
-						image: plan.image?.[0]?.thumbUrl,
-						endOfDayInfo: plan.endOfDayInfo,
+						activitiesHour: plan.activityDuration,
+						image: plan.image?.file?.thumbUrl,
+						end_of_day_info: plan.end_of_day_info,
 					})),
 				},
 			};
@@ -114,6 +124,28 @@ const PackageCard = ({ destination, packageData, closePackage }) => {
 		borderLeft: "none",
 		borderBottom: "none",
 		color: "black",
+	};
+
+	const beforeUpload = (file) => {
+		if (!file) return false;
+		const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+		if (!isJpgOrPng) {
+			message.error("You can only upload JPG/PNG file!");
+		}
+		const isLt50M = file.size / 1024 / 1024 < 50;
+		if (!isLt50M) {
+			message.error("Image must smaller than 50MB!");
+		}
+		return isJpgOrPng && isLt50M;
+	};
+
+	const convertToBase64 = (file) => {
+		return new Promise((resolve, reject) => {
+			const reader = new FileReader();
+			reader.readAsDataURL(file);
+			reader.onload = () => resolve(reader.result);
+			reader.onerror = (error) => reject(error);
+		});
 	};
 
 	return (
@@ -302,24 +334,62 @@ const PackageCard = ({ destination, packageData, closePackage }) => {
 									style={isEditable ? styleEnable : styleDisable}
 								/>
 							</Form.Item>
+							<Form.Item
+								name="end_of_day_info"
+								label={"End of Day Info"}
+								labelFontSize={16}
+								initialValue={`${packageData.end_of_day_info}`}
+								style={{ marginBottom: "0" }}
+							>
+								<Input
+									disabled={!isEditable}
+									style={isEditable ? styleEnable : styleDisable}
+								/>
+							</Form.Item>
 						</div>
 						<div>
 							<Title level={5}>Trip Benifit</Title>
-							{packageData.packageId.tripBenifit.map((item, benefitIndex) => (
-								<div key={benefitIndex}>
-									<Form.Item
-										name={["tripBenifits", benefitIndex, "benifit"]}
-										initialValue={item}
-										key={`tripBenifit-${benefitIndex}`} // Add a unique fieldKey
-										style={{ marginBottom: "0" }}
-									>
-										<Input
-											disabled={!isEditable}
-											style={isEditable ? styleEnable : styleDisable}
-										/>
-									</Form.Item>
-								</div>
-							))}
+							<Form.List
+								name="tripBenifit"
+								initialValue={packageData.packageId.tripBenifit}
+							>
+								{(fields, { add, remove }) => (
+									<>
+										{fields.map((field, index) => (
+											<Form.Item key={index}>
+												<Flex align="center">
+													<Form.Item {...field} noStyle>
+														<Input
+															disabled={!isEditable}
+															style={isEditable ? styleEnable : styleDisable}
+															placeholder="Enter Trip Benifit"
+														/>
+													</Form.Item>
+													{fields.length > 1 &&
+														(isEditable ? (
+															<MinusCircleOutlined
+																className="ml-2"
+																onClick={() => remove(field.name)}
+															/>
+														) : null)}
+												</Flex>
+											</Form.Item>
+										))}
+										{isEditable && (
+											<Form.Item>
+												<Button
+													type="dashed"
+													onClick={() => add()}
+													icon={<PlusOutlined />}
+													block
+												>
+													Add field
+												</Button>
+											</Form.Item>
+										)}
+									</>
+								)}
+							</Form.List>
 						</div>
 						<div>
 							<Image
@@ -414,66 +484,193 @@ const PackageCard = ({ destination, packageData, closePackage }) => {
 							</div>
 						</div>
 						<div className="plans-container">
-							{packageData.plans.map((plan, planIndex) => (
-								<div className="plans" key={planIndex}>
-									<div className="plan-title">
-										<Title level={4}>Day {planIndex + 1}</Title>
-									</div>
-									<div className="plan-body">
-										<div className="left">
-											<Title level={4}>{plan.title}</Title>
-											<Form.Item
-												name={["plans", planIndex, "plan"]}
-												label={"Plan"}
-												initialValue={plan.plan}
-												style={{ marginBottom: "0" }}
-											>
-												<Input.TextArea
-													disabled={!isEditable}
-													style={isEditable ? styleEnable : styleDisable}
-													textarea={{
-														autoSize: { minRows: 1, maxRows: 3 },
-													}}
-												/>
+							{/* {packageData.plans.map((plan, planIndex) => ( */}
+							<Form.List name="plans" initialValue={packageData.plans}>
+								{(fields, { add, remove }) => (
+									<>
+										{fields.map((field, index) => (
+											<div className="plans" key={field.key}>
+												<div className="plan-title">
+													<Title level={4}>Day {index + 1}</Title>
+												</div>
+												{/* plans */}
+												<div className="plan-body">
+													<div className="left">
+														{/* Plan Title */}
+														<Form.Item
+															name={[field.name, "title"]}
+															label={"Title"}
+															// initialValue={plan.title}
+															style={{ marginBottom: "0" }}
+														>
+															<Input
+																disabled={!isEditable}
+																style={isEditable ? styleEnable : styleDisable}
+																textarea={{
+																	autoSize: { minRows: 1, maxRows: 3 },
+																}}
+															/>
+														</Form.Item>
+														{/* plan */}
+														<Form.Item
+															name={[field.name, "plan"]}
+															label={"Plan"}
+															// initialValue={plan.plan}
+															style={{ marginBottom: "0" }}
+														>
+															<Input.TextArea
+																disabled={!isEditable}
+																style={isEditable ? styleEnable : styleDisable}
+																textarea={{
+																	autoSize: { minRows: 1, maxRows: 3 },
+																}}
+															/>
+														</Form.Item>
+														{/* activity */}
+														<Form.Item
+															name={[field.name, "activity"]}
+															label={"Activity"}
+															// initialValue={plan.activities}
+															style={{ marginBottom: "0" }}
+														>
+															<Input
+																disabled={!isEditable}
+																style={isEditable ? styleEnable : styleDisable}
+															/>
+														</Form.Item>
+														{/* activity duration */}
+														<Form.Item
+															name={[field.name, "activityDuration"]}
+															label={"Activity duration"}
+															// initialValue={plan.activitiesHoure}
+															style={{ marginBottom: "0" }}
+														>
+															<Input
+																disabled={!isEditable}
+																style={isEditable ? styleEnable : styleDisable}
+															/>
+														</Form.Item>
+														{/* activity address */}
+														<Form.Item
+															name={[field.name, "activitiesAddress"]}
+															label={"Activity Address"}
+															// initialValue={plan.activitiesAddress}
+															style={{ marginBottom: "0" }}
+														>
+															<Input
+																disabled={!isEditable}
+																style={isEditable ? styleEnable : styleDisable}
+															/>
+														</Form.Item>
+														{/* day end with */}
+														{/* <Form.Item
+															name={[field.name, "day_end_with"]}
+															label={"Day End With"}
+															// initialValue={plan.end_of_day_info}
+															style={{ marginBottom: "0" }}
+														>
+															<Input
+																disabled={!isEditable}
+																style={isEditable ? styleEnable : styleDisable}
+															/>
+														</Form.Item> */}
+														{/* end of day info */}
+														<Form.Item
+															name={[field.name, "end_of_day_info"]}
+															label={"End Of Day Info"}
+															// initialValue={plan.end_of_day_info}
+															style={{ marginBottom: "0" }}
+														>
+															<Input
+																disabled={!isEditable}
+																style={isEditable ? styleEnable : styleDisable}
+															/>
+														</Form.Item>
+													</div>
+													{fields.length > 1 && isEditable && (
+														<Button
+															type="link"
+															onClick={() => remove(field.name)}
+															icon={<MinusCircleOutlined />}
+														>
+															Remove Plan
+														</Button>
+													)}
+													{/* {isEditable && (
+											<Form.Item>
+												<Button
+													type="dashed"
+													onClick={() => add()}
+													icon={<PlusOutlined />}
+													block
+												>
+													Add field
+												</Button>
 											</Form.Item>
+										)} */}
+													{/* <Image width={300} height={200} src={plan.image} /> */}
+													<Form.Item name={[field.name, "image"]}>
+														<Upload
+															name="image"
+															listType="picture-card"
+															className="avatar-uploader"
+															beforeUpload={beforeUpload}
+															customRequest={async ({ file, onSuccess }) => {
+																try {
+																	const base64 = await convertToBase64(file);
+																	onSuccess({ url: base64, thumbUrl: base64 });
+																} catch (err) {
+																	console.error("Error converting image:", err);
+																	message.error("Failed to upload image");
+																}
+															}}
+														>
+															{field.image && field.image[0]?.thumbUrl ? (
+																// <img
+																// 	src={field.image[0].thumbUrl}
+																// 	alt="avatar"
+																// 	style={{ width: "100%" }}
+																// />
+																<Image
+																	width={300}
+																	height={200}
+																	src={field.image[0].thumbUrl || field.image}
+																/>
+															) : (
+																isEditable && (
+																	<div style={{ width: "50%", height: "50%" }}>
+																		<PlusOutlined />
+																		<div style={{ marginTop: 8 }}>Upload</div>
+																	</div>
+																)
+															)}
+														</Upload>
+													</Form.Item>
+												</div>
+											</div>
+										))}
+										{isEditable && (
 											<Form.Item
-												name={["plans", planIndex, "activity"]}
-												label={"Activity"}
-												initialValue={plan.activities}
-												style={{ marginBottom: "0" }}
+												style={{
+													marginBottom: "0",
+													marginTop: "10px",
+													width: "50%",
+												}}
 											>
-												<Input
-													disabled={!isEditable}
-													style={isEditable ? styleEnable : styleDisable}
-												/>
+												<Button
+													type="dashed"
+													onClick={() => add()}
+													icon={<PlusOutlined />}
+													block
+												>
+													Add Plan
+												</Button>
 											</Form.Item>
-											<Form.Item
-												name={["plans", planIndex, "activityDuration"]}
-												label={"Activity duration"}
-												initialValue={plan.activitiesHoure}
-												style={{ marginBottom: "0" }}
-											>
-												<Input
-													disabled={!isEditable}
-													style={isEditable ? styleEnable : styleDisable}
-												/>
-											</Form.Item>
-											<Form.Item
-												name={["plans", planIndex, "dayEndWith"]}
-												label={"Day End With"}
-												initialValue={plan.end_of_day_info}
-												style={{ marginBottom: "0" }}
-											>
-												<Input
-													disabled={!isEditable}
-													style={isEditable ? styleEnable : styleDisable}
-												/>
-											</Form.Item>
-										</div>
-										<Image width={300} height={200} src={plan.image} />
-									</div>
-								</div>
-							))}
+										)}
+									</>
+								)}
+							</Form.List>
+							{/* ))} */}
 						</div>
 					</div>
 				</div>
