@@ -1,11 +1,7 @@
-// import React from 'react'
-import { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { Card, Flex, Typography, Avatar, Table } from "antd";
+import { Space } from "antd";
 const baseUrl = import.meta.env.VITE_BASE_URL;
-const user = localStorage.getItem("token");
-import { Card, Flex, Typography, Avatar, Tooltip } from "antd";
-import { UserOutlined } from "@ant-design/icons";
-import { Space, Table, Button } from "antd";
 const { Title } = Typography;
 const columns = [
 	{
@@ -19,7 +15,7 @@ const columns = [
 		key: "bookingId",
 	},
 	{
-		title: "Name",
+		title: "Booking Name",
 		dataIndex: "name",
 		key: "name",
 	},
@@ -34,17 +30,11 @@ const columns = [
 						display: "flex",
 						alignItems: "center",
 						justifyContent: "center",
-						border:
-							Status === "SUCCESS"
-								? "1px solid green"
-								: Status === "pending"
-								? "1px solid blue"
-								: "1px solid red",
+						border: Status === "SUCCESS" ? "1px solid green" : Status === "pending" ? "1px solid blue" : "1px solid red",
 						padding: "0.5px",
 						borderRadius: "50%",
 						width: "11px",
 						height: "11px",
-						boxSizing: "none",
 					}}
 				>
 					<span
@@ -55,13 +45,7 @@ const columns = [
 							width: "8px",
 							height: "8px",
 							borderRadius: "50%",
-
-							backgroundColor:
-								Status === "SUCCESS"
-									? "green"
-									: Status === "pending"
-									? "blue"
-									: "red",
+							backgroundColor: Status === "SUCCESS" ? "green" : Status === "pending" ? "blue" : "red",
 						}}
 					/>
 				</span>
@@ -70,45 +54,56 @@ const columns = [
 		),
 	},
 	{
-		title: "Payment",
-		dataIndex: "Payment",
-		key: "Payment",
+		title: "Customer Name",
+		dataIndex: "cusName",
+		key: "cusName",
 	},
 	{
-		title: "Destination",
-		dataIndex: "Destination",
-		key: "Destination",
-	},
-	{
-		dataIndex: "action",
-		key: "action",
-		render: (_, { action }) => (
-			<Button type="primary" variant="solid">
-				{action.toUpperCase()}
-			</Button>
-		),
-	},
+		title: "Customer Contact Number",
+		dataIndex: "cusNumber",
+		key: "cusNumber",
+	}
 ];
 
 const Booking = () => {
 	const [bookings, setBookings] = useState([]);
+	const [userDetails, setUserDetails] = useState({});
 	const [error, setError] = useState(null);
+	const agentCode = localStorage.getItem("agentCode");
+
+	function formatDate(dateString) {
+		const date = new Date(dateString);
+	
+		// Get day, month, year, hours and minutes
+		const day = String(date.getUTCDate()).padStart(2, '0');
+		const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+		const year = date.getUTCFullYear();
+		let hours = date.getUTCHours();
+		const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+	
+		// Convert to 12-hour format and determine AM/PM
+		const ampm = hours >= 12 ? 'pm' : 'am';
+		hours = hours % 12;
+		hours = hours ? String(hours).padStart(2, '0') : '12'; // the hour '0' should be '12'
+	
+		// Construct the final formatted string
+		return `${day}-${month}-${year} ${hours}:${minutes}${ampm}`;
+	}
 
 	useEffect(() => {
 		const fetchBookings = async () => {
 			try {
 				const response = await fetch(
-					`${baseUrl}/api/admin/bookings/getAllBookings`,
+					`${baseUrl}/api/busBooking/getBookings`,
 					{
 						headers: {
-							Authorization: `Bearer ${user}`,
 							"Content-Type": "application/json",
 						},
 					}
 				);
 				const data = await response.json();
-				if (data.status === true) {
-					setBookings(data.data.bookings);
+				if (data.status === 200) {
+					setBookings(data.data);
 				} else {
 					setError(data.message);
 				}
@@ -119,6 +114,39 @@ const Booking = () => {
 		fetchBookings();
 	}, []);
 
+	useEffect(() => {
+		const fetchUserDetails = async () => {
+			const userIds = bookings
+				.filter((booking) => booking.userId !== null && booking.agentCode === agentCode)
+				.map(booking => booking.userId);
+
+			if (userIds.length > 0) {
+				const userPromises = userIds.map(userId =>
+					fetch(`${baseUrl}/api/user/getUserById`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({ userId }),
+					}).then(res => res.json())
+				);
+
+				const userResponses = await Promise.all(userPromises);
+				const userMap = {};
+				userResponses.forEach(user => {
+					if (user.status === 200) {
+						userMap[user.data._id] = user.data; // assuming user data has _id as identifier
+					}
+				});
+				setUserDetails(userMap);
+			}
+		};
+
+		if (bookings.length > 0) {
+			fetchUserDetails();
+		}
+	}, [bookings, agentCode]);
+
 	if (error) {
 		return <div>Error: {error}</div>;
 	}
@@ -126,82 +154,37 @@ const Booking = () => {
 	if (!bookings || !Array.isArray(bookings)) {
 		return <div>Loading...</div>;
 	}
-	console.log(bookings);
 
-	// const data = bookings.map((booking, index) => {
-	// 	const name = booking.userId
-	// 		? booking.userId.fullName
-	// 		: "User ID not available";
-	// 	return {
-	// 		key: booking._id,
-	// 		No: index + 1,
-	// 		bookingId: booking.bookingId,
-	// 		name,
-	// 		Status: booking.status,
-	// 		Payment: booking.payment,
-	// 		Destination: booking.toPlace,
-	// 		action: "Details",
-	// 	};
-	// });
 	const data = bookings
-		.filter((booking) => booking.userId !== null)
+		.filter((booking) => booking.userId !== null && booking.agentCode === agentCode)
 		.map((booking, index) => {
+			const user = userDetails[booking.userId];
 			return {
 				key: booking._id,
 				No: index + 1,
-				bookingId: booking.bookingId,
-				name: booking.userId.fullName,
-				Status: booking.paymentStatus,
-				Payment: booking.paymentStatus,
-				Destination: booking.toPlace,
-				action: "Details",
+				bookingId: booking._id,
+				name: `${booking.sourceCity} --- ${booking.destinationCity} --- ${formatDate(booking.updatedAt)}`,
+				Status: booking.bookingStatus,
+				cusName: user ? user.fullName : 'Loading...',
+				cusNumber: user ? user.phoneNumber : 'Loading...',
 			};
 		});
-
-	if (error) {
-		return <div>Error: {error}</div>;
-	}
-	// const data = [
-	// 	{
-	// 		key: "1",
-	// 		No: "01",
-	// 		bookingId: 4125,
-	// 		name: "John Brown",
-	// 		Status: "Completed",
-	// 		Payment: "Paid",
-	// 		Destination: "Kathmandu",
-	// 		action: "Details",
-	// 	},
-	// ];
-	// const data = bookings.map((booking, index) => {
-	// 	return {
-	// 		key: booking.id,
-	// 		No: index + 1,
-	// 		bookingId: booking.id,
-	// 		name: booking.name,
-	// 		Status: booking.status,
-	// 		Payment: booking.payment,
-	// 		Destination: booking.destination,
-	// 		action: "Details",
-	// 	};
-	// });
 
 	return (
 		<>
 			<Flex gap={10} vertical>
 				<Typography>
-					<Title level={3}>Users List</Title>
+					<Title level={3}>Bus-Bookings</Title>
 				</Typography>
 				<Card
-					// title="No of Users"
 					bordered={false}
 					style={{
 						width: 300,
 					}}
 				>
 					<Flex gap={10} vertical>
-						<Typography>Number of Users</Typography>
-						<Typography>{bookings.length}</Typography>
+						<Typography>Number of Bus Bookings</Typography>
+						<Typography>{data.length}</Typography>
 						<Avatar.Group
 							maxCount={3}
 							maxStyle={{
@@ -211,40 +194,11 @@ const Booking = () => {
 						>
 							<Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=2" />
 							<Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=1" />
-							<Avatar
-								style={{
-									backgroundColor: "#f56a00",
-								}}
-							>
-								K
-							</Avatar>
-							<Avatar
-								style={{
-									backgroundColor: "#f56a00",
-								}}
-							>
-								K
-							</Avatar>
-							<Avatar
-								style={{
-									backgroundColor: "#f56a00",
-								}}
-							>
-								K
-							</Avatar>
-							<Tooltip title="Ant User" placement="top">
-								<Avatar
-									style={{
-										backgroundColor: "#87d068",
-									}}
-									icon={<UserOutlined />}
-								/>
-							</Tooltip>
 						</Avatar.Group>
 					</Flex>
 				</Card>
 				<Typography>
-					<Title level={3}>Customers</Title>
+					<Title level={3}>List of Bus-Bookings</Title>
 				</Typography>
 				<Table columns={columns} dataSource={data} />
 			</Flex>

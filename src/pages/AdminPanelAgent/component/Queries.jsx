@@ -10,7 +10,7 @@ const Queries = () => {
   const [error, setError] = useState(null);
   const [queries, setQueries] = useState([]);
   const [filter, setFilter] = useState("all");
-  const agentCode = localStorage.getItem("agentCode"); // Get agentCode from localStorage
+  const agentCode = localStorage.getItem("agentCode"); 
 
   useEffect(() => {
     const fetchQueries = async () => {
