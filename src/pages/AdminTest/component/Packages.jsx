@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 const baseUrl = import.meta.env.VITE_BASE_URL;
 const token = localStorage.getItem("token");
-import { Flex, Typography, Card, Spin, Modal } from "antd";
+import { Flex, Typography, Card, Spin, Modal, Select } from "antd";
 const { Title } = Typography;
 import { PlusOutlined } from "@ant-design/icons";
 import PackageCard from "./PackageCard";
@@ -17,7 +17,10 @@ const Packages = () => {
 	const [packageDataForDestination, setPackageDataForDestination] = useState(
 		[]
 	);
-	const [isEditing, setIsEditing] = useState(false);
+	const [destination, setDestination] = useState("");
+	const onDestinationChange = (value) => {
+		setDestination(value);
+	};
 
 	useEffect(() => {
 		const fetchAllPackages = async () => {
@@ -79,11 +82,27 @@ const Packages = () => {
 		setOpenAddPackage(false);
 	};
 
-	const handleDestinationClick = (destination) => {
-		setSelectedDestination(destination);
-		const packagesForDestination = categorizedPackages[destination];
-		setPackageDataForDestination(packagesForDestination);
+	const handleDestinationClick = (plan) => {
+		setSelectedDestination(plan.destination);
+		const selectedPackage = packageData.plans.find((p) => p._id === plan._id);
+		setPackageDataForDestination(selectedPackage);
 	};
+
+	// const onChange = (value) => {
+	// 	console.log(`selected ${value}`);
+	// };
+	const onSearch = (value) => {
+		console.log("search:", value);
+	};
+
+	// categorizedPackages
+	const options = [
+		{ value: "All", label: "All" },
+		...Object.keys(categorizedPackages).map((key) => ({
+			value: key,
+			label: key,
+		})),
+	];
 
 	return (
 		<>
@@ -101,6 +120,7 @@ const Packages = () => {
 					<Title level={3}>Packages</Title>
 					<Flex gap={20} vertical>
 						<Flex gap={20}>
+							{/* total packages */}
 							<Card
 								style={{
 									width: 140,
@@ -130,6 +150,7 @@ const Packages = () => {
 									</Title>
 								</Flex>
 							</Card>
+							{/* add package */}
 							<Card
 								style={{
 									width: 150,
@@ -163,48 +184,89 @@ const Packages = () => {
 						</Flex>
 						<Flex gap={20} vertical>
 							<Title level={3}>Destination</Title>
-							<Flex gap={20} wrap="wrap">
-								{Object.keys(categorizedPackages).map((destination, index) => (
-									<Card
-										key={index}
-										style={{
-											width: 140,
-											height: 110,
-											boxShadow: "0 2px 10px #fff3e6",
-										}}
-										onClick={() => handleDestinationClick(destination)}
-									>
-										<Flex vertical align="center">
-											<Title level={5}>{destination}</Title>
-											<Title
-												level={5}
-												style={{
-													// flex: 1,
-													textAlign: "center",
-													lineHeight: "30px",
-													margin: "0",
-													color: "#fd5901",
-													fontWeight: "bold",
-													backgroundColor: "#fff3e6",
-													// padding: "10px",
-													width: "30px",
-													height: "30px",
-													borderRadius: "50%",
-												}}
-											>
-												{categorizedPackages[destination] &&
-													categorizedPackages[destination].length}
-											</Title>
-										</Flex>
-									</Card>
+							{/* filter button for each destination */}
+							<Select
+								showSearch
+								placeholder="Select a destination to filter"
+								optionFilterProp="label"
+								onChange={onDestinationChange}
+								onSearch={onSearch}
+								style={{ width: 300, boxShadow: "0 2px 10px #fff3e6" }}
+							>
+								{options.map((option, index) => (
+									<Select.Option key={index} value={option.value}>
+										{option.label}
+									</Select.Option>
 								))}
+							</Select>
+							<Flex
+								gap={20}
+								style={{
+									width: "100%",
+									height: "160px",
+									overflowX: "auto",
+									scrollbarWidth: "none",
+									"&::WebkitScrollbar": {
+										display: "none",
+									},
+								}}
+							>
+								{packageData &&
+									packageData.plans &&
+									packageData.plans
+										.filter((plan) =>
+											destination
+												? destination === "All"
+													? true
+													: plan.destination === destination
+												: true
+										)
+										.map((plan, index) => (
+											<Card
+												key={index}
+												style={{
+													width: 140,
+													height: 110,
+													boxShadow: "0 2px 10px #fff3e6",
+												}}
+												onClick={() => handleDestinationClick(plan)}
+											>
+												<Flex vertical align="center">
+													<Title
+														level={5}
+														style={{ textAlign: "center", width: "90px" }}
+													>
+														{plan.destination}
+													</Title>
+													<Title
+														level={5}
+														style={{
+															// flex: 1,
+															textAlign: "center",
+															lineHeight: "30px",
+															margin: "0",
+															color: "#fd5901",
+															fontWeight: "bold",
+															// backgroundColor: "#fff3e6",
+															// padding: "10px",
+															width: "60px",
+															height: "30px",
+															borderRadius: "50%",
+														}}
+													>
+														{plan && plan.packageId.totalDuration}
+													</Title>
+												</Flex>
+											</Card>
+										))}
 							</Flex>
 						</Flex>
 					</Flex>
 					{selectedDestination && (
 						<PackageCard
+							key={packageDataForDestination._id}
 							destination={selectedDestination}
-							categorizedPackagesData={packageDataForDestination}
+							packageData={packageDataForDestination}
 							closePackage={setSelectedDestination}
 						/>
 					)}
@@ -225,7 +287,7 @@ const Packages = () => {
 							height: "500px",
 							overflowY: "auto",
 							scrollbarWidth: "none",
-							"&::-webkit-scrollbar": {
+							"&::WebkitScrollbar": {
 								display: "none",
 							},
 						}}

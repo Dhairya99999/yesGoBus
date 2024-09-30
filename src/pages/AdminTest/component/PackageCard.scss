@@ -11,6 +11,9 @@
 	.card-header {
 		display: flex;
 		justify-content: space-between;
+		.card-header-title {
+			width: 50%;
+		}
 	}
 
 	.package-card-body {
@@ -21,6 +24,7 @@
 			.description {
 				display: flex;
 				flex-direction: column;
+				width: 50%;
 			}
 		}
 		.body-main {
@@ -28,10 +32,11 @@
 				display: flex;
 				// flex-direction: column;
 				justify-content: space-between;
-
+				width: 100%;
 				.left {
 					display: flex;
 					flex-direction: column;
+					width: 50%;
 				}
 			}
 			.plans {
@@ -45,7 +50,7 @@
 						display: flex;
 						flex-direction: column;
 						// flex-wrap: wrap;
-						width: 60%;
+						width: 50%;
 					}
 				}
 			}
@@ -53,6 +58,6 @@
 	}
 }
 
-Image{
+Image {
 	border-radius: 10px;
 }
