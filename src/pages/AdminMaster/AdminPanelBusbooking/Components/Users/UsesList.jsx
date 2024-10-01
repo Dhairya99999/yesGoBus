@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
 const baseUrl = import.meta.env.VITE_BASE_URL;
 const token = localStorage.getItem("token");
-import { Card, Flex, Typography, Avatar } from "antd";
-// import { UserOutlined } from "@ant-design/icons";
-import { Table, Button, Spin } from "antd";
+import { Card, Flex, Typography, Avatar, Table, Button, Spin } from "antd";
 const { Title } = Typography;
-import UserForm from "./UserForm";
-// import { act } from "react";
+import UserForm from "./Component/UserForm";
+// import { UserOutlined } from "@ant-design/icons";
 
 const UsesList = () => {
 	const [users, setUsers] = useState([]);
@@ -71,12 +69,15 @@ const UsesList = () => {
 			const fetchUsers = async () => {
 				setLoading(true);
 				try {
-					const response = await fetch(`${baseUrl}/api/admin/user/getAllUsers`, {
-						headers: {
-							Authorization: `Bearer ${token}`, // Assuming token is the correct variable
-							"Content-Type": "application/json",
-						},
-					});
+					const response = await fetch(
+						`${baseUrl}/api/admin/user/getAllUsers`,
+						{
+							headers: {
+								Authorization: `Bearer ${token}`, // Assuming token is the correct variable
+								"Content-Type": "application/json",
+							},
+						}
+					);
 					const data = await response.json();
 					// console.log("users", data.data);
 					setLoading(false);
@@ -130,9 +131,9 @@ const UsesList = () => {
 		<>
 			<Flex gap={10} vertical>
 				<Typography>
-					<Title level={3}>Users List</Title>
+					<Title level={3}>Users</Title>
 				</Typography>
-				<Flex gap={20}>
+				<Flex>
 					<Card
 						// title="No of Users"
 						bordered={false}
@@ -159,19 +160,24 @@ const UsesList = () => {
 							</Avatar.Group>
 						</Flex>
 					</Card>
-					<Button type="primary" onClick={() => showModal(null)}>
-						Add User
-					</Button>
 				</Flex>
 				<UserForm
 					openModal={openModal}
 					setOpenModal={setOpenModal}
 					userFormData={userFormData}
 				/>
-
-				<Typography>
-					<Title level={3}>List</Title>
-				</Typography>
+				<Flex justify="space-between" align="center">
+					<Typography>
+						<Title level={3}>List</Title>
+					</Typography>
+					<Button
+						type="primary"
+						onClick={() => showModal(null)}
+						style={{ marginRight: 60 }}
+					>
+						Add User
+					</Button>
+				</Flex>
 				<Table columns={columns} dataSource={data} />
 			</Flex>
 		</>

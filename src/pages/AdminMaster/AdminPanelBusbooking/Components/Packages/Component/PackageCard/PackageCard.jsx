@@ -49,7 +49,7 @@ const PackageCard = ({ destination, packageData, closePackage }) => {
 					witheFlitePrice: values.witheFlitePrice,
 					withoutFlitePrice: values.witoutFlitePrice,
 					hotelId: values.hotelId,
-					tripBenifits:
+					tripBenifit:
 						(values.tripBenifit && values.tripBenifit.map((item) => item)) ||
 						[],
 					couponCode: values.couponCode,
@@ -67,9 +67,9 @@ const PackageCard = ({ destination, packageData, closePackage }) => {
 					plans: values.plans.map((plan) => ({
 						title: plan.title,
 						plan: plan.plan,
-						activities: plan.activity,
+						activities: plan.activities,
 						activitiesAddress: plan.activitiesAddress,
-						activitiesHour: plan.activityDuration,
+						activitiesHoure: plan.activitiesHoure,
 						image: plan.image?.file?.thumbUrl,
 						end_of_day_info: plan.end_of_day_info,
 					})),
@@ -496,7 +496,7 @@ const PackageCard = ({ destination, packageData, closePackage }) => {
 												{/* plans */}
 												<div className="plan-body">
 													<div className="left">
-														{/* Plan Title */}
+														{/* title */}
 														<Form.Item
 															name={[field.name, "title"]}
 															label={"Title"}
@@ -526,11 +526,10 @@ const PackageCard = ({ destination, packageData, closePackage }) => {
 																}}
 															/>
 														</Form.Item>
-														{/* activity */}
+														{/* activities */}
 														<Form.Item
-															name={[field.name, "activity"]}
-															label={"Activity"}
-															// initialValue={plan.activities}
+															name={[field.name, "activities"]}
+															label={"Activities"}
 															style={{ marginBottom: "0" }}
 														>
 															<Input
@@ -540,7 +539,7 @@ const PackageCard = ({ destination, packageData, closePackage }) => {
 														</Form.Item>
 														{/* activity duration */}
 														<Form.Item
-															name={[field.name, "activityDuration"]}
+															name={[field.name, "activitiesHoure"]}
 															label={"Activity duration"}
 															// initialValue={plan.activitiesHoure}
 															style={{ marginBottom: "0" }}
@@ -562,18 +561,6 @@ const PackageCard = ({ destination, packageData, closePackage }) => {
 																style={isEditable ? styleEnable : styleDisable}
 															/>
 														</Form.Item>
-														{/* day end with */}
-														{/* <Form.Item
-															name={[field.name, "day_end_with"]}
-															label={"Day End With"}
-															// initialValue={plan.end_of_day_info}
-															style={{ marginBottom: "0" }}
-														>
-															<Input
-																disabled={!isEditable}
-																style={isEditable ? styleEnable : styleDisable}
-															/>
-														</Form.Item> */}
 														{/* end of day info */}
 														<Form.Item
 															name={[field.name, "end_of_day_info"]}
@@ -587,6 +574,7 @@ const PackageCard = ({ destination, packageData, closePackage }) => {
 															/>
 														</Form.Item>
 													</div>
+													{/* remove button */}
 													{fields.length > 1 && isEditable && (
 														<Button
 															type="link"
@@ -596,18 +584,7 @@ const PackageCard = ({ destination, packageData, closePackage }) => {
 															Remove Plan
 														</Button>
 													)}
-													{/* {isEditable && (
-											<Form.Item>
-												<Button
-													type="dashed"
-													onClick={() => add()}
-													icon={<PlusOutlined />}
-													block
-												>
-													Add field
-												</Button>
-											</Form.Item>
-										)} */}
+													{/* image */}
 													{/* <Image width={300} height={200} src={plan.image} /> */}
 													<Form.Item name={[field.name, "image"]}>
 														<Upload
@@ -646,9 +623,42 @@ const PackageCard = ({ destination, packageData, closePackage }) => {
 															)}
 														</Upload>
 													</Form.Item>
+													{/* <Form.Item name={[field.name, "image"]}>
+														<Upload
+															name="image"
+															listType="picture-card"
+															className="avatar-uploader"
+															beforeUpload={beforeUpload}
+															customRequest={async ({ file, onSuccess }) => {
+																try {
+																	const base64 = await convertToBase64(file);
+																	onSuccess({ url: base64, thumbUrl: base64 });
+																} catch (err) {
+																	console.error("Error converting image:", err);
+																	message.error("Failed to upload image");
+																}
+															}}
+														>
+															{field.image ? (
+																<Image
+																	width={300}
+																	height={200}
+																	src={field.image.file.thumbUrl || field.image}
+																/>
+															) : (
+																isEditable && (
+																	<div style={{ width: "50%", height: "50%" }}>
+																		<PlusOutlined />
+																		<div style={{ marginTop: 8 }}>Upload</div>
+																	</div>
+																)
+															)}
+														</Upload>
+													</Form.Item> */}
 												</div>
 											</div>
 										))}
+										{/* add button */}
 										{isEditable && (
 											<Form.Item
 												style={{

@@ -4,8 +4,8 @@ const token = localStorage.getItem("token");
 import { Flex, Typography, Card, Spin, Modal, Select } from "antd";
 const { Title } = Typography;
 import { PlusOutlined } from "@ant-design/icons";
-import PackageCard from "./PackageCard";
-import AddPackageForm from "./AddPackageForm";
+import PackageCard from "./Component/PackageCard/PackageCard";
+import AddPackageForm from "./Component/PackageForm/AddPackageForm";
 
 const Packages = () => {
 	const [selectedDestination, setSelectedDestination] = useState(null);

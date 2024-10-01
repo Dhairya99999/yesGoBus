@@ -1,11 +1,19 @@
 // import React from 'react'
 import { useState, useEffect } from "react";
-import axios from "axios";
+// import axios from "axios";
 const baseUrl = import.meta.env.VITE_BASE_URL;
 const user = localStorage.getItem("token");
-import { Card, Flex, Typography, Avatar, Tooltip } from "antd";
-import { UserOutlined } from "@ant-design/icons";
-import { Space, Table, Button } from "antd";
+import {
+	Card,
+	Flex,
+	Typography,
+	Avatar,
+	Space,
+	Table,
+	Button,
+	Spin,
+} from "antd";
+// import { UserOutlined } from "@ant-design/icons";
 const { Title } = Typography;
 const columns = [
 	{
@@ -93,9 +101,11 @@ const columns = [
 const Booking = () => {
 	const [bookings, setBookings] = useState([]);
 	const [error, setError] = useState(null);
+	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
 		const fetchBookings = async () => {
+			setLoading(true);
 			try {
 				const response = await fetch(
 					`${baseUrl}/api/admin/bookings/getAllBookings`,
@@ -108,12 +118,15 @@ const Booking = () => {
 				);
 				const data = await response.json();
 				if (data.status === true) {
+					setLoading(false);
 					setBookings(data.data.bookings);
 				} else {
 					setError(data.message);
+					setLoading(false);
 				}
 			} catch (error) {
 				setError(error.message);
+				setLoading(false);
 			}
 		};
 		fetchBookings();
@@ -123,26 +136,18 @@ const Booking = () => {
 		return <div>Error: {error}</div>;
 	}
 
+	if (loading) {
+		return (
+			<Flex justify="center" align="center" style={{ height: "100vh" }}>
+				<Spin size="large" />
+			</Flex>
+		); // Render a loading indicator when loading is true
+	}
+
 	if (!bookings || !Array.isArray(bookings)) {
 		return <div>Loading...</div>;
 	}
-	// console.log(bookings);
 
-	// const data = bookings.map((booking, index) => {
-	// 	const name = booking.userId
-	// 		? booking.userId.fullName
-	// 		: "User ID not available";
-	// 	return {
-	// 		key: booking._id,
-	// 		No: index + 1,
-	// 		bookingId: booking.bookingId,
-	// 		name,
-	// 		Status: booking.status,
-	// 		Payment: booking.payment,
-	// 		Destination: booking.toPlace,
-	// 		action: "Details",
-	// 	};
-	// });
 	const data = bookings
 		.filter((booking) => booking.userId !== null)
 		.map((booking, index) => {
@@ -154,43 +159,15 @@ const Booking = () => {
 				Status: booking.paymentStatus,
 				Payment: booking.paymentStatus,
 				Destination: booking.toPlace,
-				action: "Details",
+				action: "",
 			};
 		});
-
-	if (error) {
-		return <div>Error: {error}</div>;
-	}
-	// const data = [
-	// 	{
-	// 		key: "1",
-	// 		No: "01",
-	// 		bookingId: 4125,
-	// 		name: "John Brown",
-	// 		Status: "Completed",
-	// 		Payment: "Paid",
-	// 		Destination: "Kathmandu",
-	// 		action: "Details",
-	// 	},
-	// ];
-	// const data = bookings.map((booking, index) => {
-	// 	return {
-	// 		key: booking.id,
-	// 		No: index + 1,
-	// 		bookingId: booking.id,
-	// 		name: booking.name,
-	// 		Status: booking.status,
-	// 		Payment: booking.payment,
-	// 		Destination: booking.destination,
-	// 		action: "Details",
-	// 	};
-	// });
 
 	return (
 		<>
 			<Flex gap={10} vertical>
 				<Typography>
-					<Title level={3}>Users List</Title>
+					<Title level={3}>Bookings</Title>
 				</Typography>
 				<Card
 					// title="No of Users"
@@ -200,7 +177,7 @@ const Booking = () => {
 					}}
 				>
 					<Flex gap={10} vertical>
-						<Typography>Number of Users</Typography>
+						<Typography>Number of Bookings</Typography>
 						<Typography>{bookings.length}</Typography>
 						<Avatar.Group
 							maxCount={3}
@@ -209,42 +186,17 @@ const Booking = () => {
 								backgroundColor: "#fde3cf",
 							}}
 						>
-							<Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=2" />
-							<Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=1" />
-							<Avatar
-								style={{
-									backgroundColor: "#f56a00",
-								}}
-							>
-								K
-							</Avatar>
-							<Avatar
-								style={{
-									backgroundColor: "#f56a00",
-								}}
-							>
-								K
-							</Avatar>
-							<Avatar
-								style={{
-									backgroundColor: "#f56a00",
-								}}
-							>
-								K
-							</Avatar>
-							<Tooltip title="Ant User" placement="top">
+							{bookings.map((booking) => (
 								<Avatar
-									style={{
-										backgroundColor: "#87d068",
-									}}
-									icon={<UserOutlined />}
+									key={booking._id}
+									src="https://lh3.googleusercontent.com/proxy/xr1GXMGF5o6oKuDqHFK5Fb6fwQbaG-8XKkHC59OC8Epx1LkEgctv0jGrSf22Eir6Hngf4bN7RSV_odfUKqT74ZRvcf_r6qtvlbfkyKjMkkFbaFRWeMuLbh-X"
 								/>
-							</Tooltip>
+							))}
 						</Avatar.Group>
 					</Flex>
 				</Card>
 				<Typography>
-					<Title level={3}>Customers</Title>
+					<Title level={3}>Bookings</Title>
 				</Typography>
 				<Table columns={columns} dataSource={data} />
 			</Flex>

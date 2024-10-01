@@ -49,7 +49,6 @@ const Login = () => {
 		return <Navigate to="/" replace />;
 	}
 	// const isMobileApp = useSelector(selectIsMobileApp);
-
 	// const isMobilenumber = (num) => {
 	//   let isIndianNumber = /^[6789]\d{11}$/;
 	//   return isIndianNumber.test(num);
@@ -59,7 +58,6 @@ const Login = () => {
 		setShowLogin(!showLogin);
 		setShowCreateAccount(!showCreateAccount);
 	};
-
 	const handlePhChange = (e) => {
 		setShowOTP(false);
 		// if (isMobilenumber(e.target.value)) setShowOTP(true);
