@@ -19,7 +19,7 @@ import {
 } from "@ant-design/icons";
 const { Sider, Header, Content } = Layout;
 import Sidebar from "./Components/Sidebar/Sider";
-import UserList from "./Components/Users/UsesList";
+import Users from "./Components/Users/Users";
 import Dashboard from "./Components/Dashboard/Dashboard";
 import Booking from "./Components/Bookings/Booking";
 import Packages from "./Components/Packages/Packages";
@@ -110,7 +110,7 @@ const AdminLayout = () => {
 							case "2":
 								return <Booking />;
 							case "3":
-								return <UserList />;
+								return <Users />;
 							// case "4":
 							//   return <Revenue />;
 							case "5":

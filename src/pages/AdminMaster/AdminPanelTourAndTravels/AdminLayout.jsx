@@ -3,44 +3,44 @@ import {
 	Button,
 	Flex,
 	Layout,
-	Input,
 	Typography,
-	Avatar,
-	Badge,
 	Menu,
+	Avatar,
 	Popover,
+	// Input,
 } from "antd";
-const { Sider, Header, Content } = Layout;
 import {
 	MenuUnfoldOutlined,
 	MenuFoldOutlined,
-	SearchOutlined,
-	BellOutlined,
 	UserOutlined,
 	LogoutOutlined,
+	// SearchOutlined,
+	// BellOutlined,
 } from "@ant-design/icons";
-import Sidebar from "../component/Sider";
-import Dashboard from "../component/Dashboard";
-import Booking from "../component/Booking";
-import Agents from "../component/Agents/Agents";
-import Queries from "../component/Queries";
+const { Sider, Header, Content } = Layout;
+import Sidebar from "./Components/Sidebar/Sider";
+import UserList from "./Components/Users/UsesList";
+import Dashboard from "./Components/Dashboard/Dashboard";
+import Booking from "./Components/Bookings/Booking";
+import Packages from "./Components/Packages/Packages";
+import Queries from "./Components/Queries/Queries";
+// import Revenue from "./Components/Revenue/Revenue";
 import "./adminlayout.scss";
-const AdminAgentLayout = () => {
+const AdminLayout = () => {
 	const [collapsed, setCollapsed] = useState(false);
 	const [selectedItem, setSelectedItem] = useState("1"); // Add a state to store the selected item
-	// const [bookingData, setBookingData] = useState([]);
-	const user = JSON.parse(localStorage.getItem("agentUser"));
+
+	const user = JSON.parse(localStorage.getItem("adminUser"));
 	// console.log(user);
 
 	const handleSelect = (key) => {
 		setSelectedItem(key);
 	};
-
 	const handleLogout = () => {
 		// Add your logout logic here
 		console.log("Logging out");
-		localStorage.removeItem("agentUser");
-		localStorage.removeItem("agentToken");
+		localStorage.removeItem("adminUser");
+		localStorage.removeItem("adminToken");
 		window.location.href = "/admin/login";
 	};
 	const menuItems = [
@@ -51,7 +51,6 @@ const AdminAgentLayout = () => {
 			onClick: handleLogout,
 		},
 	];
-
 	return (
 		<Layout>
 			<Sider
@@ -85,9 +84,7 @@ const AdminAgentLayout = () => {
 								<Button icon={<BellOutlined />} />
 							</Badge> */}
 							<Flex gap={10}>
-								<Typography>
-									{user.firstName + " " + user.lastName || ""}
-								</Typography>
+								<Typography>{user.fullName || ""}</Typography>
 								<Popover
 									content={<Menu items={menuItems} />}
 									placement="bottomRight"
@@ -106,10 +103,24 @@ const AdminAgentLayout = () => {
 					</Flex>
 				</Header>
 				<Content className="content">
-					{selectedItem === "1" && <Dashboard />}
-					{/* {selectedItem === "2" && <Agents />} */}
-					{selectedItem === "3" && <Booking />}
-					{selectedItem === "4" && <Queries />}
+					{(() => {
+						switch (selectedItem) {
+							case "1":
+								return <Dashboard />;
+							case "2":
+								return <Booking />;
+							case "3":
+								return <UserList />;
+							// case "4":
+							//   return <Revenue />;
+							case "5":
+								return <Packages />;
+							case "6":
+								return <Queries />;
+							default:
+								return null;
+						}
+					})()}
 				</Content>
 				{/* <Footer>footer</Footer> */}
 			</Layout>
@@ -117,4 +128,4 @@ const AdminAgentLayout = () => {
 	);
 };
 
-export default AdminAgentLayout;
+export default AdminLayout;

@@ -3,7 +3,7 @@ import axios from "axios";
 const baseUrl = import.meta.env.VITE_BASE_URL;
 const token = localStorage.getItem("token");
 import { Button, Form, Input, Select, Space, Modal } from "antd";
-import "./UserForm.scss";
+import "./userform.scss";
 const { Option } = Select;
 const layout = {
 	labelCol: {

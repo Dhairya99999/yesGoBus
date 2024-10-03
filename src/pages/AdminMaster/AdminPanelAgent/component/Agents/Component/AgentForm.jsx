@@ -3,7 +3,7 @@ import axios from "axios";
 const baseUrl = import.meta.env.VITE_BASE_URL;
 const token = localStorage.getItem("token");
 import { Button, Form, Input, Select, Space, Modal } from "antd";
-import "./UserForm.scss";
+import "./AgentForm.scss";
 const { Option } = Select;
 const layout = {
 	labelCol: {
@@ -24,11 +24,13 @@ const UserForm = ({ openModal, setOpenModal, userFormData }) => {
 	useEffect(() => {
 		if (userFormData) {
 			form.setFieldsValue({
-				gender: userFormData.Gender,
+				// gender: userFormData.Gender,
 				fullName: userFormData.name,
 				email: userFormData.email,
 				mobile: userFormData.Mobile_No,
 				userId: userFormData.userId,
+				maxTicket: userFormData.maxTickets,
+				agentCode: userFormData.agentCode,
 			});
 		}
 	});
@@ -49,55 +51,62 @@ const UserForm = ({ openModal, setOpenModal, userFormData }) => {
 	};
 	const onFill = () => {
 		form.setFieldsValue({
-			gender: "male",
+			// gender: "male",
 			fullName: "John Doe",
 			email: "john@example.com",
 			mobile: "1234567890",
 			userId: "1234567890",
+			maxTicket: "10",
+			agentCode: "ABC123",
 		});
 	};
-	const onGenderChange = (value) => {
-		switch (value) {
-			case "male":
-				form.setFieldsValue({
-					note: "Hi, man!",
-				});
-				break;
-			case "female":
-				form.setFieldsValue({
-					note: "Hi, lady!",
-				});
-				break;
-			case "other":
-				form.setFieldsValue({
-					note: "Hi there!",
-				});
-				break;
-			default:
-		}
-	};
+	// const onGenderChange = (value) => {
+	// 	switch (value) {
+	// 		case "male":
+	// 			form.setFieldsValue({
+	// 				note: "Hi, man!",
+	// 			});
+	// 			break;
+	// 		case "female":
+	// 			form.setFieldsValue({
+	// 				note: "Hi, lady!",
+	// 			});
+	// 			break;
+	// 		case "other":
+	// 			form.setFieldsValue({
+	// 				note: "Hi there!",
+	// 			});
+	// 			break;
+	// 		default:
+	// 	}
+	// };
 
 	const updateUser = async (values) => {
 		// console.log(values);
 		// make an API call to update user on /api/user/updateProfile:userId
 
 		try {
+			const [firstName, lastName] = values.fullName.split(" ");
 			const { data: updatedUser } = await axios.patch(
-				`${baseUrl}/api/admin/user/updateProfile/${userFormData._id}`,
+				`${baseUrl}/api/admin/agents/updateAgent/${userFormData._id}`,
 				{
 					userId: values.userId,
-					fullName: values.fullName,
+					firstName: firstName || "",
+					lastName: lastName || "",
 					email: values.email,
 					phoneNumber: values.mobile,
-					gender: values.gender,
+					maxTicket: values.maxTicket,
+					agentCode: values.agentCode,
 				},
 				{
 					headers: {
 						Authorization: `Bearer ${token}`,
 						"Content-Type": "application/json",
 					},
+					withCredentials: true, // Ensure this is set if you're using credentials
 				}
 			);
+
 			if (updatedUser.status === 200) {
 				JSON.stringify(updatedUser?.data);
 				// alert("Profile Updated");
@@ -179,7 +188,7 @@ const UserForm = ({ openModal, setOpenModal, userFormData }) => {
 					<Input placeholder="Enter Full Name" />
 				</Form.Item>
 
-				<Form.Item
+				{/* <Form.Item
 					name="gender"
 					label="Gender"
 					rules={[
@@ -197,8 +206,8 @@ const UserForm = ({ openModal, setOpenModal, userFormData }) => {
 						<Option value="female">female</Option>
 						<Option value="other">other</Option>
 					</Select>
-				</Form.Item>
-				<Form.Item
+				</Form.Item> */}
+				{/* <Form.Item
 					noStyle
 					shouldUpdate={(prevValues, currentValues) =>
 						prevValues.gender !== currentValues.gender
@@ -219,7 +228,7 @@ const UserForm = ({ openModal, setOpenModal, userFormData }) => {
 							</Form.Item>
 						) : null
 					}
-				</Form.Item>
+				</Form.Item> */}
 				<Form.Item
 					name="email"
 					label="Email"
@@ -234,6 +243,28 @@ const UserForm = ({ openModal, setOpenModal, userFormData }) => {
 				<Form.Item
 					name="mobile"
 					label="Mobile Number"
+					rules={[
+						{
+							required: true,
+						},
+					]}
+				>
+					<Input placeholder="1234567890" />
+				</Form.Item>
+				<Form.Item
+					name="agentCode"
+					label="Agent Code"
+					rules={[
+						{
+							required: true,
+						},
+					]}
+				>
+					<Input placeholder="Enter Agent Code" />
+				</Form.Item>
+				<Form.Item
+					name="maxTicket"
+					label="Max Tickets per Day"
 					rules={[
 						{
 							required: true,

@@ -27,27 +27,31 @@ const Sider = ({ onSelect }) => {
 						icon: <HomeOutlined />,
 						label: "Dashboard",
 					},
-					// {
-					// 	key: "2",
-					// 	icon: <UserOutlined />,
-					// 	label: "Agents",
-					// },
-
+					{
+						key: "2",
+						icon: <FileTextOutlined />,
+						label: "Booking",
+					},
 					{
 						key: "3",
-						icon: <FileTextOutlined />,
-						label: "Bookings",
-					},
-					{
-						key: "4",
-						icon: <PiTruckBold />,
-						label: "Queries",
+						icon: <UserOutlined />,
+						label: "User",
 					},
 					// {
-					// 	key: "2",
-					// 	icon: <PiTruckBold />,
-					// 	label: "Packages",
+					// 	key: "4",
+					// 	icon: <DollarOutlined />,
+					// 	label: "Revenue",
 					// },
+					{
+						key: "5",
+						icon: <PiTruckBold />,
+						label: "Packages",
+					},
+					{
+						key: "6",
+						icon: <PiTruckBold/>,
+						label:"Queries",
+					},
 				]}
 				onSelect={({ key }) => onSelect(key)}
 			/>

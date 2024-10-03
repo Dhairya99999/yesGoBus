@@ -85,10 +85,10 @@ const Dashboard = () => {
   return (
     <div>
       <h2>Welcome to the Dashboard</h2>
-      {result && <div>{result.message || "No additional information available."}</div>}
+      {/* {result && <div>{result.message || "No additional information available."}</div>}
       <Button type="danger" onClick={handleLogout}>
         Logout
-      </Button>
+      </Button> */}
       {/* Additional dashboard content goes here */}
     </div>
   );

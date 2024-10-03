@@ -42,8 +42,9 @@ import QueryForm from "./components/QueryForm/QueryFrom";
 
 // Admin Routes Pages
 import AdminLogin from "./pages/AdminMaster/AdminLogin/AdminLogin";
-import AdminLayout from "./pages/AdminMaster/AdminPanelBusbooking/AdminLayout";
-import AdminAgentLayout from "./pages/AdminMaster/AdminPanelAgent/AdminLayout/AdminLayout";
+import AdminPanelBusbooking from "./pages/AdminMaster/AdminPanelBusbooking/AdminLayout";
+import AdminPanelAgentLayout from "./pages/AdminMaster/AdminPanelAgent/AdminLayout/AdminLayout";
+import AdminPanelTourAndTravels from "./pages/AdminMaster/AdminPanelTourAndTravels/AdminLayout";
 
 function App() {
 	const dispatch = useDispatch();
@@ -82,9 +83,12 @@ function App() {
 				/>
 				{/* Admin Routes */}
 				<Route path="/admin/login" element={<AdminLogin />} />
-				<Route path="/admin/busbooking" element={<AdminLayout />} />
-				<Route patgh="/admin/tourandtravels" element={<AdminLayout />} />
-				<Route path="/admin/agent" element={<AdminAgentLayout />} />
+				<Route path="/admin/busbooking" element={<AdminPanelBusbooking />} />
+				<Route
+					path="/admin/tourandtravels"
+					element={<AdminPanelTourAndTravels />}
+				/>
+				<Route path="/admin/agent" element={<AdminPanelAgentLayout />} />
 
 				<Route path="/busbooking" element={<BusBooking />} />
 				<Route path="/busbooking/payment" element={<Payment />} />
