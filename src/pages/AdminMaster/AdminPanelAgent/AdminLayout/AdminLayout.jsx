@@ -86,7 +86,9 @@ const AdminAgentLayout = () => {
 							</Badge> */}
 							<Flex gap={10}>
 								<Typography>
-									{user.firstName + " " + user.lastName || ""}
+									{user.firstName && user.lastName
+										? user.firstName + " " + user.lastName
+										: user.fullName || user.email || ""}
 								</Typography>
 								<Popover
 									content={<Menu items={menuItems} />}
