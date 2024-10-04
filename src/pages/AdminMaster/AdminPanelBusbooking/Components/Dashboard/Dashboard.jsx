@@ -91,7 +91,7 @@ const Dashboard = () => {
 
 	// console.log("users", users);
 	// console.log("bookings", bookings);
-	console.log("packages", packages);
+	// console.log("packages", packages);
 
 	if (loading || !users || !bookings || !packages) {
 		return (
