@@ -1,11 +1,38 @@
 import { useState, useEffect } from "react";
 const baseUrl = import.meta.env.VITE_BASE_URL;
 const token = localStorage.getItem("token");
-import { Flex, Typography, Card, Spin, Modal, Select } from "antd";
+import {
+	Flex,
+	Typography,
+	Card,
+	Spin,
+	Modal,
+	Select,
+	Table,
+	Button,
+} from "antd";
+import { createStyles } from "antd-style";
 const { Title } = Typography;
 import { PlusOutlined } from "@ant-design/icons";
 import PackageCard from "./Component/PackageCard/PackageCard";
 import AddPackageForm from "./Component/PackageForm/AddPackageForm";
+
+const useStyle = createStyles(({ css, token }) => {
+	const { antCls } = token;
+	return {
+		customTable: css`
+			${antCls}-table {
+				${antCls}-table-container {
+					${antCls}-table-body,
+					${antCls}-table-content {
+						scrollbar-width: thin;
+						scrollbar-color: unset;
+					}
+				}
+			}
+		`,
+	};
+});
 
 const Packages = () => {
 	const [selectedDestination, setSelectedDestination] = useState(null);
@@ -18,6 +45,7 @@ const Packages = () => {
 		[]
 	);
 	const [destination, setDestination] = useState("");
+	const { styles } = useStyle();
 	const onDestinationChange = (value) => {
 		setDestination(value);
 	};
@@ -104,6 +132,78 @@ const Packages = () => {
 		})),
 	];
 
+	// Package table data
+	const columns = [
+		{
+			title: "Sr. No.",
+			dataIndex: "key",
+			width: 150,
+		},
+		{
+			title: "Package Name",
+			dataIndex: "packageName",
+			width: 150,
+		},
+		{
+			title: "Destination",
+			dataIndex: "destination",
+			width: 150,
+		},
+		{
+			title: "Total Duration",
+			dataIndex: "totalDuration",
+		},
+		{
+			title: "Hotel Type",
+			dataIndex: "hotelType",
+		},
+		{
+			title: "Price",
+			dataIndex: "price",
+		},
+		{
+			title: "Rating",
+			dataIndex: "destinationRating",
+		},
+		{
+			dataIndex: "action",
+			key: "action",
+			render: (text, record) => (
+				<Button
+					type="primary"
+					onClick={() => handleDestinationClick(record.plan)}
+				>
+					Details
+				</Button>
+			),
+		},
+	];
+
+	// console.log("packageData", packageData.plans);
+	const data =
+		packageData &&
+		packageData.plans &&
+		packageData.plans
+			.filter((plan) =>
+				destination
+					? destination === "All"
+						? true
+						: plan.destination === destination
+					: true
+			)
+			.map((plan, index) => ({
+				key: index + 1,
+				packageName: plan.packageId.name,
+				destination: plan.destination,
+				totalDuration: plan.packageId.totalDuration,
+				hotelType: plan.room_name,
+				price: plan.packageId.witheFlitePrice,
+				destinationRating: plan.packageId.destinationID.rating,
+				plan: plan,
+			}));
+
+	// console.log("data", data);
+
 	return (
 		<>
 			<div
@@ -183,11 +283,11 @@ const Packages = () => {
 							</Card>
 						</Flex>
 						<Flex gap={20} vertical>
-							<Title level={3}>Destination</Title>
+							<Title level={3}>Plan your dream Vacation with our Custom Packages!</Title>
 							{/* filter button for each destination */}
 							<Select
 								showSearch
-								placeholder="Select a destination to filter"
+								placeholder="Pick Your Dream Destination!"
 								optionFilterProp="label"
 								onChange={onDestinationChange}
 								onSearch={onSearch}
@@ -199,7 +299,7 @@ const Packages = () => {
 									</Select.Option>
 								))}
 							</Select>
-							<Flex
+							{/* <Flex
 								gap={20}
 								style={{
 									width: "100%",
@@ -259,7 +359,18 @@ const Packages = () => {
 												</Flex>
 											</Card>
 										))}
-							</Flex>
+							</Flex> */}
+							<Table
+								className={styles.customTable}
+								columns={columns}
+								dataSource={data}
+								pagination={{
+									pageSize: 50,
+								}}
+								scroll={{
+									y: 55 * 5,
+								}}
+							/>
 						</Flex>
 					</Flex>
 					{selectedDestination && (

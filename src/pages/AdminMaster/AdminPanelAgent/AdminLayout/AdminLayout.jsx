@@ -29,6 +29,10 @@ const AdminAgentLayout = () => {
 	const [collapsed, setCollapsed] = useState(false);
 	const [selectedItem, setSelectedItem] = useState("1"); // Add a state to store the selected item
 	// const [bookingData, setBookingData] = useState([]);
+
+	if (!localStorage.getItem("agentUser")) {
+		window.location.href = "/admin/login";
+	}
 	const user = JSON.parse(localStorage.getItem("agentUser"));
 	// console.log(user);
 

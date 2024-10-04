@@ -30,6 +30,9 @@ const AdminLayout = () => {
 	const [collapsed, setCollapsed] = useState(false);
 	const [selectedItem, setSelectedItem] = useState("1"); // Add a state to store the selected item
 
+	if (!localStorage.getItem("adminUser")) {
+		window.location.href = "/admin/login";
+	}
 	const user = JSON.parse(localStorage.getItem("adminUser"));
 	// console.log(user);
 
