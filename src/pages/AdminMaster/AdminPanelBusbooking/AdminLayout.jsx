@@ -114,14 +114,14 @@ const AdminLayout = () => {
 								return <Booking />;
 							case "3":
 								return <Users />;
-							// case "4":
-							//   return <Revenue />;
-							case "5":
-								return <Packages />;
-							case "6":
+							case "4":
 								return <Queries />;
 							default:
 								return null;
+							// case "4":
+							//   return <Revenue />;
+							// case "5":
+							// 	return <Packages />;
 						}
 					})()}
 				</Content>
