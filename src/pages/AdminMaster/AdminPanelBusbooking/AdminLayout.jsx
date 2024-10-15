@@ -22,9 +22,10 @@ import Sidebar from "./Components/Sidebar/Sider";
 import Users from "./Components/Users/Users";
 import Dashboard from "./Components/Dashboard/Dashboard";
 import Booking from "./Components/Bookings/Booking";
-import Packages from "./Components/Packages/Packages";
+// import Packages from "./Components/Packages/Packages";
 import Queries from "./Components/Queries/Queries";
-// import Revenue from "./Components/Revenue/Revenue";
+import Revenue from "./Components/Revenue/Revenue";
+import Ratings from "./Components/Ratings/Ratings";
 import "./adminlayout.scss";
 const AdminLayout = () => {
 	const [collapsed, setCollapsed] = useState(false);
@@ -115,12 +116,14 @@ const AdminLayout = () => {
 							case "3":
 								return <Users />;
 							case "4":
+								return <Revenue />;
+							case "5":
+								return <Ratings />;
+							case "6":
 								return <Queries />;
 							default:
 								return null;
-							// case "4":
-							//   return <Revenue />;
-							// case "5":
+							// case "6":
 							// 	return <Packages />;
 						}
 					})()}
