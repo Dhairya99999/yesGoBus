@@ -6,7 +6,9 @@ import {
 	DollarOutlined,
 	HomeOutlined,
 } from "@ant-design/icons";
+import { FcRating } from "react-icons/fc";
 import { PiTruckBold } from "react-icons/pi";
+import { SiGooglebigquery } from "react-icons/si";
 import "./sider.scss";
 const Sider = ({ onSelect }) => {
 	return (
@@ -35,22 +37,27 @@ const Sider = ({ onSelect }) => {
 					{
 						key: "3",
 						icon: <UserOutlined />,
-						label: "User",
+						label: "Users",
 					},
-					// {
-					// 	key: "4",
-					// 	icon: <DollarOutlined />,
-					// 	label: "Revenue",
-					// },
 					{
-						key: "5",
+						key: "4",
 						icon: <PiTruckBold />,
 						label: "Packages",
 					},
 					{
+						key: "5",
+						icon: <DollarOutlined />,
+						label: "Revenue",
+					},
+					{
 						key: "6",
-						icon: <PiTruckBold/>,
-						label:"Queries",
+						icon: <FcRating />,
+						label: "Customer Ratings",
+					},
+					{
+						key: "7",
+						icon: <SiGooglebigquery />,
+						label: "Queries",
 					},
 				]}
 				onSelect={({ key }) => onSelect(key)}

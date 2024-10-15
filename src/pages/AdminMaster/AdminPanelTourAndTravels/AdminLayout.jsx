@@ -24,7 +24,8 @@ import Dashboard from "./Components/Dashboard/Dashboard";
 import Booking from "./Components/Bookings/Booking";
 import Packages from "./Components/Packages/Packages";
 import Queries from "./Components/Queries/Queries";
-// import Revenue from "./Components/Revenue/Revenue";
+import Revenue from "./Components/Revenue/Revenue";
+import Ratings from "./Components/CustomerRatings/Ratings";
 import "./adminlayout.scss";
 const AdminLayout = () => {
 	const [collapsed, setCollapsed] = useState(false);
@@ -114,11 +115,13 @@ const AdminLayout = () => {
 								return <Booking />;
 							case "3":
 								return <UserList />;
-							// case "4":
-							//   return <Revenue />;
-							case "5":
+							case "4":
 								return <Packages />;
+							case "5":
+								return <Revenue />;
 							case "6":
+								return <Ratings />;
+							case "7":
 								return <Queries />;
 							default:
 								return null;
