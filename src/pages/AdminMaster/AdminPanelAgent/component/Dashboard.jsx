@@ -43,6 +43,7 @@ const Dashboard = () => {
         message.error(result.message || "Login failed");
       }
     } catch (error) {
+      console.log(error);
       message.error("An error occurred during login");
     } finally {
       setLoading(false);
@@ -53,7 +54,7 @@ const Dashboard = () => {
     localStorage.removeItem("agentToken");
 	localStorage.removeItem("agentCode");
     setIsLoggedIn(false);
-    navigate("/agent/admin/test")
+    navigate("/admin/login")
   };
 
   if (!isLoggedIn) {
