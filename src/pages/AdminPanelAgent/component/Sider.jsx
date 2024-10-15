@@ -32,13 +32,18 @@ const Sider = ({ onSelect }) => {
 						icon: <FileTextOutlined />,
 						label: "Booking",
 					},
+					// {
+					// 	key: "3",
+					// 	icon: <PiTruckBold />,
+					// 	label: "Packages",
+					// },
 					{
-						key: "3",
-						icon: <PiTruckBold />,
-						label: "Packages",
+						key:"4",
+						icon: <FileTextOutlined />,
+						label: "Package Bookings",
 					},
 					{
-						key: "4",
+						key: "5",
 						icon: <PiTruckBold/>,
 						label:"Queries",
 					},

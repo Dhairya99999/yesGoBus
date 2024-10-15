@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Flex, Layout, Input, Typography } from "antd";
 import {
 	MenuUnfoldOutlined,
@@ -14,6 +14,7 @@ import Dashboard from "../component/Dashboard";
 import Booking from "../component/Booking";
 import Packages from "../component/Packages";
 import Queries from "../component/Queries";
+import PackageBooking from "../component/PackageBooking";
 import "./adminlayout.scss";
 const AdminAgentLayout = () => {
 	const [collapsed, setCollapsed] = useState(false);
@@ -22,6 +23,13 @@ const AdminAgentLayout = () => {
 	const handleSelect = (key) => {
 		setSelectedItem(key);
 	};
+
+	const [agentCode, setAgentCode] = useState("");
+
+	useEffect(() => {
+		const code = localStorage.getItem("agentCode");
+		setAgentCode(code);
+	},[agentCode]); 
 	return (
 		<Layout>
 			<Sider
@@ -39,39 +47,31 @@ const AdminAgentLayout = () => {
 				/>
 			</Sider>
 			<Layout>
-				<Header className="header">
-					<Flex justify="space-between">
-						<Flex gap={10}>
-							<Input
-								placeholder="Search"
-								variant="borderless"
-								style={{ minWidth: 300, maxWidth: 1000 }}
-							/>
+			<Header className="header">
+  <Flex justify="space-between">
+    <div> {/* Left side content (if any) */} </div>
 
-							<Button type="primary" icon={<SearchOutlined />} />
-						</Flex>
-						<Flex gap={30}>
-							<Badge count={1}>
-								<Button icon={<BellOutlined />} />
-							</Badge>
-							<Flex gap={10}>
-								<Typography>User</Typography>
+    <Flex gap={10} style={{ alignItems: 'center' }}>
+      {agentCode && (
+        <>
+          <Typography>{agentCode}</Typography>
+          <Avatar
+            style={{ backgroundColor: "#FF742C" }}
+            icon={<UserOutlined />}
+          />
+        </>
+      )}
+    </Flex>
+  </Flex>
+</Header>
 
-								<Avatar
-									style={{
-										backgroundColor: "#FF742C",
-									}}
-									icon={<UserOutlined />}
-								/>
-							</Flex>
-						</Flex>
-					</Flex>
-				</Header>
 				<Content className="content">
 					{selectedItem === "1" && <Dashboard />}
 					{selectedItem === "2" && <Booking />}
-					{selectedItem === "3" && <Packages />}
-					{selectedItem === "4" && <Queries />}
+					{/* {selectedItem === "3" && <Packages />} */}
+					{selectedItem === "4" && <PackageBooking />}
+
+					{selectedItem === "5" && <Queries />}
 				</Content>
 				{/* <Footer>footer</Footer> */}
 			</Layout>

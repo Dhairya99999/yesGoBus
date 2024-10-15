@@ -15,7 +15,7 @@ const columns = [
 		key: "bookingId",
 	},
 	{
-		title: "Booking Name",
+		title: "Package Name",
 		dataIndex: "name",
 		key: "name",
 	},
@@ -65,13 +65,12 @@ const columns = [
 	}
 ];
 
-const Booking = () => {
+const PackageBooking = () => {
 	const [bookings, setBookings] = useState([]);
 	const [userDetails, setUserDetails] = useState({});
 	const [error, setError] = useState(null);
 	const agentCode = localStorage.getItem("agentCode");
-	const [totalSales, setTotalSales] = useState(0);
-
+    const [totalSales, setTotalSales] = useState(0);
 
 	function formatDate(dateString) {
 		const date = new Date(dateString);
@@ -96,29 +95,25 @@ const Booking = () => {
 		const fetchBookings = async () => {
 			try {
 				const response = await fetch(
-					`${baseUrl}/api/busBooking/getBookings`,
-					{
+					`${baseUrl}/api/bookingHistory/getAllBookings`,
+					{   method: "GET",
 						headers: {
 							"Content-Type": "application/json",
 						},
 					}
 				);
 				const data = await response.json();
-				if (data.status === 200) {
 					setBookings(data.data);
-					const total = data.data
-    .filter(booking => 
-        booking.agentCode === agentCode && 
-        booking.totalAmount && 
-        booking.bookingStatus === 'paid'
-    )
-    .reduce((acc, booking) => acc + booking.totalAmount, 0);
 
-setTotalSales(total);
-
-				} else {
-					setError(data.message);
-				}
+                    const total = data.data
+                    .filter(booking => 
+                        booking.agentCode === agentCode && 
+                        booking.totalPackagePrice && 
+                        (booking.paymentStatus === 'SUCCESS' || booking.paymentStatus === 'PAYMENT_SUCCESS')
+                    )
+                    .reduce((acc, booking) => acc + booking.totalPackagePrice, 0);
+                
+                setTotalSales(total);				
 			} catch (error) {
 				setError(error.message);
 			}
@@ -175,10 +170,10 @@ setTotalSales(total);
 				key: booking._id,
 				No: index + 1,
 				bookingId: booking._id,
-				name: `${booking.sourceCity} --- ${booking.destinationCity} --- ${formatDate(booking.updatedAt)}`,
-				Status: booking.bookingStatus,
-				cusName: user ? user.fullName : 'Loading...',
-				cusNumber: user ? user.phoneNumber : 'Loading...',
+				name: `${booking.packageId.name} --- ${booking.packageId.totalDuration} --- ${booking.departureDate}`,
+                Status: booking.paymentStatus === "PAYMENT_SUCCESS" ? "SUCCESS" : booking.paymentStatus,
+                cusName: user ? user.fullName : 'Deleted User',
+				cusNumber: user ? user.phoneNumber : 'No Contact info. Available',
 			};
 		});
 
@@ -186,9 +181,9 @@ setTotalSales(total);
 		<>
 			<Flex gap={10} vertical>
 				<Typography>
-					<Title level={3}>Bus-Bookings</Title>
+					<Title level={3}>Package-Bookings</Title>
 				</Typography>
-				<Flex gap={10} horizontal>
+                <Flex gap={10} horizontal>
 				<Card
 					bordered={false}
 					style={{
@@ -196,7 +191,7 @@ setTotalSales(total);
 					}}
 				>
 					<Flex gap={10} vertical>
-						<Typography>Number of Bus Bookings</Typography>
+						<Typography>Number of Package Bookings</Typography>
 						<Typography>{data.length}</Typography>
 						<Avatar.Group
 							maxCount={3}
@@ -210,7 +205,7 @@ setTotalSales(total);
 						</Avatar.Group>
 					</Flex>
 				</Card>
-				<Card
+                <Card
 					bordered={false}
 					style={{
 						width: 300,
@@ -221,7 +216,7 @@ setTotalSales(total);
 						<Typography>₹{totalSales.toFixed(2)}</Typography>
 					</Flex>
 				</Card>
-				</Flex>
+                </Flex>
 				<Typography>
 					<Title level={3}>List of Bus-Bookings</Title>
 				</Typography>
@@ -231,4 +226,4 @@ setTotalSales(total);
 	);
 };
 
-export default Booking;
+export default PackageBooking;
