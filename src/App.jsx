@@ -27,20 +27,24 @@ import { App as CapacitorApp } from "@capacitor/app";
 //import CabRoutes from "./routes/CabRoutes";
 import "./App.scss";
 //import CabDriverRoutes from "./routes/CabDriverRoutes";
-import AdminRoutes from "./routes/AdminRoutes";
-import {
-	AdminCreateAccount,
-	AdminLogin,
-	AdminAccountDetails,
-} from "./pages/Admin";
+// import AdminRoutes from "./routes/AdminRoutes";
+// import {
+// 	AdminCreateAccount,
+// 	AdminLogin,
+// 	AdminAccountDetails,
+// } from "./pages/Admin";
 import TravelingPayment from "./pages/TravelingPayment";
 import PaymentSuccessful from "./pages/PaymentSuccessful";
 import PaymentFailed from "./pages/PaymentFailed";
 import NotFoundPage from "./pages/Error/NotFoundPage/NotFoundPage";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import QueryForm from "./components/QueryForm/QueryFrom";
-import AdminLayout from "./pages/AdminTest/AdminLayout/AdminLayout";
-import AdminAgentLayout from "./pages/AdminPanelAgent/AdminLayout/AdminLayout";
+
+// Admin Routes Pages
+import AdminLogin from "./pages/AdminMaster/AdminLogin/AdminLogin";
+import AdminPanelBusbooking from "./pages/AdminMaster/AdminPanelBusbooking/AdminLayout";
+import AdminPanelAgentLayout from "./pages/AdminMaster/AdminPanelAgent/AdminLayout/AdminLayout";
+import AdminPanelTourAndTravels from "./pages/AdminMaster/AdminPanelTourAndTravels/AdminLayout";
 
 function App() {
 	const dispatch = useDispatch();
@@ -77,8 +81,15 @@ function App() {
 					path="/"
 					element={isMobileApp ? <BusBooking /> : <LandingPage />}
 				/>
-				<Route path="/admin/test" element={<AdminLayout />} />
-				<Route path="agent/admin/test" element={<AdminAgentLayout />} />
+				{/* Admin Routes */}
+				<Route path="/admin/login" element={<AdminLogin />} />
+				<Route path="/admin/busbooking" element={<AdminPanelBusbooking />} />
+				<Route
+					path="/admin/tourandtravels"
+					element={<AdminPanelTourAndTravels />}
+				/>
+				<Route path="/admin/agent" element={<AdminPanelAgentLayout />} />
+
 				<Route path="/busbooking" element={<BusBooking />} />
 				<Route path="/busbooking/payment" element={<Payment />} />
 				<Route path="/payment" element={<TravelingPayment />} />
@@ -114,13 +125,13 @@ function App() {
         <Route path="/cab_driver/*" element={<CabDriverRoutes />} />*/}
 
 				{/* Admin */}
-				<Route path="/admin/create-account" element={<AdminCreateAccount />} />
+				{/* <Route path="/admin/create-account" element={<AdminCreateAccount />} />
 				<Route
 					path="/admin/account-details"
 					element={<AdminAccountDetails />}
 				/>
 				<Route path="/admin/login" element={<AdminLogin />} />
-				<Route path="/admin/*" element={<AdminRoutes />} />
+				<Route path="/admin/*" element={<AdminRoutes />} /> */}
 
 				{/* 404 Not Found */}
 				<Route path="*" element={<NotFoundPage />} />
