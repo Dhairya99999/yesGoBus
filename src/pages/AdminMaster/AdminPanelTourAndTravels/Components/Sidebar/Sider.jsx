@@ -6,8 +6,8 @@ import {
 	DollarOutlined,
 	HomeOutlined,
 } from "@ant-design/icons";
-import { FcRating } from "react-icons/fc";
 import { PiTruckBold } from "react-icons/pi";
+import { FcRating } from "react-icons/fc";
 import { SiGooglebigquery } from "react-icons/si";
 import "./sider.scss";
 const Sider = ({ onSelect }) => {
