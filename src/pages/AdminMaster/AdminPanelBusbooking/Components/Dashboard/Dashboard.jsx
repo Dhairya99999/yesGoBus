@@ -5,10 +5,6 @@ import {
 	Card,
 	Flex,
 	Typography,
-	Avatar,
-	Space,
-	Table,
-	Button,
 	Spin,
 } from "antd";
 const { Title } = Typography;
