@@ -37,6 +37,8 @@ export default function AdminLoginPage() {
 			return <Navigate to="/admin/tourandtravels" replace />;
 		} else if (adminUser.email === "agentadmin@gmail.com") {
 			return <Navigate to="/admin/agent" replace />;
+		} else if (adminUser.email === "superadmin@gmail.com") {
+			return <Navigate to="/admin/superadmin" replace />;
 		}
 	}
 
@@ -58,7 +60,7 @@ export default function AdminLoginPage() {
 							{
 								mobile: emailOrMobile,
 								otp,
-								orderId
+								orderId,
 							}
 						);
 						if (response.status === 200) {
@@ -76,7 +78,10 @@ export default function AdminLoginPage() {
 								"agentUser",
 								JSON.stringify(response.data.data.user)
 							);
-							localStorage.setItem("agentCode", response.data.data.user.agentCode);
+							localStorage.setItem(
+								"agentCode",
+								response.data.data.user.agentCode
+							);
 							setLoading(false);
 							navigate("/admin/agent");
 						}
@@ -161,10 +166,10 @@ export default function AdminLoginPage() {
 					const response = await fetch(`${baseUrl}/api/agent/login`, {
 						method: "POST",
 						headers: {
-						  "Content-Type": "application/json",
+							"Content-Type": "application/json",
 						},
 						body: JSON.stringify({ emailMobile: emailOrMobile, password }),
-					  });
+					});
 					if (response.status === 200) {
 						toast.dismiss(loadingToast);
 						toast.success("Login Successful", {
@@ -343,6 +348,8 @@ export default function AdminLoginPage() {
 							response.data.data.email === "tourandtravelsadmin@gmail.com"
 						) {
 							navigate("/admin/tourandtravels");
+						} else if (response.data.data.email === "superadmin@gmail.com") {
+							navigate("/admin/superadmin");
 						}
 					}
 					if (response.status === 201 || response.status === 202) {
@@ -489,4 +496,3 @@ export default function AdminLoginPage() {
 		</Box>
 	);
 }
-

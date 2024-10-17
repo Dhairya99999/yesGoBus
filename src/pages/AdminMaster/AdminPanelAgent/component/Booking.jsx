@@ -81,6 +81,7 @@ const Booking = () => {
 	const [error, setError] = useState(null);
 	const agentCode = localStorage.getItem("agentCode");
 	const [totalSales, setTotalSales] = useState(0);
+	const [switchData, setSwitchData] = useState(false);
 
 	function formatDate(dateString) {
 		const date = new Date(dateString);

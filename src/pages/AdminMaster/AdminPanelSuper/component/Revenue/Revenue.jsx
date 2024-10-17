@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 const baseUrl = import.meta.env.VITE_BASE_URL;
-const token = localStorage.getItem("adminToken");
+const user = localStorage.getItem("token");
 import {
 	Card,
 	Flex,
@@ -125,7 +125,7 @@ const Revenue = () => {
 					`${baseUrl}/api/admin/revenue/getRevenue`,
 					{
 						headers: {
-							Authorization: `Bearer ${token}`,
+							Authorization: `Bearer ${user}`,
 							"Content-Type": "application/json",
 						},
 					}

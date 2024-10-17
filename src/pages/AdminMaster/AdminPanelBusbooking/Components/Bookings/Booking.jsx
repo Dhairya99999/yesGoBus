@@ -27,55 +27,29 @@ const columns = [
 		key: "bookingId",
 	},
 	{
-		title: "Name",
-		dataIndex: "name",
-		key: "name",
+		title: "Bus Type",
+		dataIndex: "busOperator",
+		key: "busOperator",
+	},
+	{
+		title: "Customer Name",
+		dataIndex: "customerName",
+		key: "customerName",
+	},
+	{
+		title: "Customer Email",
+		dataIndex: "customerEmail",
+		key: "customerEmail",
+	},
+	{
+		title: "Customer Phone",
+		dataIndex: "customerPhone",
+		key: "customerPhone",
 	},
 	{
 		title: "Status",
 		dataIndex: "Status",
 		key: "Status",
-		render: (_, { Status }) => (
-			<Space>
-				<span
-					style={{
-						display: "flex",
-						alignItems: "center",
-						justifyContent: "center",
-						border:
-							Status === "SUCCESS"
-								? "1px solid green"
-								: Status === "pending"
-								? "1px solid blue"
-								: "1px solid red",
-						padding: "0.5px",
-						borderRadius: "50%",
-						width: "11px",
-						height: "11px",
-						boxSizing: "none",
-					}}
-				>
-					<span
-						style={{
-							display: "flex",
-							alignItems: "center",
-							justifyContent: "center",
-							width: "8px",
-							height: "8px",
-							borderRadius: "50%",
-
-							backgroundColor:
-								Status === "SUCCESS"
-									? "green"
-									: Status === "pending"
-									? "blue"
-									: "red",
-						}}
-					/>
-				</span>
-				<Typography>{Status}</Typography>
-			</Space>
-		),
 	},
 	{
 		title: "Payment",
@@ -83,20 +57,98 @@ const columns = [
 		key: "Payment",
 	},
 	{
-		title: "Destination",
-		dataIndex: "Destination",
-		key: "Destination",
+		title: "Selected Seats",
+		dataIndex: "selectedSeats",
+		key: "selectedSeats",
 	},
 	{
-		dataIndex: "action",
-		key: "action",
-		render: (_, { action }) => (
-			<Button type="primary" variant="solid">
-				{action.toUpperCase()}
-			</Button>
-		),
+		title: "Destination",
+		dataIndex: "destinationCity",
+		key: "destinationCity",
 	},
 ];
+// const columns = [
+// 	{
+// 		title: "No.",
+// 		dataIndex: "No",
+// 		key: "No",
+// 	},
+// 	{
+// 		title: "Booking Id",
+// 		dataIndex: "bookingId",
+// 		key: "bookingId",
+// 	},
+// 	{
+// 		title: "Name",
+// 		dataIndex: "name",
+// 		key: "name",
+// 	},
+// 	{
+// 		title: "Status",
+// 		dataIndex: "Status",
+// 		key: "Status",
+// 		render: (_, { Status }) => (
+// 			<Space>
+// 				<span
+// 					style={{
+// 						display: "flex",
+// 						alignItems: "center",
+// 						justifyContent: "center",
+// 						border:
+// 							Status === "SUCCESS"
+// 								? "1px solid green"
+// 								: Status === "pending"
+// 								? "1px solid blue"
+// 								: "1px solid red",
+// 						padding: "0.5px",
+// 						borderRadius: "50%",
+// 						width: "11px",
+// 						height: "11px",
+// 						boxSizing: "none",
+// 					}}
+// 				>
+// 					<span
+// 						style={{
+// 							display: "flex",
+// 							alignItems: "center",
+// 							justifyContent: "center",
+// 							width: "8px",
+// 							height: "8px",
+// 							borderRadius: "50%",
+
+// 							backgroundColor:
+// 								Status === "SUCCESS"
+// 									? "green"
+// 									: Status === "pending"
+// 									? "blue"
+// 									: "red",
+// 						}}
+// 					/>
+// 				</span>
+// 				<Typography>{Status}</Typography>
+// 			</Space>
+// 		),
+// 	},
+// 	{
+// 		title: "Payment",
+// 		dataIndex: "Payment",
+// 		key: "Payment",
+// 	},
+// 	{
+// 		title: "Destination",
+// 		dataIndex: "Destination",
+// 		key: "Destination",
+// 	},
+// 	{
+// 		dataIndex: "action",
+// 		key: "action",
+// 		render: (_, { action }) => (
+// 			<Button type="primary" variant="solid">
+// 				{action.toUpperCase()}
+// 			</Button>
+// 		),
+// 	},
+// ];
 
 const Booking = () => {
 	const [bookings, setBookings] = useState([]);
@@ -108,7 +160,7 @@ const Booking = () => {
 			setLoading(true);
 			try {
 				const response = await fetch(
-					`${baseUrl}/api/admin/bookings/getAllBookings`,
+					`${baseUrl}/api/admin/busBookings/getAllBookings`,
 					{
 						headers: {
 							Authorization: `Bearer ${user}`,
@@ -148,20 +200,31 @@ const Booking = () => {
 		return <div>Loading...</div>;
 	}
 
-	const data = bookings
-		.filter((booking) => booking.userId !== null)
-		.map((booking, index) => {
-			return {
-				key: booking._id,
-				No: index + 1,
-				bookingId: booking.bookingId,
-				name: booking.userId.fullName,
-				Status: booking.paymentStatus,
-				Payment: booking.paymentStatus,
-				Destination: booking.toPlace,
-				action: "",
-			};
-		});
+	const data = bookings.map((booking, index) => {
+		return {
+			No: index + 1,
+			bookingId: booking._id,
+			busOperator: booking.busOperator,
+			busType: booking.busType,
+			customerEmail: booking.customerEmail,
+			customerName: booking.customerName + " " + booking.customerLastName,
+			customerPhone: booking.customerPhone,
+			Status: booking.bookingStatus,
+			Payment: booking.totalAmount,
+			SourceCity: booking.sourceCity,
+			destinationCity: booking.destinationCity,
+			agentCode: booking.agentCode,
+			boardingPoint: booking.boardingPoint,
+			droppingPoint: booking.droppingPoint,
+			doj: booking.doj,
+			merchantTransactionId: booking.merchantTransactionId,
+			pickUpTime: booking.pickUpTime,
+			reachTime: booking.reachTime,
+			selectedSeats: booking.selectedSeats,
+			userId: booking.userId,
+			action: "",
+		};
+	});
 
 	return (
 		<>
