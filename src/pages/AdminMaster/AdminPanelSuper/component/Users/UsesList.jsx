@@ -265,11 +265,11 @@ const UsesList = () => {
 					setOpenModal={setOpenModal}
 					userFormData={userFormData}
 				/>
-				{switchData ? (
-					<Flex justify="space-between" align="center">
-						<Typography>
-							<Title level={3}>List</Title>
-						</Typography>
+				<Flex justify="space-between" align="center">
+					<Typography>
+						<Title level={3}>List</Title>
+					</Typography>
+					{switchData ? (
 						<Button
 							type="primary"
 							onClick={() => showModal(null)}
@@ -277,10 +277,10 @@ const UsesList = () => {
 						>
 							Add User
 						</Button>
-					</Flex>
-				) : (
-					""
-				)}
+					) : (
+						""
+					)}
+				</Flex>
 
 				<Button
 					type="primary"
