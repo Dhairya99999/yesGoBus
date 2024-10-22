@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Card, Flex, Typography, Avatar, Table } from "antd";
+import { Card, Flex, Typography, Avatar, Table, DatePicker } from "antd";
 import { Space } from "antd";
 const baseUrl = import.meta.env.VITE_BASE_URL;
 const { Title } = Typography;
+const { RangePicker } = DatePicker;
 const columns = [
 	{
 		title: "No.",
@@ -23,6 +24,26 @@ const columns = [
 		title: "Status",
 		dataIndex: "Status",
 		key: "Status",
+		filters: [
+			{
+				text: "Paid",
+				value: "paid",
+			},
+			{
+				text: "Pending",
+				value: "pending",
+			},
+			{
+				text: "Failed",
+				value: "failed",
+			},
+			{
+				text: "Cancelled",
+				value: "cancelled",
+			},
+		],
+		onFilter: (value, record) => record.Status.startsWith(value),
+		filterSearch: true,
 		render: (_, { Status }) => (
 			<Space>
 				<span
@@ -73,6 +94,12 @@ const columns = [
 		dataIndex: "cusNumber",
 		key: "cusNumber",
 	},
+	{
+		title: "Price",
+		dataIndex: "price",
+		key: "price",
+		render: (text) => `₹ ${text}`,
+	},
 ];
 
 const Booking = () => {
@@ -81,7 +108,8 @@ const Booking = () => {
 	const [error, setError] = useState(null);
 	const agentCode = localStorage.getItem("agentCode");
 	const [totalSales, setTotalSales] = useState(0);
-	const [switchData, setSwitchData] = useState(false);
+	const [loading, setLoading] = useState(false);
+	const [filteredBookings, setFilteredBookings] = useState([]);
 
 	function formatDate(dateString) {
 		const date = new Date(dateString);
@@ -105,6 +133,7 @@ const Booking = () => {
 	useEffect(() => {
 		const fetchBookings = async () => {
 			try {
+				setLoading(true);
 				const response = await fetch(`${baseUrl}/api/busBooking/getBookings`, {
 					headers: {
 						"Content-Type": "application/json",
@@ -112,26 +141,67 @@ const Booking = () => {
 				});
 				const data = await response.json();
 				if (data.status === 200) {
+					setLoading(false);
 					setBookings(data.data);
-					const total = data.data
-						.filter(
-							(booking) =>
-								booking.agentCode === agentCode &&
-								booking.totalAmount &&
-								booking.bookingStatus === "paid"
-						)
-						.reduce((acc, booking) => acc + booking.totalAmount, 0);
+					setFilteredBookings(data.data);
+					// const total = data.data
+					// 	.filter(
+					// 		(booking) =>
+					// 			booking.agentCode === agentCode &&
+					// 			booking.totalAmount &&
+					// 			booking.bookingStatus === "paid"
+					// 	)
+					// 	.reduce((acc, booking) => acc + booking.totalAmount, 0);
 
-					setTotalSales(total);
+					// setTotalSales(total);
 				} else {
+					setLoading(false);
 					setError(data.message);
 				}
 			} catch (error) {
+				setLoading(false);
 				setError(error.message);
 			}
 		};
 		fetchBookings();
 	}, []);
+
+	const handleDateChange = (dates) => {
+		// setDateRange(dates);
+		if (dates && dates[0] && dates[1]) {
+			const startDate = new Date(dates[0].startOf("day").toISOString());
+			const endDate = new Date(dates[1].endOf("day").toISOString());
+			endDate.setHours(23, 59, 59, 999);
+
+			const filtered = bookings.filter((booking) => {
+				const createdAt = new Date(booking.createdAt);
+				return createdAt >= startDate && createdAt <= endDate;
+			});
+			const total = filtered
+				.filter(
+					(booking) =>
+						booking.agentCode === agentCode &&
+						booking.totalAmount &&
+						booking.bookingStatus === "paid"
+				)
+				.reduce((acc, booking) => acc + booking.totalAmount, 0);
+
+			setTotalSales(total);
+			setFilteredBookings(filtered);
+		} else {
+			const total = bookings
+				.filter(
+					(booking) =>
+						booking.agentCode === agentCode &&
+						booking.totalAmount &&
+						booking.bookingStatus === "paid"
+				)
+				.reduce((acc, booking) => acc + booking.totalAmount, 0);
+
+			setTotalSales(total);
+			setFilteredBookings(bookings);
+		}
+	};
 
 	useEffect(() => {
 		const fetchUserDetails = async () => {
@@ -177,7 +247,7 @@ const Booking = () => {
 		return <div>Loading...</div>;
 	}
 
-	const data = bookings
+	const data = filteredBookings
 		.filter(
 			(booking) => booking.userId !== null && booking.agentCode === agentCode
 		)
@@ -193,12 +263,13 @@ const Booking = () => {
 				Status: booking.bookingStatus,
 				cusName: user ? user.fullName : "Loading...",
 				cusNumber: user ? user.phoneNumber : "Loading...",
+				price: booking.totalAmount,
 			};
 		});
 
 	return (
 		<>
-			<Flex gap={10} vertical>
+			<Flex gap={20} vertical>
 				<Typography>
 					<Title level={3}>Bus-Bookings</Title>
 				</Typography>
@@ -206,13 +277,29 @@ const Booking = () => {
 					<Card
 						bordered={false}
 						style={{
-							width: 300,
+							width: 250,
+							boxShadow: "0 2px 10px #fff3e6",
 						}}
 					>
-						<Flex gap={10} vertical>
-							<Typography>Number of Bus Bookings</Typography>
-							<Typography>{data.length}</Typography>
-							<Avatar.Group
+						<Flex gap={10} vertical align="center" justify="center">
+							<Typography style={{ fontWeight: "bold" }}>
+								Number of Bus Bookings
+							</Typography>
+							<Typography
+								style={{
+									fontSize: 25,
+									backgroundColor: "#fff3e6",
+									padding: 10,
+									borderRadius: "10px",
+									width: 50,
+									height: 50,
+									textAlign: "center",
+									lineHeight: "30px",
+								}}
+							>
+								{data.length}
+							</Typography>
+							{/* <Avatar.Group
 								maxCount={3}
 								maxStyle={{
 									color: "#f56a00",
@@ -221,25 +308,48 @@ const Booking = () => {
 							>
 								<Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=2" />
 								<Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=1" />
-							</Avatar.Group>
+							</Avatar.Group> */}
 						</Flex>
 					</Card>
 					<Card
 						bordered={false}
 						style={{
-							width: 300,
+							width: 250,
+							boxShadow: "0 2px 10px #fff3e6",
 						}}
 					>
-						<Flex gap={10} vertical>
-							<Typography>Total Sales</Typography>
-							<Typography>₹{totalSales.toFixed(2)}</Typography>
+						<Flex gap={10} vertical align="center" justify="center">
+							<Typography style={{ fontWeight: "bold" }}>
+								Total Sales
+							</Typography>
+							<Typography
+								style={{
+									fontSize: 25,
+									backgroundColor: "#fff3e6",
+									padding: 10,
+									borderRadius: "10px",
+									width: 140,
+									height: 50,
+									textAlign: "center",
+									lineHeight: "30px",
+								}}
+							>
+								₹ {!loading && Math.floor(totalSales).toLocaleString("en-IN")}
+							</Typography>
 						</Flex>
 					</Card>
 				</Flex>
 				<Typography>
 					<Title level={3}>List of Bus-Bookings</Title>
 				</Typography>
-				<Table columns={columns} dataSource={data} />
+				<Flex style={{ marginBottom: 16, marginTop: 10 }}>
+					<RangePicker
+						style={{ width: "45%" }}
+						onChange={handleDateChange}
+						format="YYYY-MM-DD"
+					/>
+				</Flex>
+				<Table columns={columns} dataSource={data} loading={loading} />
 			</Flex>
 		</>
 	);

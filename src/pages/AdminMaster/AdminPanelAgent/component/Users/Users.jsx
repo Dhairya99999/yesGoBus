@@ -83,13 +83,13 @@ const Users = () => {
 	if (error) {
 		return <div>Error: {error}</div>;
 	}
-	if (loading) {
-		return (
-			<Flex justify="center" align="center" style={{ height: "100vh" }}>
-				<Spin size="large" />
-			</Flex>
-		); // Render a loading indicator when loading is true
-	}
+	// if (loading) {
+	// 	return (
+	// 		<Flex justify="center" align="center" style={{ height: "100vh" }}>
+	// 			<Spin size="large" />
+	// 		</Flex>
+	// 	); // Render a loading indicator when loading is true
+	// }
 
 	const columns = [
 		{
@@ -244,12 +244,14 @@ const Users = () => {
 					dataSource={switchUser ? bookingUserData : bookingUserData}
 				/> */}
 				<Table
+					loading={loading}
 					columns={columns}
 					expandable={{
 						expandedRowRender: (record) => (
 							<Table
 								columns={bookingColumns}
 								dataSource={getBookingData(record.bookings)}
+								pagination={{ pageSize: 5 }}
 							/>
 						),
 						rowExpandable: (record) => record.userEmail !== "Not Expandable",

@@ -13,7 +13,9 @@ const Sider = ({ onSelect }) => {
 		<>
 			<Flex align="center" justify="center" className="sider">
 				<div className="sider-title">
-					<Typography>YesGoBus</Typography>
+					<Typography.Title level={3} style={{ margin: "-6.5px 0" }}>
+						YesGoBus
+					</Typography.Title>
 				</div>
 			</Flex>
 

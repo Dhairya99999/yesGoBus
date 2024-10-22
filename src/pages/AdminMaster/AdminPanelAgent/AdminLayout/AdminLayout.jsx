@@ -66,9 +66,11 @@ const AdminAgentLayout = () => {
 			</Sider>
 			<Layout>
 				<Header className="header">
-					<Flex justify="end">
+					<Flex justify="space-between">
 						{/* <div> Left side content (if any) </div> */}
-
+						<Typography.Title level={3}>
+							Agent Admin Panel
+						</Typography.Title>
 						<Flex gap={10} style={{ alignItems: "center" }}>
 							{agentCode && (
 								<>

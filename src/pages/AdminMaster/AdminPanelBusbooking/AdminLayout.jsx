@@ -73,7 +73,10 @@ const AdminLayout = () => {
 			</Sider>
 			<Layout>
 				<Header className="header">
-					<Flex justify="end">
+					<Flex justify="space-between">
+						<Typography.Title level={3}>
+							Bus Booking Admin Panel
+						</Typography.Title>
 						{/* <Flex gap={10}>
 							<Input
 								placeholder="Search"

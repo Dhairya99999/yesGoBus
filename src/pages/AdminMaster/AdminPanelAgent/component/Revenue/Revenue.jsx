@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Flex, Typography, Card, Table, Space, Spin, Button } from "antd";
+import { render } from "react-dom";
 const { Title } = Typography;
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -183,16 +184,16 @@ const Revenue = () => {
 	if (error) {
 		return <div>Error: {error}</div>;
 	}
-	if (loading) {
-		return (
-			<Flex justify="center" align="center" style={{ height: "100vh" }}>
-				<Spin size="large" />
-			</Flex>
-		); // Render a loading indicator when loading is true
-	}
-	if (!bookings || !Array.isArray(bookings)) {
-		return <div>Loading...</div>;
-	}
+	// if (loading) {
+	// 	return (
+	// 		<Flex justify="center" align="center" style={{ height: "100vh" }}>
+	// 			<Spin size="large" />
+	// 		</Flex>
+	// 	); // Render a loading indicator when loading is true
+	// }
+	// if (!bookings || !Array.isArray(bookings)) {
+	// 	return <div>Loading...</div>;
+	// }
 
 	const columns = [
 		{
@@ -214,6 +215,26 @@ const Revenue = () => {
 			title: "Status",
 			dataIndex: "Status",
 			key: "Status",
+			filters: [
+				{
+					text: "Paid",
+					value: "paid",
+				},
+				{
+					text: "Pending",
+					value: "pending",
+				},
+				{
+					text: "Failed",
+					value: "failed",
+				},
+				{
+					text: "Cancelled",
+					value: "cancelled",
+				},
+			],
+			onFilter: (value, record) => record.Status.startsWith(value),
+			filterSearch: true,
 			render: (_, { Status }) => (
 				<Space>
 					<span
@@ -265,6 +286,115 @@ const Revenue = () => {
 			key: "cusNumber",
 		},
 	];
+
+	const packageColumns = [
+		{
+			title: "No.",
+			dataIndex: "No",
+			key: "No",
+		},
+		{
+			title: "Booking Id",
+			dataIndex: "bookingId",
+			key: "bookingId",
+		},
+		{
+			title: "Package Name",
+			dataIndex: "name",
+			key: "name",
+		},
+		{
+			title: "Status",
+			dataIndex: "Status",
+			key: "Status",
+			filters: [
+				{
+					text: "SUCCESS",
+					value: "SUCCESS",
+				},
+				{
+					text: "PENDING",
+					value: "pending" || "PENDING",
+				},
+				{
+					text: "FAILED",
+					value: "failed",
+				},
+				{
+					text: "CANCELLED",
+					value: "cancelled",
+				},
+			],
+			onFilter: (value, record) => record.Status.startsWith(value),
+			filterSearch: true,
+			render: (_, { Status }) => (
+				<Space>
+					<span
+						style={{
+							display: "flex",
+							alignItems: "center",
+							justifyContent: "center",
+							border:
+								Status === "SUCCESS"
+									? "1px solid green"
+									: Status === "pending"
+									? "1px solid blue"
+									: "1px solid red",
+							padding: "0.5px",
+							borderRadius: "50%",
+							width: "11px",
+							height: "11px",
+						}}
+					>
+						<span
+							style={{
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "center",
+								width: "8px",
+								height: "8px",
+								borderRadius: "50%",
+								backgroundColor:
+									Status === "SUCCESS"
+										? "green"
+										: Status === "pending"
+										? "blue"
+										: "red",
+							}}
+						/>
+					</span>
+					<Typography>{Status}</Typography>
+				</Space>
+			),
+		},
+		{
+			title: "With Flight",
+			dataIndex: "withFlight",
+			key: "withFlight",
+		},
+		{
+			title: "Package Price",
+			dataIndex: "totalPackagePrice",
+			key: "totalPackagePrice",
+			// render: (record) => (
+			// 	<Space>
+			// 		<span>` {record.totalPackagePrice}`</span>
+			// 	</Space>
+			// ),
+		},
+		// {
+		// 	title: "Total Room",
+		// 	dataIndex: "totalRoom",
+		// 	key: "totalRoom",
+		// },
+		{
+			title: "Total Guest",
+			dataIndex: "totalGuests",
+			key: "totalGuests",
+		},
+	];
+
+	// const data = [];
 	const bookingData = bookings
 		.filter(
 			(booking) => booking.userId !== null && booking.agentCode === agentCode
@@ -284,20 +414,22 @@ const Revenue = () => {
 			};
 		});
 
+	console.log("packageBookingData", PackageBookings);
 	const packageBookingData = PackageBookings.filter(
 		(booking) => booking.userId !== null && booking.agentCode === agentCode
 	).map((booking, index) => {
-		const user = packageBookingUserDetails[booking.userId];
+		// const user = packageBookingUserDetails[booking.userId];
 		return {
 			key: booking._id,
 			No: index + 1,
 			bookingId: booking._id,
-			name: `${booking.sourceCity} --- ${
-				booking.destinationCity
-			} --- ${formatDate(booking.updatedAt)}`,
-			Status: booking.bookingStatus,
-			cusName: user ? user.fullName : "Loading...",
-			cusNumber: user ? user.phoneNumber : "Loading...",
+			name: `${booking.fromPlace} --- ${booking.toPlace} --- ${formatDate(
+				booking.updatedAt
+			)}`,
+			Status: booking.paymentStatus,
+			withFlight: booking.withFlight ? "Yes" : "No",
+			totalPackagePrice: booking.totalPackagePrice,
+			totalGuests: booking.totalGuests,
 		};
 	});
 
@@ -310,11 +442,25 @@ const Revenue = () => {
 						bordered={false}
 						style={{
 							width: 200,
+							boxShadow: "0 2px 10px #fff3e6",
 						}}
 					>
-						<Flex gap={10} vertical>
-							<Typography>Bus Booking</Typography>
-							<Typography>
+						<Flex gap={10} vertical align="center" justify="center">
+							<Typography style={{ fontWeight: "bold" }}>
+								Bus Booking
+							</Typography>
+							<Typography
+								style={{
+									fontSize: 25,
+									backgroundColor: "#fff3e6",
+									padding: 10,
+									borderRadius: "10px",
+									width: 140,
+									height: 50,
+									textAlign: "center",
+									lineHeight: "30px",
+								}}
+							>
 								₹ {totalBookingsSales.toLocaleString("en-IN")}
 							</Typography>
 						</Flex>
@@ -323,11 +469,25 @@ const Revenue = () => {
 						bordered={false}
 						style={{
 							width: 200,
+							boxShadow: "0 2px 10px #fff3e6",
 						}}
 					>
-						<Flex gap={10} vertical>
-							<Typography>Package Booking</Typography>
-							<Typography>
+						<Flex gap={10} vertical align="center" justify="center">
+							<Typography style={{ fontWeight: "bold" }}>
+								Package Booking
+							</Typography>
+							<Typography
+								style={{
+									fontSize: 25,
+									backgroundColor: "#fff3e6",
+									padding: 10,
+									borderRadius: "10px",
+									width: 140,
+									height: 50,
+									textAlign: "center",
+									lineHeight: "30px",
+								}}
+							>
 								₹ {totalPackageBookingsSales.toLocaleString("en-IN")}
 							</Typography>
 						</Flex>
@@ -346,7 +506,8 @@ const Revenue = () => {
 					{switchData ? "Bus Bookings" : "Package Bookings"}
 				</Button>
 				<Table
-					columns={columns}
+					loading={loading}
+					columns={switchData ? columns : packageColumns}
 					expandable={{
 						expandedRowRender: (record) => (
 							<p
