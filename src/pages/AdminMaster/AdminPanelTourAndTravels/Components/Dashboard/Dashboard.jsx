@@ -5,19 +5,18 @@ import {
 	Card,
 	Flex,
 	Typography,
-	Avatar,
-	Space,
-	Table,
-	Button,
 	Spin,
 } from "antd";
 const { Title } = Typography;
+
 const Dashboard = () => {
 	const [error, setError] = useState(null);
 	const [loading, setLoading] = useState(false);
 	const [bookings, setBookings] = useState([]);
 	const [users, setUsers] = useState([]);
 	const [packages, setPackages] = useState([]);
+	const [revenue, setRevenue] = useState();
+	const [totalAgents, setTotalAgents] = useState();
 
 	useEffect(() => {
 		const fetchAllPackages = async () => {
@@ -27,13 +26,12 @@ const Dashboard = () => {
 					`${baseUrl}/api/admin/packages/getAllPackages`,
 					{
 						headers: {
-							Authorization: `Bearer ${user}`, // Assuming token is the correct variable
+							Authorization: `Bearer ${user}`,
 							"Content-Type": "application/json",
 						},
 					}
 				);
 				const data = await response.json();
-				// console.log("data", data.data);
 				setLoading(false);
 				setPackages(data.data.packages);
 			} catch (error) {
@@ -50,13 +48,12 @@ const Dashboard = () => {
 					`${baseUrl}/api/admin/bookings/getAllBookings`,
 					{
 						headers: {
-							Authorization: `Bearer ${user}`, // Assuming token is the correct variable
+							Authorization: `Bearer ${user}`,
 							"Content-Type": "application/json",
 						},
 					}
 				);
 				const data = await response.json();
-				// console.log("data", data.data);
 				setLoading(false);
 				setBookings(data.data.bookings);
 			} catch (error) {
@@ -72,12 +69,11 @@ const Dashboard = () => {
 			try {
 				const response = await fetch(`${baseUrl}/api/admin/user/getAllUsers`, {
 					headers: {
-						Authorization: `Bearer ${user}`, // Assuming token is the correct variable
+						Authorization: `Bearer ${user}`,
 						"Content-Type": "application/json",
 					},
 				});
 				const data = await response.json();
-				// console.log("data", data.data);
 				setLoading(false);
 				setUsers(data.data);
 			} catch (error) {
@@ -89,16 +85,62 @@ const Dashboard = () => {
 		fetchAllUsers();
 	}, []);
 
-	// console.log("users", users);
-	// console.log("bookings", bookings);
-	console.log("packages", packages);
+	useEffect(() => {
+		const fetchBookings = async () => {
+			setLoading(true);
+			try {
+				const response = await fetch(
+					`${baseUrl}/api/admin/revenue/getRevenue`,
+					{
+						headers: {
+							Authorization: `Bearer ${user}`,
+							"Content-Type": "application/json",
+						},
+					}
+				);
+				const data = await response.json();
+				if (data.status === 200) {
+					setLoading(false);
+					setRevenue(data.data.totalRevenue);
+				} else {
+					setError(data.message);
+					setLoading(false);
+				}
+			} catch (error) {
+				setError(error.message);
+				setLoading(false);
+			}
+		};
+		fetchBookings();
+	}, []);
+
+	useEffect(() => {
+		const fetchAgents = async () => {
+			setLoading(true);
+			try {
+				const response = await fetch(`${baseUrl}/api/agent/getAllAgents`);
+				const data = await response.json();
+				if (data.status === 200) {
+					setLoading(false);
+					setTotalAgents(data.data);
+				} else {
+					setError(data.message);
+					setLoading(false);
+				}
+			} catch (error) {
+				setError(error.message);
+				setLoading(false);
+			}
+		};
+		fetchAgents();
+	}, []);
 
 	if (loading || !users || !bookings || !packages) {
 		return (
 			<Flex justify="center" align="center" style={{ height: "100vh" }}>
 				<Spin size="large" />
 			</Flex>
-		); // Render a loading indicator when loading is true or data is not received
+		);
 	}
 
 	if (error) {
@@ -111,87 +153,44 @@ const Dashboard = () => {
 				<Title level={3}>Dashboard</Title>
 
 				<Flex gap={20}>
-					<Card
-						bordered={false}
-						style={{
-							width: 140,
-							height: 140,
-							boxShadow: "0 2px 10px #fff3e6",
-							// backgroundColor: "#fff3e6",
-						}}
-					>
-						<Flex gap={10} vertical align="center" justify="center">
-							<Typography style={{ fontWeight: "bold" }}>Users</Typography>
+					{[
+						{ title: "Total Users", count: users.length || 0 },
+						{ title: "Package Bookings", count: bookings.length || 0 },
+						{ title: "Packages", count: packages.length || 0 },
+						{ title: "Total Revenue", count: revenue || 0 },
+						{ title: "Total Agents", count: totalAgents || 0 },
+					].map(({ title, count }, index) => (
+						<Card
+							key={index}
+							bordered={false}
+							style={{
+								width: "150px", // Fixed width
+								height: "150px", // Fixed height
+								boxShadow: "0 2px 10px #fff3e6",
+								display: "flex", // Flex display to center content
+								flexDirection: "column", // Vertical alignment
+								justifyContent: "center", // Center vertically
+								alignItems: "center", // Center horizontally
+								textAlign: "center", // Center text
+							}}
+						>
+							<Typography style={{ fontWeight: "bold" }}>{title}</Typography>
 							<Typography
 								style={{
-									fontSize: 25,
+									fontSize: "1.5rem",
 									backgroundColor: "#fff3e6",
-									padding: 10,
+									padding: "10px",
 									borderRadius: "10px",
-									width: 70,
-									height: 50,
-									textAlign: "center",
-									lineHeight: "30px",
+									lineHeight: "1.5",
+									overflow: "hidden",
+									textOverflow: "ellipsis",
+									whiteSpace: "nowrap",
 								}}
 							>
-								{users.length || 50}
+								{count}
 							</Typography>
-						</Flex>
-					</Card>
-					<Card
-						// title="No of Users"
-						bordered={false}
-						style={{
-							width: 140,
-							boxShadow: "0 2px 10px #fff3e6",
-						}}
-					>
-						<Flex gap={10} vertical align="center" justify="center">
-							<Typography style={{ fontWeight: "bold" }}>Bookings</Typography>
-							<Typography
-								style={{
-									fontSize: 25,
-									backgroundColor: "#fff3e6",
-									padding: 10,
-									borderRadius: "10px",
-									width: 50,
-									height: 50,
-									textAlign: "center",
-									lineHeight: "30px",
-								}}
-							>
-								{bookings.length || 50}
-							</Typography>
-						</Flex>
-					</Card>
-					<Card
-						// title="No of Users"
-						bordered={false}
-						style={{
-							width: 150,
-							boxShadow: "0 2px 10px #fff3e6",
-						}}
-					>
-						<Flex gap={10} vertical align="center" justify="center">
-							<Typography style={{ fontWeight: "bold" }}>Packages</Typography>
-							<Typography
-								style={{
-									fontSize: 25,
-									backgroundColor: "#fff3e6",
-									padding: 10,
-									borderRadius: "10px",
-									width: 50,
-									height: 50,
-									textAlign: "center",
-									lineHeight: "30px",
-								}}
-							>
-								{!loading && packages.length
-									? packages.length
-									: 0}
-							</Typography>
-						</Flex>
-					</Card>
+						</Card>
+					))}
 				</Flex>
 			</Flex>
 		</>

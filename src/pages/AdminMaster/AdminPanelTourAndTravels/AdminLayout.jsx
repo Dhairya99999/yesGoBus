@@ -64,7 +64,7 @@ const AdminLayout = () => {
 				collapsed={collapsed}
 				className="sider-bar"
 			>
-				<Sidebar onSelect={handleSelect} />
+				<Sidebar title="YesGoBus Tourism"  onSelect={handleSelect} />
 				<Button
 					onClick={() => setCollapsed(!collapsed)}
 					icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}

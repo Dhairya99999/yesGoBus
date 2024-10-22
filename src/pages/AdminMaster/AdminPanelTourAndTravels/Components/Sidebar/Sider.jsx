@@ -10,12 +10,12 @@ import { PiTruckBold } from "react-icons/pi";
 import { FcRating } from "react-icons/fc";
 import { SiGooglebigquery } from "react-icons/si";
 import "./sider.scss";
-const Sider = ({ onSelect }) => {
+const Sider = ({ title, onSelect }) => {
 	return (
 		<>
 			<Flex align="center" justify="center" className="sider">
 				<div className="sider-title">
-					<Typography>YesGoBus</Typography>
+					<Typography>{title || "YesGoBus"}</Typography>
 				</div>
 			</Flex>
 

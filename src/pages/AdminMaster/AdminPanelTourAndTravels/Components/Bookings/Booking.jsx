@@ -12,19 +12,15 @@ import {
 	Table,
 	Button,
 	Spin,
+	DatePicker
 } from "antd";
-// import { UserOutlined } from "@ant-design/icons";
 const { Title } = Typography;
+const { RangePicker } = DatePicker; 
 const columns = [
 	{
 		title: "No.",
 		dataIndex: "No",
 		key: "No",
-	},
-	{
-		title: "Booking Id",
-		dataIndex: "bookingId",
-		key: "bookingId",
 	},
 	{
 		title: "Name",
@@ -78,130 +74,161 @@ const columns = [
 		),
 	},
 	{
-		title: "Payment",
-		dataIndex: "Payment",
-		key: "Payment",
+		title: "From Place",
+		dataIndex: "Source",
+		key: "Source",
 	},
 	{
-		title: "Destination",
+		title: "To Place",
 		dataIndex: "Destination",
 		key: "Destination",
+	},{
+		title: "Departure Date",
+		dataIndex: "departure",
+		key: "departure",
+	},{
+		title: "Return Date",
+		dataIndex: "return",
+		key: "return",
 	},
 	{
-		dataIndex: "action",
-		key: "action",
-		render: (_, { action }) => (
-			<Button type="primary" variant="solid">
-				{action.toUpperCase()}
-			</Button>
-		),
+		title: "Package Price",
+		dataIndex: "price",
+		key: "price",
 	},
+	// {
+	// 	dataIndex: "action",
+	// 	key: "action",
+	// 	render: (_, { action }) => (
+	// 		<Button type="primary" variant="solid">
+	// 			{action.toUpperCase()}
+	// 		</Button>
+	// 	),
+	// },
 ];
 
 const Booking = () => {
-	const [bookings, setBookings] = useState([]);
-	const [error, setError] = useState(null);
-	const [loading, setLoading] = useState(false);
+    const [bookings, setBookings] = useState([]);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [filteredBookings, setFilteredBookings] = useState([]);
+    const [dateRange, setDateRange] = useState([null, null]);
 
-	useEffect(() => {
-		const fetchBookings = async () => {
-			setLoading(true);
-			try {
-				const response = await fetch(
-					`${baseUrl}/api/admin/bookings/getAllBookings`,
-					{
-						headers: {
-							Authorization: `Bearer ${user}`,
-							"Content-Type": "application/json",
-						},
-					}
-				);
-				const data = await response.json();
-				if (data.status === true) {
-					setLoading(false);
-					setBookings(data.data.bookings);
-				} else {
-					setError(data.message);
-					setLoading(false);
-				}
-			} catch (error) {
-				setError(error.message);
-				setLoading(false);
-			}
-		};
-		fetchBookings();
-	}, []);
+    useEffect(() => {
+        const fetchBookings = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch(`${baseUrl}/api/admin/bookings/getAllBookings`, {
+                    headers: {
+                        Authorization: `Bearer ${user}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+                const data = await response.json();
+                if (data.status) {
+                    setLoading(false);
+                    setBookings(data.data.bookings);
+                    setFilteredBookings(data.data.bookings); 
+                } else {
+                    setError(data.message);
+                    setLoading(false);
+                }
+            } catch (error) {
+                setError(error.message);
+                setLoading(false);
+            }
+        };
+        fetchBookings();
+    }, []);
 
-	if (error) {
-		return <div>Error: {error}</div>;
-	}
+    const handleDateChange = (dates) => {
+        setDateRange(dates);
+        if (dates && dates[0] && dates[1]) {
+            const startDate = new Date(dates[0].startOf('day').toISOString());
+            const endDate = new Date(dates[1].endOf('day').toISOString());
+            endDate.setHours(23, 59, 59, 999); 
 
-	if (loading) {
-		return (
-			<Flex justify="center" align="center" style={{ height: "100vh" }}>
-				<Spin size="large" />
-			</Flex>
-		); // Render a loading indicator when loading is true
-	}
+            const filtered = bookings.filter((booking) => {
+                const createdAt = new Date(booking.createdAt); 
+                return createdAt >= startDate && createdAt <= endDate; 
+            });
 
-	if (!bookings || !Array.isArray(bookings)) {
-		return <div>Loading...</div>;
-	}
+            setFilteredBookings(filtered); 
+        } else {
+            setFilteredBookings(bookings); 
+        }
+    };
 
-	const data = bookings
-		.filter((booking) => booking.userId !== null)
-		.map((booking, index) => {
-			return {
-				key: booking._id,
-				No: index + 1,
-				bookingId: booking.bookingId,
-				name: booking.userId.fullName,
-				Status: booking.paymentStatus,
-				Payment: booking.paymentStatus,
-				Destination: booking.toPlace,
-				action: "",
-			};
-		});
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
 
-	return (
-		<>
-			<Flex gap={10} vertical>
-				<Typography>
-					<Title level={3}>Bookings</Title>
-				</Typography>
-				<Card
-					// title="No of Users"
-					bordered={false}
-					style={{
-						width: 300,
-					}}
-				>
-					<Flex gap={10} vertical>
-						<Typography>Number of Bookings</Typography>
-						<Typography>{bookings.length}</Typography>
-						<Avatar.Group
-							maxCount={3}
-							maxStyle={{
-								color: "#f56a00",
-								backgroundColor: "#fde3cf",
-							}}
-						>
-							{bookings.map((booking) => (
-								<Avatar
-									key={booking._id}
-									src="https://lh3.googleusercontent.com/proxy/xr1GXMGF5o6oKuDqHFK5Fb6fwQbaG-8XKkHC59OC8Epx1LkEgctv0jGrSf22Eir6Hngf4bN7RSV_odfUKqT74ZRvcf_r6qtvlbfkyKjMkkFbaFRWeMuLbh-X"
-								/>
-							))}
-						</Avatar.Group>
-					</Flex>
-				</Card>
-				<Typography>
-					<Title level={3}>Bookings</Title>
-				</Typography>
-				<Table columns={columns} dataSource={data} />
-			</Flex>
-		</>
-	);
+    if (loading) {
+        return (
+            <Flex justify="center" align="center" style={{ height: "100vh" }}>
+                <Spin size="large" />
+            </Flex>
+        );
+    }
+
+    const data = filteredBookings.length > 0
+        ? filteredBookings.filter((booking) => booking.userId !== null)
+        .map((booking, index) => {
+            return {
+                key: booking._id,
+                No: index + 1,
+                name: booking.userId.fullName,
+                Status: booking.paymentStatus,
+                Source: booking.fromPlace,
+                Destination: booking.toPlace,
+                departure: booking.departureDate,
+                return: booking.returnDate,
+                price: booking.totalPackagePrice,
+            };
+        })
+        : []; 
+
+    return (
+        <>
+            <Flex gap={10} vertical>
+                <Typography>
+                    <Title level={3}>Bookings</Title>
+                </Typography>
+                <Card bordered={false} style={{ width: 300 }}>
+                    <Flex gap={10} vertical>
+                        <Typography>Number of Bookings</Typography>
+                        <Typography>{bookings.length}</Typography>
+                        <Avatar.Group
+                            maxCount={3}
+                            maxStyle={{
+                                color: "#f56a00",
+                                backgroundColor: "#fde3cf",
+                            }}
+                        >
+                            {bookings.map((booking) => (
+                                <Avatar
+                                    key={booking._id}
+                                    src="https://lh3.googleusercontent.com/proxy/xr1GXMGF5o6oKuDqHFK5Fb6fwQbaG-8XKkHC59OC8Epx1LkEgctv0jGrSf22Eir6Hngf4bN7RSV_odfUKqT74ZRvcf_r6qtvlbfkyKjMkkFbaFRWeMuLbh-X"
+                                />
+                            ))}
+                        </Avatar.Group>
+                    </Flex>
+                </Card>
+                <Flex style={{ marginBottom: 16, marginTop: 10 }}>
+                    <RangePicker
+                        style={{ width: "45%" }}
+                        onChange={handleDateChange}
+                        format="YYYY-MM-DD"
+                    />
+                </Flex>
+                <Typography>
+                    <Title level={3}>Bookings</Title>
+                </Typography>
+                <Table columns={columns} dataSource={data} />
+            </Flex>
+        </>
+    );
 };
+
 
 export default Booking;
