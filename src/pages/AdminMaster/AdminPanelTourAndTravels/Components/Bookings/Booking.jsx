@@ -197,7 +197,7 @@ const Booking = () => {
                 <Card bordered={false} style={{ width: 300 }}>
                     <Flex gap={10} vertical>
                         <Typography>Number of Bookings</Typography>
-                        <Typography>{bookings.length}</Typography>
+                        <Typography>{filteredBookings.length}</Typography>
                         <Avatar.Group
                             maxCount={3}
                             maxStyle={{

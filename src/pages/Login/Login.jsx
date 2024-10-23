@@ -40,7 +40,7 @@ const Login = () => {
 	useEffect(() => {
 		GoogleAuth.initialize({
 			clientId:
-				"100318910449-h74ooih65luj6ambadl5ik50arsafo4a.apps.googleusercontent.com",
+				"714501822558-oj5j8epvkfs2l07mmi1g2r3hd963abqg.apps.googleusercontent.com",
 			scopes: ["profile", "email"],
 			grantOfflineAccess: true,
 		});
@@ -517,26 +517,43 @@ const Login = () => {
 
 	// Google sigin for mobile APP
 	const googleLoginHandle = async () => {
-		// let googleUser = await GoogleAuth.signIn();
-		// console.log(googleUser.authentication.idToken);
-		// const credential = googleUser.authentication.idToken;
-		signInWithPopup(auth, provider).then((data) => {
+		try {
+			// Sign in with Google
+			const googleUser = await GoogleAuth.signIn();
+			console.log(googleUser.authentication.idToken);
+			const credential = googleUser.authentication.idToken;
+	
+			// Use the credential to sign in with your Firebase provider
+			const data = await signInWithPopup(auth, provider);
 			googleUserVerifyHandler({ credential: data.user.accessToken });
-		});
+		} catch (error) {
+			console.error("Google Sign-In Error:", error);
+			toast.error("Failed to sign in with Google.", {
+				duration: 2000,
+				position: "top-center",
+				style: {
+					background: "red",
+					color: "white",
+				},
+			});
+		}
 	};
-
+	
 	const googleUserVerifyHandler = async ({ credential }) => {
 		try {
 			setLoading(true);
-			// const loadingToast = toast.loading('Logging in...');
 			const { data, token } = await googleLoginAPI(credential);
+			
+			// Store token and user data in localStorage
 			localStorage.setItem("token", token);
 			localStorage.setItem("loggedInUser", JSON.stringify(data));
+	
+			// Navigate to bus booking page
 			navigate("/busbooking");
 		} catch (error) {
-			console.log(error);
+			console.error("Login Verification Error:", error);
 			navigate("/");
-			toast.error("Error", {
+			toast.error("Error during verification", {
 				duration: 2000,
 				position: "top-center",
 				style: {
@@ -546,9 +563,9 @@ const Login = () => {
 			});
 		} finally {
 			setLoading(false);
-			//toast.dismiss(loadingToast);
 		}
 	};
+	
 
 	const facebookLoginHanler = async (fbResponse) => {
 		try {
