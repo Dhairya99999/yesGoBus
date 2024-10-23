@@ -20,6 +20,11 @@ import { auth, provider } from "../../utils/googleAuth";
 import { signInWithPopup } from "firebase/auth";
 import { selectIsMobileApp } from "../../stores/slices/designSlice";
 //import ForgotPassword from "../../components/Shared/ForgotPassword/ForgotPassword";
+import { ClerkProvider } from '@clerk/clerk-react'
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
+
+
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
 const Login = () => {
 	const loggedInUser = localStorage.getItem("loggedInUser");
@@ -711,9 +716,20 @@ const Login = () => {
 									{/* <span>Facebook</span>*/}
 								</div>
 							</LoginSocialFacebook>
+
+<>
+<ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+							<SignedOut>
+								<SignInButton />
+							</SignedOut>
+							<SignedIn>
+								<UserButton />
+							</SignedIn>
+							</ClerkProvider>
+</>
+							
 							<div className="link" onClick={googleLoginHandle}>
 								<img src={google} alt="" id="googlesigninn" />
-								{/*<span>Google</span>*/}
 							</div>
 							{/* <div className="link">
                 <div
