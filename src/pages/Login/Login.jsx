@@ -717,7 +717,7 @@ const Login = () => {
 								</div>
 							</LoginSocialFacebook>
 
-<>
+{/* <>
 <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
 							<SignedOut>
 								<SignInButton />
@@ -726,7 +726,7 @@ const Login = () => {
 								<UserButton />
 							</SignedIn>
 							</ClerkProvider>
-</>
+</> */}
 							
 							<div className="link" onClick={googleLoginHandle}>
 								<img src={google} alt="" id="googlesigninn" />
