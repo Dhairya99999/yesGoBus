@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "deploy": "aws s3 sync dist/ s3://yesgobus.com",
     "prod": "npm run build && npm run deploy && npx cap sync",
-    "copy:netlify": "copy netlify.toml dist\\"
+    "copy:netlify": "copy netlify.toml dist\\",
+    "proxy": "http://ec2-3-109-123-180.ap-south-1.compute.amazonaws.com:3000"
   },
   "dependencies": {
     "@babel/runtime": "^7.25.4",

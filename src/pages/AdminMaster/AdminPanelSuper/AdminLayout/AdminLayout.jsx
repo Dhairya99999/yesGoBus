@@ -39,7 +39,8 @@ import PackagesTourAndTravels from "../components/componentsForTourism/Packages/
 
 // imports for CabsAndParcels
 import DashboardCabAndParcels from "../components/componentsForCabAndParcels/Dashboard/Dashboard";
-
+import CabBooking from "../components/componentsForCabAndParcels/Bookings/Booking";
+import ParcelBooking from "../components/componentsForCabAndParcels/Bookings/ParcelBookings";
 import "./adminlayout.scss";
 const AdminLayout = () => {
 	const [collapsed, setCollapsed] = useState(false);
@@ -154,6 +155,10 @@ const AdminLayout = () => {
 								return <QueriesTourAndTravels />;
 							case "14":
 								return <DashboardCabAndParcels />;
+								case "16":
+								return <CabBooking />;
+								case "17":
+								return <ParcelBooking />;
 							default:
 								return null;
 						}

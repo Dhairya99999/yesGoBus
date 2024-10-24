@@ -41,8 +41,8 @@ const subItemsForPackages = [
 
 const subMenuItems = [
 	getItem("Dashboard", "14", <HomeOutlined />),
-	// getItem("Booking", "16", <FileTextOutlined />),
-	// getItem("Users", "17", <UserOutlined />),
+	getItem("Cab Bookings", "16", <FileTextOutlined />),
+	getItem("Parcel Bookings", "17", <FileTextOutlined />),
 	// getItem("Packages", "18", <PiTruckBold />),
 	// getItem("Revenue", "19", <DollarOutlined />),
 	// getItem("Ratings", "20", <FcRating />),
