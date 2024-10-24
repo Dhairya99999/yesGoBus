@@ -1,16 +1,7 @@
 import React, { useState, useEffect } from "react";
 const baseUrl = import.meta.env.VITE_BASE_URL;
 const user = localStorage.getItem("token");
-import {
-	Card,
-	Flex,
-	Typography,
-	Avatar,
-	Space,
-	Table,
-	Button,
-	Spin,
-} from "antd";
+import { Card, Flex, Typography, Spin } from "antd";
 const { Title } = Typography;
 const Dashboard = () => {
 	const [error, setError] = useState(null);
@@ -18,6 +9,8 @@ const Dashboard = () => {
 	const [bookings, setBookings] = useState([]);
 	const [users, setUsers] = useState([]);
 	const [packages, setPackages] = useState([]);
+	const [agents, setAgents] = useState([]);
+	const [revenue, setRevenue] = useState(0);
 
 	useEffect(() => {
 		const fetchAllPackages = async () => {
@@ -87,11 +80,66 @@ const Dashboard = () => {
 		};
 
 		fetchAllUsers();
+
+		const fetchAllAgents = async () => {
+			setLoading(true);
+			try {
+				const response = await fetch(
+					`${baseUrl}/api/admin/agents/getAllAgents`,
+					{
+						headers: {
+							Authorization: `Bearer ${user}`, // Assuming token is the correct variable
+							"Content-Type": "application/json",
+						},
+					}
+				);
+				const data = await response.json();
+				// console.log("data", data.data);
+				setLoading(false);
+				setAgents(data.data);
+			} catch (error) {
+				setError(error.message);
+				setLoading(false);
+			}
+		};
+
+		fetchAllAgents();
+	}, []);
+	useEffect(() => {
+		const fetchBookings = async () => {
+			setLoading(true);
+			try {
+				const response = await fetch(
+					`${baseUrl}/api/admin/revenue/getRevenueForBus`,
+					{
+						headers: {
+							Authorization: `Bearer ${user}`,
+							"Content-Type": "application/json",
+						},
+					}
+				);
+				const data = await response.json();
+				// console.log("data", data.data);
+				if (data.status === 200) {
+					setLoading(false);
+					setRevenue(data.data.totalRevenue);
+					// setRevenueData(data.data.revenueData);
+					// setFilteredData(data.data.revenueData);
+				} else {
+					setError(data.message);
+					setLoading(false);
+				}
+			} catch (error) {
+				setError(error.message);
+				setLoading(false);
+			}
+		};
+		fetchBookings();
 	}, []);
 
 	// console.log("users", users);
 	// console.log("bookings", bookings);
-	console.log("packages", packages);
+	// console.log("packages", packages);
 
 	if (loading || !users || !bookings || !packages) {
 		return (
@@ -114,14 +162,16 @@ const Dashboard = () => {
 					<Card
 						bordered={false}
 						style={{
-							width: 140,
+							width: 150,
 							height: 140,
 							boxShadow: "0 2px 10px #fff3e6",
 							// backgroundColor: "#fff3e6",
 						}}
 					>
 						<Flex gap={10} vertical align="center" justify="center">
-							<Typography style={{ fontWeight: "bold" }}>Users</Typography>
+							<Typography style={{ fontWeight: "bold" }}>
+								Total Users
+							</Typography>
 							<Typography
 								style={{
 									fontSize: 25,
@@ -142,12 +192,14 @@ const Dashboard = () => {
 						// title="No of Users"
 						bordered={false}
 						style={{
-							width: 140,
+							width: 150,
 							boxShadow: "0 2px 10px #fff3e6",
 						}}
 					>
 						<Flex gap={10} vertical align="center" justify="center">
-							<Typography style={{ fontWeight: "bold" }}>Bookings</Typography>
+							<Typography style={{ fontWeight: "bold" }}>
+								Total Bookings
+							</Typography>
 							<Typography
 								style={{
 									fontSize: 25,
@@ -173,7 +225,9 @@ const Dashboard = () => {
 						}}
 					>
 						<Flex gap={10} vertical align="center" justify="center">
-							<Typography style={{ fontWeight: "bold" }}>Packages</Typography>
+							<Typography style={{ fontWeight: "bold" }}>
+								Total Packages
+							</Typography>
 							<Typography
 								style={{
 									fontSize: 25,
@@ -186,9 +240,63 @@ const Dashboard = () => {
 									lineHeight: "30px",
 								}}
 							>
-								{!loading && packages.length
-									? packages.length
-									: 0}
+								{!loading && packages.length ? packages.length : 0}
+							</Typography>
+						</Flex>
+					</Card>
+					<Card
+						// title="No of Users"
+						bordered={false}
+						style={{
+							width: 150,
+							boxShadow: "0 2px 10px #fff3e6",
+						}}
+					>
+						<Flex gap={10} vertical align="center" justify="center">
+							<Typography style={{ fontWeight: "bold" }}>
+								Total Agents
+							</Typography>
+							<Typography
+								style={{
+									fontSize: 25,
+									backgroundColor: "#fff3e6",
+									padding: 10,
+									borderRadius: "10px",
+									width: 50,
+									height: 50,
+									textAlign: "center",
+									lineHeight: "30px",
+								}}
+							>
+								{!loading && agents.length ? agents.length : 0}
+							</Typography>
+						</Flex>
+					</Card>
+					<Card
+						// title="No of Users"
+						bordered={false}
+						style={{
+							width: 200,
+							boxShadow: "0 2px 10px #fff3e6",
+						}}
+					>
+						<Flex gap={10} vertical align="center" justify="center">
+							<Typography style={{ fontWeight: "bold" }}>
+								Total Revenue
+							</Typography>
+							<Typography
+								style={{
+									fontSize: 25,
+									backgroundColor: "#fff3e6",
+									padding: 10,
+									borderRadius: "10px",
+									width: 140,
+									height: 50,
+									textAlign: "center",
+									lineHeight: "30px",
+								}}
+							>
+								₹ {!loading && Math.floor(revenue).toLocaleString("en-IN")}
 							</Typography>
 						</Flex>
 					</Card>

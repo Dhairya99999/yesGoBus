@@ -18,14 +18,28 @@ import {
 	// BellOutlined,
 } from "@ant-design/icons";
 const { Sider, Header, Content } = Layout;
-import Sidebar from "../component/Sidebar/Sider";
-import UserList from "../component/Users/UsesList";
-import Dashboard from "../component/Dashboard/Dashboard";
-import Booking from "../component/Bookings/Booking";
-import Packages from "../component/Packages/Packages";
-import Queries from "../component/Queries/Queries";
-import Revenue from "../component/Revenue/Revenue";
-import Ratings from "../component/CustomerRatings/Ratings";
+import Sidebar from "./Sidebar/Sider";
+
+// imports for Bus Booking
+import UserBusBooking from "../components/componentsForBusBookings/Users/Users";
+import DashboardBusBooking from "../components/componentsForBusBookings/Dashboard/Dashboard";
+import BookingsBusBooking from "../components/componentsForBusBookings/Bookings/Booking";
+import QueriesBusBooking from "../components/componentsForBusBookings/Queries/Queries";
+import RevenueBusBooking from "../components/componentsForBusBookings/Revenue/Revenue";
+import RatingsBusBooking from "../components/componentsForBusBookings/Ratings/Ratings";
+
+// imports for Tour and Travels
+import UserTourAndTravels from "../components/componentsForTourism/Users/UsesList";
+import DashboardTourAndTravels from "../components/componentsForTourism/Dashboard/Dashboard";
+import BookingTourAndTravels from "../components/componentsForTourism/Bookings/Booking";
+import QueriesTourAndTravels from "../components/componentsForTourism/Queries/Queries";
+import RevenueTourAndTravels from "../components/componentsForTourism/Revenue/Revenue";
+import RatingsTourAndTravels from "../components/componentsForTourism/CustomerRatings/Ratings";
+import PackagesTourAndTravels from "../components/componentsForTourism/Packages/Packages";
+
+// imports for CabsAndParcels
+import DashboardCabAndParcels from "../components/componentsForCabAndParcels/Dashboard/Dashboard";
+
 import "./adminlayout.scss";
 const AdminLayout = () => {
 	const [collapsed, setCollapsed] = useState(false);
@@ -73,7 +87,8 @@ const AdminLayout = () => {
 			</Sider>
 			<Layout>
 				<Header className="header">
-					<Flex justify="end">
+					<Flex justify="space-between">
+						<Typography.Title level={3}>Admin Panel</Typography.Title>
 						{/* <Flex gap={10}>
 							<Input
 								placeholder="Search"
@@ -110,19 +125,35 @@ const AdminLayout = () => {
 					{(() => {
 						switch (selectedItem) {
 							case "1":
-								return <Dashboard />;
+								return <DashboardBusBooking />;
 							case "2":
-								return <Booking />;
+								return <BookingsBusBooking />;
 							case "3":
-								return <UserList />;
+								return <UserBusBooking />;
+							// case "4":
+								// return <Packages />;
 							case "4":
-								return <Packages />;
+								return <RevenueBusBooking />;
 							case "5":
-								return <Revenue />;
+								return <RatingsBusBooking />;
 							case "6":
-								return <Ratings />;
+								return <QueriesBusBooking />;
 							case "7":
-								return <Queries />;
+								return <DashboardTourAndTravels />;
+							case "8":
+								return <BookingTourAndTravels />;
+							case "9":
+								return <UserTourAndTravels />;
+							case "10":
+								return <PackagesTourAndTravels />;
+							case "11":
+								return <RevenueTourAndTravels />;
+							case "12":
+								return <RatingsTourAndTravels />;
+							case "13":
+								return <QueriesTourAndTravels />;
+							case "14":
+								return <DashboardCabAndParcels />;
 							default:
 								return null;
 						}
