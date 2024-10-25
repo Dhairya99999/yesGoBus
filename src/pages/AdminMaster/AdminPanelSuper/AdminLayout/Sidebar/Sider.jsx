@@ -41,9 +41,9 @@ const subItemsForPackages = [
 
 const subMenuItems = [
 	getItem("Dashboard", "14", <HomeOutlined />),
+	getItem("Users", "18", <UserOutlined />),
 	getItem("Cab Bookings", "16", <FileTextOutlined />),
 	getItem("Parcel Bookings", "17", <FileTextOutlined />),
-	// getItem("Packages", "18", <PiTruckBold />),
 	// getItem("Revenue", "19", <DollarOutlined />),
 	// getItem("Ratings", "20", <FcRating />),
 	// getItem("Queries", "21", <SiGooglebigquery />),

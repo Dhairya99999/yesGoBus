@@ -103,7 +103,7 @@ const Dashboard = () => {
 								textAlign: "center",
 								lineHeight: "30px",
 							}}>
-								{users || 0}
+								{users.length || 0}
 							</Typography>
 						</Flex>
 					</Card>
