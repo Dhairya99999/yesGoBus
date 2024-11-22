@@ -395,19 +395,19 @@ const Seats = ({
 		} else if (isSrs) {
 			const filteredSeats = seats;
 			const highlightedPrice = selectedPriceFilter;
-			const numRows =
-				Math.max(...filteredSeats?.map((seat) => parseInt(seat.column, 10))) +
-				1;
-			const numCols =
-				Math.max(...filteredSeats?.map((seat) => parseInt(seat.row, 10))) + 1;
-			const minRow = Math.min(
-				...filteredSeats?.map((seat) => parseInt(seat.column, 10))
-			);
+			
+			const numRows = Math.max(...filteredSeats?.map((seat) => parseInt(seat.column, 10))) + 1;
+			const numCols = Math.max(...filteredSeats?.map((seat) => parseInt(seat.row, 10))) + 1;
+			const minRow = Math.min(...filteredSeats?.map((seat) => parseInt(seat.column, 10)));
 
 			const seatTable = [];
 			let previousSeatCount = -1;
 
-			for (let row = minRow; row < numRows; row++) {
+			// array of row indices and reverse it
+			const rowIndices = Array.from({ length: numRows - minRow }, (_, i) => numRows - 1 - i);
+
+			// Iterating through reversed rows
+			for (const row of rowIndices) {
 				const seatRow = [];
 				let seatCount = 0;
 
@@ -415,6 +415,7 @@ const Seats = ({
 					const seat = filteredSeats.find(
 						(s) => parseInt(s.column, 10) === row && parseInt(s.row, 10) === col
 					);
+
 					if (seat) {
 						seatCount++;
 						const isHighlighted =
@@ -574,11 +575,13 @@ const Seats = ({
 						seatRow.push(<td key={`empty-${row}-${col}`}></td>);
 					}
 				}
+
 				if (!(seatCount === 0 && previousSeatCount === 0)) {
 					seatTable.push(<tr key={`row-${row}`}>{seatRow}</tr>);
 				}
 				previousSeatCount = seatCount;
 			}
+
 			return (
 				<table>
 					<tbody>{seatTable}</tbody>
