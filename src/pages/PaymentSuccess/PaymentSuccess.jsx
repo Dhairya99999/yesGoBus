@@ -11,7 +11,7 @@ import axios from "axios";
 const PaymentSuccess = () => {
   const urlSearchParams = new URLSearchParams(window.location.search);
   const bookingId = urlSearchParams.get("bookingId");
-  const token = localStorage.getItem({token})
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
   const [bookingDetails, setBookingDetails] = useState(null);
