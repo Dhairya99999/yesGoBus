@@ -1,174 +1,189 @@
+// Variables for colors and other reused values
+$primary-color: #fd5901;
+$secondary-color: #110803;
+$light-bg: rgba(253, 89, 1, 0.15);
+$gradient-bg: linear-gradient(to bottom, transparent, #ffe1d6);
+$dark-bg: rgb(22, 22, 22);
+
 .BusRoute {
-	display: flex;
-	background: black;
-	align-items: center;
-	justify-content: space-evenly;
-	padding: 20px 30px;
-	margin-top: 10px; // Ensure separation from the navbar
+  display: flex;
+  background: black;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 20px 30px;
+  margin-top: 10px; // Ensure separation from the navbar
 
-	.reverse-img {
-		transition: transform 0.5s ease;
-		cursor: pointer;
-	}
+  .reverse-img {
+    transition: transform 0.5s ease;
+    cursor: pointer;
+  }
 
-	input[type="search"]::-webkit-search-cancel-button {
-		-webkit-appearance: none;
-		height: 1em;
-		width: 1em;
-		border-radius: 50em;
-		background: url("../../assets/busbooking/x-symbol.svg") no-repeat 50% 50%;
-		background-size: contain;
-		opacity: 0;
-		pointer-events: none;
-		cursor: pointer;
-	}
+  input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    height: 1em;
+    width: 1em;
+    border-radius: 50em;
+    background: url("../../assets/busbooking/x-symbol.svg") no-repeat 50% 50%;
+    background-size: contain;
+    opacity: 0;
+    pointer-events: none;
+    cursor: pointer;
+  }
 
-	input[type="search"]:focus::-webkit-search-cancel-button {
-		opacity: 0.8;
-		pointer-events: all;
-	}
+  input[type="search"]:focus::-webkit-search-cancel-button {
+    opacity: 0.8;
+    pointer-events: all;
+  }
 
-	input[type="search"].dark::-webkit-search-cancel-button {
-		filter: invert(1);
-	}
+  input[type="search"].dark::-webkit-search-cancel-button {
+    filter: invert(1);
+  }
 }
 
 .MobileBusRoute {
-	padding: 30px 10px;
-	background: rgba(253, 89, 1, 0.15);
-	display: flex;
-	flex-direction: column;
-	gap: 20px;
-	background: linear-gradient(to bottom, transparent, #ffe1d6);
-	border-radius: 30px;
+  padding: 30px 10px;
+  background: $light-bg;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: $gradient-bg;
+  border-radius: 30px;
 
-	.MobileBusRouteHead {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-top: 60px;
-		h3 {
-			font-size: 20px;
-			font-weight: 600;
-			color: #110803;
-			line-height: 27px;
-		}
-		.google_translate_element {
-			height: 40px !important;
-			select {
-				height: 30px !important;
-				width: auto !important;
-				padding: 4px !important;
-			}
-		}
-	}
+  .MobileBusRouteHead {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 60px;
 
-	.outer_border {
-		// border: 1px solid rgb(35, 35, 35);
-		border-radius: 15px;
-		margin: 5px;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-evenly;
-	}
+    h3 {
+      font-size: 20px;
+      font-weight: 600;
+      color: $secondary-color;
+      line-height: 27px;
+    }
 
-	.inputs {
-		padding: 10px;
+    .google_translate_element {
+      height: 40px !important;
 
-		.date-input {
-			.date-label {
-				color: gray;
-				margin-left: 10px;
-				font-weight: 500;
-				font-size: 15px;
-			}
-			.date-container {
-				display: flex;
-				gap: 10px;
-				align-items: center;
-				margin: 5px 10px;
-				width: "100%";
-				color: "#fd5901";
-				input {
-					color: #110803;
-					font-size: 16px;
-					width: 100%;
-					font-weight: 700;
-					background: none;
-					border: none;
-					outline: none;
-					&::placeholder {
-						font-size: 14px;
-						font-weight: 600;
-					}
-				}
-				.calendar-icon {
-					color: #fd5901;
-				}
-			}
-		}
+      select {
+        height: 30px !important;
+        width: auto !important;
+        padding: 4px !important;
+      }
+    }
+  }
 
-		.fromto {
-			padding: 5px 0;
-			border: 1px solid rgb(34, 34, 34);
-			border-radius: 10px;
+  .outer_border {
+    border-radius: 15px;
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
 
-			.img_rotater {
-				position: relative;
+  .inputs {
+    padding: 10px;
 
-				.reverse-img {
-					width: 20px;
-					height: 20px;
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					position: absolute;
-					right: 8px;
-					bottom: -14px;
-					background-color: rgb(22, 22, 22);
-					padding: 5px;
-					color: #fd5901;
-					border-radius: 100px;
-				}
-			}
-		}
+    .date-input {
+      .date-label {
+        color: gray;
+        margin-left: 10px;
+        font-weight: 500;
+        font-size: 15px;
+      }
 
-		.days {
-			margin-top: 10px;
-			display: flex;
-			gap: 7px;
+      .date-container {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin: 5px 10px;
+        width: 100%;
+        color: $primary-color;
 
-			.dayButton {
-				border: none;
-				border-radius: 5px;
-				padding: 5px 7px;
-				background-color: white;
-				color: #110803;
-			}
-			.highlighted {
-				background-color: #fd5901;
-				color: #fff;
-			}
-		}
-	}
+        input {
+          color: $secondary-color;
+          font-size: 16px;
+          width: 100%;
+          font-weight: 700;
+          background: none;
+          border: none;
+          outline: none;
+
+          &::placeholder {
+            font-size: 14px;
+            font-weight: 600;
+          }
+        }
+
+        .calendar-icon {
+          color: $primary-color;
+        }
+      }
+    }
+
+    .fromto {
+      padding: 5px 0;
+      border: 1px solid rgb(34, 34, 34);
+      border-radius: 10px;
+
+      .img_rotater {
+        position: relative;
+
+        .reverse-img {
+          width: 20px;
+          height: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: absolute;
+          right: 8px;
+          bottom: -14px;
+          background-color: $dark-bg;
+          padding: 5px;
+          color: $primary-color;
+          border-radius: 100px;
+        }
+      }
+    }
+
+    .days {
+      margin-top: 10px;
+      display: flex;
+      gap: 7px;
+
+      .dayButton {
+        border: none;
+        border-radius: 5px;
+        padding: 5px 7px;
+        background-color: white;
+        color: $secondary-color;
+      }
+
+      .highlighted {
+        background-color: $primary-color;
+        color: #fff;
+      }
+    }
+  }
 }
 
+// Media queries for responsiveness
 @media (max-width: 768px) {
-	.BusRoute {
-		display: none;
-	}
+  .BusRoute {
+    display: none;
+  }
 
-	.MobileBusRoute {
-		display: block;
-	}
+  .MobileBusRoute {
+    display: block;
+  }
 }
 
 @media (min-width: 768px) {
-	.BusRoute {
-		display: flex;
-	}
+  .BusRoute {
+    display: flex;
+  }
 
-	.MobileBusRoute {
-		display: none;
-	}
+  .MobileBusRoute {
+    display: none;
+  }
 }

@@ -1,9 +1,7 @@
 import {
 	facebook,
 	google,
-	//image,
-	// linkedin,
-	//logoblack,
+	
 } from "../../assets/login";
 import logo from "../../assets/yegobus-logo.png";
 import "./Login.scss";
@@ -51,13 +49,9 @@ const Login = () => {
 		});
 	}, []);
 	if (loggedInUser) {
-		return <Navigate to="/" replace />;
+		return <Navigate to="/landing" replace />;
 	}
-	// const isMobileApp = useSelector(selectIsMobileApp);
-	// const isMobilenumber = (num) => {
-	//   let isIndianNumber = /^[6789]\d{11}$/;
-	//   return isIndianNumber.test(num);
-	// };
+	
 
 	const handleLoginChange = () => {
 		setShowLogin(!showLogin);
@@ -77,19 +71,7 @@ const Login = () => {
 		});
 	};
 
-	// const handlePhChangeSingup = (e) => {
-	//   setShowOTP(false);
-	//   if (isMobilenumber(e.target.value)) setShowOTP(true);
-	//   setCreateAccountData((prev) => {
-	//     return { ...prev, [e.target.name]: e.target.value };
-	//   });
-	// };
-
-	// const handleOtherSignupChanges = (e) => {
-	//   setCreateAccountData((prev) => {
-	//     return { ...prev, [e.target.name]: e.target.value };
-	//   });
-	// };
+	
 	const handleSubmit = async () => {
 		if (showLogin) {
 			setLoading(true);
@@ -105,10 +87,7 @@ const Login = () => {
 				if (response.status === 200) {
 					toast.dismiss(loadingToast);
 					setOrderId(response.data.data.orderId);
-					// const token = response.data.token;
-					// const loggedInUser = response.data.data;
-					// localStorage.setItem("token", token);
-					// localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
+					
 					toast.success(response.data.message, {
 						duration: 2000,
 						position: "top-center",
@@ -149,7 +128,7 @@ const Login = () => {
 						},
 					});
 					setTimeout(() => {
-						navigate("/");
+						navigate("/landing");
 					}, 2000);
 				}
 			} catch (error) {
@@ -276,7 +255,7 @@ const Login = () => {
 						},
 					});
 					setTimeout(() => {
-						navigate("/");
+						navigate("/landing");
 					}, 2000);
 				} else {
 					toast.error("Invalid credentials", {
@@ -317,7 +296,7 @@ const Login = () => {
 						},
 					});
 					setTimeout(() => {
-						navigate("/");
+						navigate("/landing");
 					}, 2000);
 				} else {
 					toast.error("Invalid credentials", {
@@ -474,10 +453,7 @@ const Login = () => {
 					<div className="genderContainer">
 						{/* <label htmlFor={`gender_${index}`}>Gender *</label> */}
 						<select
-							// name={`gender_${index}`}
-							// id={`gender_${index}`}
-							// value={userData[`gender_${index}`] || ""}
-							// onChange={(e) => handleInputChange(e, `gender`)}
+
 							onChange={(e) => {
 								setCreateAccountData({
 									...createAccountData,
@@ -717,47 +693,13 @@ const Login = () => {
 								</div>
 							</LoginSocialFacebook>
 
-{/* <>
-<ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
-							<SignedOut>
-								<SignInButton />
-							</SignedOut>
-							<SignedIn>
-								<UserButton />
-							</SignedIn>
-							</ClerkProvider>
-</> */}
+{}
 							
 							<div className="link" onClick={googleLoginHandle}>
 								<img src={google} alt="" id="googlesigninn" />
 							</div>
-							{/* <div className="link">
-                <div
-                  className="fb-login-button"
-                  data-size="medium"
-                  data-button-type="continue_with"
-                  data-layout="default"
-                  data-auto-logout-link="false"
-                  data-use-continue-as="true"
-                  data-width=""
-                  data-scope="public_profile,email"
-                  onClick={facebookLoginHandler}
-                />
-              </div> */}
-							{/* 
-              // <div className="link">
-              //   <img src={google} alt="" id="googlesignin" />
-              //   <span>Google</span>
-              // </div> 
-              <div className="link">
-                <img src={facebook} alt="" />
-                <span>Facebook</span>
-              </div>
-              <div className="link">
-                <img src={linkedin} alt="" />
-                <span>Linkedin</span>
-              </div> 
-              */}
+							{}
+							{}
 						</div>
 					</div>
 

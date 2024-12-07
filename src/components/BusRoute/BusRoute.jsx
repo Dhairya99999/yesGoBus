@@ -8,270 +8,198 @@ import Calendar from "../Calendar/Calendar";
 import { formatDate } from "../../utils/BusBookingHelpers";
 
 const BusRoute = ({ locationOne, locationTwo, departureDate, onSearch }) => {
-	const [locationOneSuggestions, setLocationOneSuggestions] = useState([]);
-	const [locationTwoSuggestions, setLocationTwoSuggestions] = useState([]);
-	const [sourceCity, setSourceCity] = useState(locationOne);
-	const [destinationCity, setDestinationCity] = useState(locationTwo);
-	const [doj, setDoj] = useState(departureDate);
-	const [inputDate, setInputDate] = useState(departureDate);
-	const [loading, setLoading] = useState(false);
-	const [highlighted, setHighlighted] = useState(true);
-	const [openCalendar, setOpenCalendar] = useState(false);
-	const token = localStorage.getItem("token");
+  const [locationOneSuggestions, setLocationOneSuggestions] = useState([]);
+  const [locationTwoSuggestions, setLocationTwoSuggestions] = useState([]);
+  const [sourceCity, setSourceCity] = useState(locationOne);
+  const [destinationCity, setDestinationCity] = useState(locationTwo);
+  const [doj, setDoj] = useState(departureDate);
+  const [inputDate, setInputDate] = useState(departureDate);
+  const [loading, setLoading] = useState(false);
+  const [highlighted, setHighlighted] = useState(true);
+  const [openCalendar, setOpenCalendar] = useState(false);
+  const token = localStorage.getItem("token");
 
-	const [isSwapped, setIsSwapped] = useState(false);
+  const [isSwapped, setIsSwapped] = useState(false);
+  
+  // New state to manage popular locations for the "From" field
+  const [popularDestinations, setPopularDestinations] = useState([]);
 
-	const handleDateChange = (isToday) => {
-		const currentDate = new Date();
-		const nextDate = new Date(currentDate);
-		nextDate.setDate(currentDate.getDate() + (isToday ? 0 : 1));
-		setInputDate(formatDate(nextDate));
-		setDoj(formatDate(nextDate));
-		setHighlighted(isToday);
-	};
+  const handleDateChange = (isToday) => {
+    const currentDate = new Date();
+    const nextDate = new Date(currentDate);
+    nextDate.setDate(currentDate.getDate() + (isToday ? 0 : 1));
+    setInputDate(formatDate(nextDate));
+    setDoj(formatDate(nextDate));
+    setHighlighted(isToday);
+  };
 
-	useEffect(() => {
-		const formattedDate = formatDate(departureDate);
-		setSourceCity(locationOne);
-		setDestinationCity(locationTwo);
-		setDoj(formattedDate);
-		setInputDate(formattedDate);
-	}, [locationOne, locationTwo, departureDate]);
+  useEffect(() => {
+    const formattedDate = formatDate(departureDate);
+    setSourceCity(locationOne);
+    setDestinationCity(locationTwo);
+    setDoj(formattedDate);
+    setInputDate(formattedDate);
+  }, [locationOne, locationTwo, departureDate]);
 
-	const fetchLocationSuggestions = async (query, setLocationSuggestions) => {
-		try {
-			setLoading(true);
-			const response = await axios.get(
-				`${import.meta.env.VITE_BASE_URL}/api/busBooking/searchCity/${query}`,
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-						"Content-Type": "application/json",
-					},
-				}
-			);
-			setLocationSuggestions(response.data.data);
-		} catch (error) {
-			console.error("Something went wrong:", error);
-		} finally {
-			setLoading(false);
-		}
-	};
+  // Fetch popular destinations when the "From" field is clicked
+  const fetchPopularDestinations = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/busBooking/popularDestinations`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setPopularDestinations(response.data.data);
+    } catch (error) {
+      console.error("Error fetching popular destinations:", error);
+    }
+  };
 
-	const [locationOneQuery, setLocationOneQuery] = useState("");
-	const [locationTwoQuery, setLocationTwoQuery] = useState("");
+  const fetchLocationSuggestions = async (query, setLocationSuggestions) => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/busBooking/searchCity/${query}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setLocationSuggestions(response.data.data);
+    } catch (error) {
+      console.error("Something went wrong:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-	useEffect(() => {
-		const debounceTimer = setTimeout(() => {
-			if (locationOneQuery) {
-				fetchLocationSuggestions(locationOneQuery, setLocationOneSuggestions);
-			}
-			if (locationTwoQuery) {
-				fetchLocationSuggestions(locationTwoQuery, setLocationTwoSuggestions);
-			}
-		}, 500);
+  const [locationOneQuery, setLocationOneQuery] = useState("");
+  const [locationTwoQuery, setLocationTwoQuery] = useState("");
 
-		return () => clearTimeout(debounceTimer);
-	}, [locationOneQuery, locationTwoQuery]);
+  useEffect(() => {
+    const debounceTimer = setTimeout(() => {
+      if (locationOneQuery) {
+        fetchLocationSuggestions(locationOneQuery, setLocationOneSuggestions);
+      }
+      if (locationTwoQuery) {
+        fetchLocationSuggestions(locationTwoQuery, setLocationTwoSuggestions);
+      }
+    }, 500);
 
-	const handleSearch = async () => {
-		if (sourceCity && destinationCity && doj) {
-			let formattedDate;
-			if (/^\w+, \d{1,2}-\w+$/.test(doj)) {
-				const [dayOfWeek, dayMonth] = doj.split(", ");
-				const [dayOfMonth, monthName] = dayMonth.split("-");
-				const months = [
-					"Jan",
-					"Feb",
-					"Mar",
-					"Apr",
-					"May",
-					"Jun",
-					"Jul",
-					"Aug",
-					"Sep",
-					"Oct",
-					"Nov",
-					"Dec",
-				];
-				const monthIndex = months.indexOf(monthName) + 1;
-				const year = new Date().getFullYear();
-				formattedDate = `${year}-${monthIndex
-					.toString()
-					.padStart(2, "0")}-${dayOfMonth.padStart(2, "0")}`;
-			} else {
-				const [day, month, year] = doj.split("-");
-				formattedDate = `${year}-${month.padStart(2, "0")}-${day.padStart(
-					2,
-					"0"
-				)}`;
-			}
-			onSearch(sourceCity, destinationCity, formattedDate);
-		} else {
-			alert("Please enter values for all fields");
-		}
-	};
+    return () => clearTimeout(debounceTimer);
+  }, [locationOneQuery, locationTwoQuery]);
 
-	useEffect(() => {
-		const googleTranslateElementInit = () => {
-			new window.google.translate.TranslateElement(
-				{
-					pageLanguage: "en",
-					includedLanguages: "en,kn,te,ta,ml,hi",
-					layout:
-						window.google.translate.TranslateElement.InlineLayout.TOP_RIGHT,
-				},
-				"google_translate_element"
-			);
-		};
+  const handleSearch = async () => {
+    if (sourceCity && destinationCity && doj) {
+      let formattedDate;
+      if (/^\w+, \d{1,2}-\w+$/.test(doj)) {
+        const [dayOfWeek, dayMonth] = doj.split(", ");
+        const [dayOfMonth, monthName] = dayMonth.split("-");
+        const months = [
+          "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+        const monthIndex = months.indexOf(monthName) + 1;
+        const year = new Date().getFullYear();
+        formattedDate = `${year}-${monthIndex.toString().padStart(2, "0")}-${dayOfMonth.padStart(2, "0")}`;
+      } else {
+        const [day, month, year] = doj.split("-");
+        formattedDate = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+      }
+      onSearch(sourceCity, destinationCity, formattedDate);
+    } else {
+      alert("Please enter values for all fields");
+    }
+  };
 
-		if (!document.getElementById("your_button_id")) {
-			window.googleTranslateElementInit = googleTranslateElementInit;
+  useEffect(() => {
+    const googleTranslateElementInit = () => {
+      new window.google.translate.TranslateElement(
+        {
+          pageLanguage: "en",
+          includedLanguages: "en,kn,te,ta,ml,hi",
+          layout: window.google.translate.TranslateElement.InlineLayout.TOP_RIGHT,
+        },
+        "google_translate_element"
+      );
+    };
 
-			const yourButton = document.createElement("button");
-			yourButton.id = "your_button_id";
-			yourButton.style.display = "none";
-			document.querySelector(".right").appendChild(yourButton);
-		}
-	}, [locationOne, locationTwo, departureDate]);
+    if (!document.getElementById("your_button_id")) {
+      window.googleTranslateElementInit = googleTranslateElementInit;
 
-	const handleSwap = () => {
-		console.log("handleSwap called");
-		setIsSwapped(!isSwapped);
-		// let temp = sourceCity;
-		// setSourceCity(destinationCity);
-		// setDestinationCity(temp);
-	};
+      const yourButton = document.createElement("button");
+      yourButton.id = "your_button_id";
+      yourButton.style.display = "none";
+      document.querySelector(".right").appendChild(yourButton);
+    }
+  }, [locationOne, locationTwo, departureDate]);
 
-	return (
-		<>
-			<div className="BusRoute">
-				<BusRouteCard
-					title="From"
-					suggestions={locationOneSuggestions}
-					loading={loading}
-					setLocationQuery={setLocationOneQuery}
-					setData={setSourceCity}
-				/>
-				<div
-					className="reverse-img"
-					onClick={() => {
-						setDestinationCity(sourceCity);
-						setSourceCity(destinationCity);
-						onSearch(destinationCity, sourceCity, doj);
-					}}
-				>
-					<LuArrowUpDown />
-				</div>
-				<BusRouteCard
-					title="To"
-					suggestions={locationTwoSuggestions}
-					loading={loading}
-					setLocationQuery={setLocationTwoQuery}
-					setData={setDestinationCity}
-				/>
-				<div className="date-input">
-					<p className="date-label">Date of Journey</p>
-					<div className="date-container">
-						<input placeholder="dd-mm-yyyy" value={inputDate} readOnly />
-						<div
-							className="calendar-icon"
-							onClick={() => setOpenCalendar(true)}
-						>
-							<LuCalendarDays size={25} />
-						</div>
-					</div>
-				</div>
-				<Button text={"Search"} onClicked={handleSearch} />
-			</div>
-			<div className="MobileBusRoute">
-				<div className="MobileBusRouteHead">
-					<h3 className="ml-3">Bus Ticket</h3>
-					<div
-						id="google_translate_element"
-						className="google_translate_element"
-						style={{ position: "static" }}
-					></div>
-				</div>
-				<div className="outer_border">
-					<div className="inputs">
-						<div className="fromto">
-							<BusRouteCard
-								title="From"
-								suggestions={locationOneSuggestions}
-								loading={loading}
-								setLocationQuery={setLocationOneQuery}
-								setData={isSwapped ? setDestinationCity : setSourceCity}
-								value={isSwapped ? destinationCity : sourceCity}
-							/>
-							<div className="img_rotater">
-								<div
-									className="reverse-img"
-									width={23}
-									onClick={() => handleSwap()}
-								>
-									<LuArrowUpDown />
-								</div>
-								<hr />
-							</div>
-							<BusRouteCard
-								title="To"
-								suggestions={locationTwoSuggestions}
-								loading={loading}
-								setLocationQuery={setLocationTwoQuery}
-								setData={isSwapped ? setSourceCity : setDestinationCity}
-								value={isSwapped ? sourceCity : destinationCity}
-							/>
-							<hr />
-							<div className="date-input">
-								<p className="date-label">Date of Journey</p>
-								<div className="date-container">
-									<input placeholder="dd-mm-yyyy" value={inputDate} readOnly />
-									<div
-										className="calendar-icon"
-										onClick={() => setOpenCalendar(true)}
-									>
-										<LuCalendarDays size={25} />
-									</div>
-								</div>
-							</div>
-						</div>
-						<div className="days">
-							<button
-								onClick={() => handleDateChange(true)}
-								className={highlighted ? "dayButton highlighted" : "dayButton"}
-								style={{ color: highlighted ? "#fff" : "#000" }}
-							>
-								Today
-							</button>
-							<button
-								onClick={() => handleDateChange(false)}
-								className={!highlighted ? "dayButton highlighted" : "dayButton"}
-							>
-								Tomorrow
-							</button>
-						</div>
-					</div>
-				</div>
-				<Button
-					text={"Search"}
-					onClicked={handleSearch}
-					style={{ width: "100%", marginTop: "5px" }}
-				/>
-			</div>
-			{openCalendar && (
-				<Calendar
-					setOpenCalendar={setOpenCalendar}
-					setInputDate={(date) => {
-						const formattedDate = formatDate(date);
-						setDoj(formattedDate);
-						setInputDate(formattedDate);
-					}}
-					inputDate={inputDate}
-				/>
-			)}
-		</>
-	);
+  const handleSwap = () => {
+    console.log("handleSwap called");
+    setIsSwapped(!isSwapped);
+  };
+
+  return (
+    <>
+      <div className="BusRoute">
+        <BusRouteCard
+          title="From"
+          suggestions={locationOneSuggestions}
+          loading={loading}
+          setLocationQuery={setLocationOneQuery}
+          setData={setSourceCity}
+          onClick={() => fetchPopularDestinations()} // Fetch popular destinations on click
+          popularDestinations={popularDestinations} // Pass popular destinations to the component
+        />
+        <div
+          className="reverse-img"
+          onClick={() => {
+            setDestinationCity(sourceCity);
+            setSourceCity(destinationCity);
+            onSearch(destinationCity, sourceCity, doj);
+          }}
+        >
+          <LuArrowUpDown />
+        </div>
+        <BusRouteCard
+          title="To"
+          suggestions={locationTwoSuggestions}
+          loading={loading}
+          setLocationQuery={setLocationTwoQuery}
+          setData={setDestinationCity}
+        />
+        <div className="date-input">
+          <p className="date-label">Date of Journey</p>
+          <div className="date-container">
+            <input placeholder="dd-mm-yyyy" value={inputDate} readOnly />
+            <div
+              className="calendar-icon"
+              onClick={() => setOpenCalendar(true)}
+            >
+              <LuCalendarDays size={25} />
+            </div>
+          </div>
+        </div>
+        <Button text={"Search"} onClicked={handleSearch} />
+      </div>
+      {openCalendar && (
+        <Calendar
+          setOpenCalendar={setOpenCalendar}
+          setInputDate={(date) => {
+            const formattedDate = formatDate(date);
+            setDoj(formattedDate);
+            setInputDate(formattedDate);
+          }}
+          inputDate={inputDate}
+        />
+      )}
+    </>
+  );
 };
 
 export default BusRoute;

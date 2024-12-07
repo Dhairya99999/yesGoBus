@@ -80,7 +80,7 @@ function App() {
 			<Routes>
 				<Route
 					path="/"
-					element={isMobileApp ? <BusBooking /> : <LandingPage />}
+					element={isMobileApp ? <Login /> : <Login />}
 				/>
 				{/* Admin Routes */}
 				<Route path="/admin/login" element={<AdminLogin />} />
@@ -91,13 +91,13 @@ function App() {
 				/>
 				<Route path="/admin/agent" element={<AdminPanelAgentLayout />} />
 				<Route path="/admin/superadmin" element={<AdminPanelSuper />} />
-
+				<Route path="/landing" element={<LandingPage />} />
 				<Route path="/busbooking" element={<BusBooking />} />
 				<Route path="/busbooking/payment" element={<Payment />} />
 				<Route path="/payment" element={<TravelingPayment />} />
 				<Route path="/payment/successful" element={<PaymentSuccessful />} />
 				<Route path="/payment/failure" element={<PaymentFailed />} />
-				<Route path="/login" element={<Login />} />
+				{/* <Route path="/login" element={<Login />} /> */}
 				<Route
 					path="/busbooking/payment/failure"
 					element={<PaymentFailure />}
