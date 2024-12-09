@@ -45,7 +45,6 @@ import AdminLogin from "./pages/AdminMaster/AdminLogin/AdminLogin";
 import AdminPanelBusbooking from "./pages/AdminMaster/AdminPanelBusbooking/AdminLayout";
 import AdminPanelAgentLayout from "./pages/AdminMaster/AdminPanelAgent/AdminLayout/AdminLayout";
 import AdminPanelTourAndTravels from "./pages/AdminMaster/AdminPanelTourAndTravels/AdminLayout";
-import AdminPanelSuper from "./pages/AdminMaster/AdminPanelSuper/AdminLayout/AdminLayout";
 
 function App() {
 	const dispatch = useDispatch();
@@ -80,7 +79,7 @@ function App() {
 			<Routes>
 				<Route
 					path="/"
-					element={isMobileApp ? <Login /> : <Login />}
+					element={isMobileApp ? <BusBooking /> : <LandingPage />}
 				/>
 				{/* Admin Routes */}
 				<Route path="/admin/login" element={<AdminLogin />} />
@@ -90,14 +89,13 @@ function App() {
 					element={<AdminPanelTourAndTravels />}
 				/>
 				<Route path="/admin/agent" element={<AdminPanelAgentLayout />} />
-				<Route path="/admin/superadmin" element={<AdminPanelSuper />} />
-				<Route path="/landing" element={<LandingPage />} />
+
 				<Route path="/busbooking" element={<BusBooking />} />
 				<Route path="/busbooking/payment" element={<Payment />} />
 				<Route path="/payment" element={<TravelingPayment />} />
 				<Route path="/payment/successful" element={<PaymentSuccessful />} />
 				<Route path="/payment/failure" element={<PaymentFailed />} />
-				{/* <Route path="/login" element={<Login />} /> */}
+				<Route path="/login" element={<Login />} />
 				<Route
 					path="/busbooking/payment/failure"
 					element={<PaymentFailure />}

@@ -1,7 +1,9 @@
 import {
 	facebook,
 	google,
-	
+	//image,
+	// linkedin,
+	//logoblack,
 } from "../../assets/login";
 import logo from "../../assets/yegobus-logo.png";
 import "./Login.scss";
@@ -18,11 +20,6 @@ import { auth, provider } from "../../utils/googleAuth";
 import { signInWithPopup } from "firebase/auth";
 import { selectIsMobileApp } from "../../stores/slices/designSlice";
 //import ForgotPassword from "../../components/Shared/ForgotPassword/ForgotPassword";
-import { ClerkProvider } from '@clerk/clerk-react'
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
-
-
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
 const Login = () => {
 	const loggedInUser = localStorage.getItem("loggedInUser");
@@ -43,15 +40,19 @@ const Login = () => {
 	useEffect(() => {
 		GoogleAuth.initialize({
 			clientId:
-				"714501822558-oj5j8epvkfs2l07mmi1g2r3hd963abqg.apps.googleusercontent.com",
+				"100318910449-h74ooih65luj6ambadl5ik50arsafo4a.apps.googleusercontent.com",
 			scopes: ["profile", "email"],
 			grantOfflineAccess: true,
 		});
 	}, []);
 	if (loggedInUser) {
-		return <Navigate to="/landing" replace />;
+		return <Navigate to="/" replace />;
 	}
-	
+	// const isMobileApp = useSelector(selectIsMobileApp);
+	// const isMobilenumber = (num) => {
+	//   let isIndianNumber = /^[6789]\d{11}$/;
+	//   return isIndianNumber.test(num);
+	// };
 
 	const handleLoginChange = () => {
 		setShowLogin(!showLogin);
@@ -71,7 +72,19 @@ const Login = () => {
 		});
 	};
 
-	
+	// const handlePhChangeSingup = (e) => {
+	//   setShowOTP(false);
+	//   if (isMobilenumber(e.target.value)) setShowOTP(true);
+	//   setCreateAccountData((prev) => {
+	//     return { ...prev, [e.target.name]: e.target.value };
+	//   });
+	// };
+
+	// const handleOtherSignupChanges = (e) => {
+	//   setCreateAccountData((prev) => {
+	//     return { ...prev, [e.target.name]: e.target.value };
+	//   });
+	// };
 	const handleSubmit = async () => {
 		if (showLogin) {
 			setLoading(true);
@@ -87,7 +100,10 @@ const Login = () => {
 				if (response.status === 200) {
 					toast.dismiss(loadingToast);
 					setOrderId(response.data.data.orderId);
-					
+					// const token = response.data.token;
+					// const loggedInUser = response.data.data;
+					// localStorage.setItem("token", token);
+					// localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
 					toast.success(response.data.message, {
 						duration: 2000,
 						position: "top-center",
@@ -128,7 +144,7 @@ const Login = () => {
 						},
 					});
 					setTimeout(() => {
-						navigate("/landing");
+						navigate("/");
 					}, 2000);
 				}
 			} catch (error) {
@@ -255,7 +271,7 @@ const Login = () => {
 						},
 					});
 					setTimeout(() => {
-						navigate("/landing");
+						navigate("/");
 					}, 2000);
 				} else {
 					toast.error("Invalid credentials", {
@@ -296,7 +312,7 @@ const Login = () => {
 						},
 					});
 					setTimeout(() => {
-						navigate("/landing");
+						navigate("/");
 					}, 2000);
 				} else {
 					toast.error("Invalid credentials", {
@@ -453,7 +469,10 @@ const Login = () => {
 					<div className="genderContainer">
 						{/* <label htmlFor={`gender_${index}`}>Gender *</label> */}
 						<select
-
+							// name={`gender_${index}`}
+							// id={`gender_${index}`}
+							// value={userData[`gender_${index}`] || ""}
+							// onChange={(e) => handleInputChange(e, `gender`)}
 							onChange={(e) => {
 								setCreateAccountData({
 									...createAccountData,
@@ -498,43 +517,26 @@ const Login = () => {
 
 	// Google sigin for mobile APP
 	const googleLoginHandle = async () => {
-		try {
-			// Sign in with Google
-			const googleUser = await GoogleAuth.signIn();
-			console.log(googleUser.authentication.idToken);
-			const credential = googleUser.authentication.idToken;
-	
-			// Use the credential to sign in with your Firebase provider
-			const data = await signInWithPopup(auth, provider);
+		// let googleUser = await GoogleAuth.signIn();
+		// console.log(googleUser.authentication.idToken);
+		// const credential = googleUser.authentication.idToken;
+		signInWithPopup(auth, provider).then((data) => {
 			googleUserVerifyHandler({ credential: data.user.accessToken });
-		} catch (error) {
-			console.error("Google Sign-In Error:", error);
-			toast.error("Failed to sign in with Google.", {
-				duration: 2000,
-				position: "top-center",
-				style: {
-					background: "red",
-					color: "white",
-				},
-			});
-		}
+		});
 	};
-	
+
 	const googleUserVerifyHandler = async ({ credential }) => {
 		try {
 			setLoading(true);
+			// const loadingToast = toast.loading('Logging in...');
 			const { data, token } = await googleLoginAPI(credential);
-			
-			// Store token and user data in localStorage
 			localStorage.setItem("token", token);
 			localStorage.setItem("loggedInUser", JSON.stringify(data));
-	
-			// Navigate to bus booking page
 			navigate("/busbooking");
 		} catch (error) {
-			console.error("Login Verification Error:", error);
+			console.log(error);
 			navigate("/");
-			toast.error("Error during verification", {
+			toast.error("Error", {
 				duration: 2000,
 				position: "top-center",
 				style: {
@@ -544,9 +546,9 @@ const Login = () => {
 			});
 		} finally {
 			setLoading(false);
+			//toast.dismiss(loadingToast);
 		}
 	};
-	
 
 	const facebookLoginHanler = async (fbResponse) => {
 		try {
@@ -692,14 +694,37 @@ const Login = () => {
 									{/* <span>Facebook</span>*/}
 								</div>
 							</LoginSocialFacebook>
-
-{}
-							
 							<div className="link" onClick={googleLoginHandle}>
 								<img src={google} alt="" id="googlesigninn" />
+								{/*<span>Google</span>*/}
 							</div>
-							{}
-							{}
+							{/* <div className="link">
+                <div
+                  className="fb-login-button"
+                  data-size="medium"
+                  data-button-type="continue_with"
+                  data-layout="default"
+                  data-auto-logout-link="false"
+                  data-use-continue-as="true"
+                  data-width=""
+                  data-scope="public_profile,email"
+                  onClick={facebookLoginHandler}
+                />
+              </div> */}
+							{/* 
+              // <div className="link">
+              //   <img src={google} alt="" id="googlesignin" />
+              //   <span>Google</span>
+              // </div> 
+              <div className="link">
+                <img src={facebook} alt="" />
+                <span>Facebook</span>
+              </div>
+              <div className="link">
+                <img src={linkedin} alt="" />
+                <span>Linkedin</span>
+              </div> 
+              */}
 						</div>
 					</div>
 
