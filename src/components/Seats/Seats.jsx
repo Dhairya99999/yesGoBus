@@ -208,7 +208,8 @@ const Seats = ({
 		? seatDetails.coach_details.filter((seat) => seat.z_index === 1)
 		: seatDetails.filter((seat) => seat.zIndex === "1");
 
-	const renderSeatTable = (seats, selectedSeats) => {
+
+const renderSeatTable = (seats, selectedSeats) => {
 		if (isVrl) {
 			const filteredSeats = seats;
 			const highlightedPrice = selectedPriceFilter;
@@ -222,7 +223,7 @@ const Seats = ({
 				...filteredSeats?.map((seat) => parseInt(seat.Column, 10))
 			);
 
-			const seatTable = [];
+			let seatTable = [];
 			let previousSeatCount = -1;
 
 			for (let row = minRow; row < numRows; row++) {
@@ -242,9 +243,8 @@ const Seats = ({
 								seatRow.push(
 									<td key={seat.SeatNo}>
 										<div
-											className={`seat_____container ${
-												isHighlighted ? "highlighted_____seat" : ""
-											} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+											className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+												} ${highlightedPrice ? "priceOptionSelected" : ""}`}
 										>
 											<img
 												onClick={() =>
@@ -276,9 +276,8 @@ const Seats = ({
 									seatRow.push(
 										<td key={seat.SeatNo}>
 											<div
-												className={`seat_____container ${
-													isHighlighted ? "highlighted_____seat" : ""
-												} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+												className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+													} ${highlightedPrice ? "priceOptionSelected" : ""}`}
 											>
 												<img
 													onClick={() =>
@@ -309,9 +308,8 @@ const Seats = ({
 									seatRow.push(
 										<td key={seat.SeatNo}>
 											<div
-												className={`seat_____container ${
-													isHighlighted ? "highlighted_____seat" : ""
-												} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+												className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+													} ${highlightedPrice ? "priceOptionSelected" : ""}`}
 											>
 												<img
 													onClick={() =>
@@ -386,36 +384,41 @@ const Seats = ({
 				}
 				previousSeatCount = seatCount;
 			}
-
+			seatTable=seatTable.reverse()
 			return (
 				<table>
 					<tbody>{seatTable}</tbody>
 				</table>
 			);
 		} else if (isSrs) {
+			// console.log('srs bus seat layout')
+			console.log('seat is srs bus',seats)
 			const filteredSeats = seats;
 			const highlightedPrice = selectedPriceFilter;
-			
-			const numRows = Math.max(...filteredSeats?.map((seat) => parseInt(seat.column, 10))) + 1;
-			const numCols = Math.max(...filteredSeats?.map((seat) => parseInt(seat.row, 10))) + 1;
-			const minRow = Math.min(...filteredSeats?.map((seat) => parseInt(seat.column, 10)));
+			const numRows =
+				Math.max(...filteredSeats?.map((seat) => parseInt(seat.column, 10))) +
+				1;
+			const numCols =
+				Math.max(...filteredSeats?.map((seat) => parseInt(seat.row, 10))) + 1;
+			const minRow = Math.min(
+				...filteredSeats?.map((seat) => parseInt(seat.column, 10))
+			);
 
-			const seatTable = [];
+			let seatTable = [];
 			let previousSeatCount = -1;
+			// console.log('numRows:------',numRows, "numCols---------",numCols,"minRow----------",minRow, "foltered seats",filteredSeats)
 
-			// array of row indices and reverse it
-			const rowIndices = Array.from({ length: numRows - minRow }, (_, i) => numRows - 1 - i);
-
-			// Iterating through reversed rows
-			for (const row of rowIndices) {
-				const seatRow = [];
+			for (let row = minRow; row < numRows; row++) {
+				let seatRow = [];
 				let seatCount = 0;
+				// console.log('row in for loop', row)
 
 				for (let col = 0; col < numCols; col++) {
+
+					// console.log('col in for loop', col)
 					const seat = filteredSeats.find(
 						(s) => parseInt(s.column, 10) === row && parseInt(s.row, 10) === col
 					);
-
 					if (seat) {
 						seatCount++;
 						const isHighlighted =
@@ -427,9 +430,8 @@ const Seats = ({
 								seatRow.push(
 									<td key={seat.seatName}>
 										<div
-											className={`seat_____container ${
-												isHighlighted ? "highlighted_____seat" : ""
-											} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+											className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+												} ${highlightedPrice ? "priceOptionSelected" : ""}`}
 										>
 											<img
 												onClick={() =>
@@ -439,20 +441,19 @@ const Seats = ({
 														seatDetails.available_gst[seat.seatName] || 0,
 														0,
 														parseFloat(seatDetails.available[seat.seatName]) +
-															parseFloat(
-																seatDetails.available_gst[seat.seatName] || 0
-															),
+														parseFloat(
+															seatDetails.available_gst[seat.seatName] || 0
+														),
 														seatDetails.ladies_seats?.includes(seat.seatName)
 														// seat.ac,
 														// seat.sleeper
 													)
 												}
-												title={`ID: ${seat.seatName}\nFare: ₹${
-													seatDetails.available[seat.seatName]
-												}`}
+												title={`ID: ${seat.seatName}\nFare: ₹${seatDetails.available[seat.seatName]
+													}`}
 												src={seat.width === 1 ? singleselected : selectedFill}
 												alt="selected seat"
-												// className={(seat.width == "2") ? "vertical" : ""}
+											// className={(seat.width == "2") ? "vertical" : ""}
 											/>
 										</div>
 									</td>
@@ -462,9 +463,8 @@ const Seats = ({
 									seatRow.push(
 										<td key={seat.seatName}>
 											<div
-												className={`seat_____container ${
-													isHighlighted ? "highlighted_____seat" : ""
-												} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+												className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+													} ${highlightedPrice ? "priceOptionSelected" : ""}`}
 											>
 												<img
 													onClick={() =>
@@ -474,24 +474,23 @@ const Seats = ({
 															seatDetails.available_gst[seat.seatName] || 0,
 															0,
 															parseFloat(seatDetails.available[seat.seatName]) +
-																parseFloat(
-																	seatDetails.available_gst[seat.seatName] || 0
-																),
+															parseFloat(
+																seatDetails.available_gst[seat.seatName] || 0
+															),
 															seatDetails.ladies_seats?.includes(seat.seatName)
 															// seat.ac,
 															// seat.sleeper
 														)
 													}
-													title={`ID: ${seat.seatName}\nFare: ₹${
-														seatDetails.available_gst[seat.seatName]
-													}`}
+													title={`ID: ${seat.seatName}\nFare: ₹${seatDetails.available_gst[seat.seatName]
+														}`}
 													src={
 														seat.width === 1
 															? singleladiesavailable
 															: ladiesavailable
 													}
 													alt="available ladies"
-													// className={(seat.width == "2") ? "vertical" : ""}
+												// className={(seat.width == "2") ? "vertical" : ""}
 												/>
 											</div>
 										</td>
@@ -500,9 +499,8 @@ const Seats = ({
 									seatRow.push(
 										<td key={seat.seatName}>
 											<div
-												className={`seat_____container ${
-													isHighlighted ? "highlighted_____seat" : ""
-												} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+												className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+													} ${highlightedPrice ? "priceOptionSelected" : ""}`}
 											>
 												<img
 													onClick={() =>
@@ -512,20 +510,19 @@ const Seats = ({
 															seatDetails.available_gst[seat.seatName] || 0,
 															0,
 															parseFloat(seatDetails.available[seat.seatName]) +
-																parseFloat(
-																	seatDetails.available_gst[seat.seatName] || 0
-																),
+															parseFloat(
+																seatDetails.available_gst[seat.seatName] || 0
+															),
 															seatDetails.ladies_seats?.includes(seat.seatName)
 															// seat.ac,
 															// seat.sleeper
 														)
 													}
-													title={`ID: ${seat.seatName}\nFare: ₹${
-														seatDetails.available[seat.seatName]
-													}`}
+													title={`ID: ${seat.seatName}\nFare: ₹${seatDetails.available[seat.seatName]
+														}`}
 													src={seat.width === 1 ? singleavailable : available}
 													alt="available"
-													// className={(seat.width == "2") ? "vertical" : ""}
+												// className={(seat.width == "2") ? "vertical" : ""}
 												/>
 											</div>
 										</td>
@@ -537,9 +534,8 @@ const Seats = ({
 								seatRow.push(
 									<td key={seat.seatName}>
 										<div
-											className={`seat_____container ${
-												isHighlighted ? "highlighted_____seat" : ""
-											} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+											className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+												} ${highlightedPrice ? "priceOptionSelected" : ""}`}
 										>
 											<img
 												title={`ID: ${seat.seatName}`}
@@ -547,7 +543,7 @@ const Seats = ({
 													seat.width === 1 ? singleladiesbooked : ladiesbooked
 												}
 												alt="ladiesbooked"
-												// className={(seat.width == "2") ? "vertical" : ""}
+											// className={(seat.width == "2") ? "vertical" : ""}
 											/>
 										</div>
 									</td>
@@ -556,15 +552,14 @@ const Seats = ({
 								seatRow.push(
 									<td key={seat.seatName}>
 										<div
-											className={`seat_____container ${
-												isHighlighted ? "highlighted_____seat" : ""
-											} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+											className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+												} ${highlightedPrice ? "priceOptionSelected" : ""}`}
 										>
 											<img
 												title={`ID: ${seat.seatName}`}
 												src={seat.width === 1 ? singlebooked : booked}
 												alt="booked"
-												// className={(seat.width == "2") ? "vertical" : ""}
+											// className={(seat.width == "2") ? "vertical" : ""}
 											/>
 										</div>
 									</td>
@@ -575,13 +570,14 @@ const Seats = ({
 						seatRow.push(<td key={`empty-${row}-${col}`}></td>);
 					}
 				}
-
 				if (!(seatCount === 0 && previousSeatCount === 0)) {
+		
 					seatTable.push(<tr key={`row-${row}`}>{seatRow}</tr>);
 				}
 				previousSeatCount = seatCount;
+				// console.log('seatrow array' ,seatRow)
 			}
-
+			seatTable=seatTable.reverse()
 			return (
 				<table>
 					<tbody>{seatTable}</tbody>
@@ -597,7 +593,7 @@ const Seats = ({
 				Math.max(...filteredSeats?.map((seat) => parseInt(seat.column, 10))) +
 				1;
 
-			const seatTable = [];
+			let seatTable = [];
 			let previousSeatCount = -1;
 
 			for (let row = 0; row < numRows; row++) {
@@ -617,9 +613,8 @@ const Seats = ({
 								seatRow.push(
 									<td key={seat.name}>
 										<div
-											className={`seat_____container ${
-												isHighlighted ? "highlighted_____seat" : ""
-											} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+											className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+												} ${highlightedPrice ? "priceOptionSelected" : ""}`}
 										>
 											<img
 												onClick={() =>
@@ -651,9 +646,8 @@ const Seats = ({
 									seatRow.push(
 										<td key={seat.name}>
 											<div
-												className={`seat_____container ${
-													isHighlighted ? "highlighted_____seat" : ""
-												} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+												className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+													} ${highlightedPrice ? "priceOptionSelected" : ""}`}
 											>
 												<img
 													onClick={() =>
@@ -684,9 +678,8 @@ const Seats = ({
 									seatRow.push(
 										<td key={seat.name}>
 											<div
-												className={`seat_____container ${
-													isHighlighted ? "highlighted_____seat" : ""
-												} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+												className={`seat_____container ${isHighlighted ? "highlighted_____seat" : ""
+													} ${highlightedPrice ? "priceOptionSelected" : ""}`}
 											>
 												<img
 													onClick={() =>
@@ -720,9 +713,8 @@ const Seats = ({
 								seatRow.push(
 									<td key={seat.name}>
 										<div
-											className={`seat_____container ${
-												isHighlighted ? "" : ""
-											} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+											className={`seat_____container ${isHighlighted ? "" : ""
+												} ${highlightedPrice ? "priceOptionSelected" : ""}`}
 										>
 											<img
 												title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
@@ -741,9 +733,8 @@ const Seats = ({
 								seatRow.push(
 									<td key={seat.name}>
 										<div
-											className={`seat_____container ${
-												isHighlighted ? "" : ""
-											} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+											className={`seat_____container ${isHighlighted ? "" : ""
+												} ${highlightedPrice ? "priceOptionSelected" : ""}`}
 										>
 											<img
 												title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
@@ -771,7 +762,7 @@ const Seats = ({
 
 				// seatTable.push(<tr key={`row-${row}`}>{seatRow}</tr>);
 			}
-
+			seatTable=seatTable.reverse()
 			return (
 				<table>
 					<tbody>{seatTable}</tbody>
@@ -779,6 +770,578 @@ const Seats = ({
 			);
 		}
 	};
+		
+	// const renderSeatTable = (seats, selectedSeats) => {
+	// 	if (isVrl) {
+	// 		const filteredSeats = seats;
+	// 		const highlightedPrice = selectedPriceFilter;
+
+	// 		const numRows =
+	// 			Math.max(...filteredSeats?.map((seat) => parseInt(seat.Column, 10))) +
+	// 			1;
+	// 		const numCols =
+	// 			Math.max(...filteredSeats?.map((seat) => parseInt(seat.Row, 10))) + 1;
+	// 		const minRow = Math.min(
+	// 			...filteredSeats?.map((seat) => parseInt(seat.Column, 10))
+	// 		);
+
+	// 		const seatTable = [];
+	// 		let previousSeatCount = -1;
+
+	// 		for (let row = minRow; row < numRows; row++) {
+	// 			const seatRow = [];
+	// 			let seatCount = 0;
+
+	// 			for (let col = 0; col < numCols; col++) {
+	// 				const seat = filteredSeats.find(
+	// 					(s) => parseInt(s.Column, 10) === row && parseInt(s.Row, 10) === col
+	// 				);
+
+	// 				if (seat) {
+	// 					seatCount++;
+	// 					const isHighlighted = seat.BaseFare === highlightedPrice;
+	// 					if (seat.Available === "Y") {
+	// 						if (selectedSeats.includes(seat.SeatNo)) {
+	// 							seatRow.push(
+	// 								<td key={seat.SeatNo}>
+	// 									<div
+	// 										className={`seat_____container ${
+	// 											isHighlighted ? "highlighted_____seat" : ""
+	// 										} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+	// 									>
+	// 										<img
+	// 											onClick={() =>
+	// 												seatSelectionHandler(
+	// 													seat.SeatNo,
+	// 													seat.BaseFare,
+	// 													seat.ServiceTax,
+	// 													0,
+	// 													seat.SeatRate,
+	// 													seat.IsLadiesSeat
+	// 													// seat.ac,
+	// 													// seat.sleeper
+	// 												)
+	// 											}
+	// 											title={`ID: ${seat.SeatNo}\nFare: ₹${seat.BaseFare}`}
+	// 											src={
+	// 												seat.SeatType === 0 || seat.SeatType == 2
+	// 													? singleselected
+	// 													: selectedFill
+	// 											}
+	// 											alt="selected seat"
+	// 											className={seat.ColumnSpan == "2" ? "vertical" : ""}
+	// 										/>
+	// 									</div>
+	// 								</td>
+	// 							);
+	// 						} else {
+	// 							if (seat.IsLadiesSeat === "Y") {
+	// 								seatRow.push(
+	// 									<td key={seat.SeatNo}>
+	// 										<div
+	// 											className={`seat_____container ${
+	// 												isHighlighted ? "highlighted_____seat" : ""
+	// 											} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+	// 										>
+	// 											<img
+	// 												onClick={() =>
+	// 													seatSelectionHandler(
+	// 														seat.SeatNo,
+	// 														seat.BaseFare,
+	// 														seat.ServiceTax,
+	// 														0,
+	// 														seat.SeatRate,
+	// 														seat.IsLadiesSeat
+	// 														// seat.ac,
+	// 														// seat.sleeper
+	// 													)
+	// 												}
+	// 												title={`ID: ${seat.SeatNo}\nFare: ₹${seat.BaseFare}`}
+	// 												src={
+	// 													seat.SeatType === 0 || seat.SeatType == 2
+	// 														? singleladiesavailable
+	// 														: ladiesavailable
+	// 												}
+	// 												alt="available ladies"
+	// 												className={seat.ColumnSpan == "2" ? "vertical" : ""}
+	// 											/>
+	// 										</div>
+	// 									</td>
+	// 								);
+	// 							} else {
+	// 								seatRow.push(
+	// 									<td key={seat.SeatNo}>
+	// 										<div
+	// 											className={`seat_____container ${
+	// 												isHighlighted ? "highlighted_____seat" : ""
+	// 											} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+	// 										>
+	// 											<img
+	// 												onClick={() =>
+	// 													seatSelectionHandler(
+	// 														seat.SeatNo,
+	// 														seat.BaseFare,
+	// 														seat.ServiceTax,
+	// 														0,
+	// 														seat.SeatRate,
+	// 														seat.IsLadiesSeat
+	// 														// seat.ac,
+	// 														// seat.sleeper
+	// 													)
+	// 												}
+	// 												title={`ID: ${seat.SeatNo}\nFare: ₹${seat.BaseFare}`}
+	// 												src={
+	// 													seat.SeatType === 0 || seat.SeatType == 2
+	// 														? singleavailable
+	// 														: available
+	// 												}
+	// 												alt="available"
+	// 												className={seat.ColumnSpan == "2" ? "vertical" : ""}
+	// 											/>
+	// 										</div>
+	// 									</td>
+	// 								);
+	// 							}
+	// 						}
+	// 					} else {
+	// 						if (seat.ladiesSeat === "N") {
+	// 							seatRow.push(
+	// 								<td key={seat.SeatNo}>
+	// 									<div className={`seat_____container`}>
+	// 										<img
+	// 											title={`ID: ${seat.SeatNo}\nFare: ₹${seat.BaseFare}`}
+	// 											src={
+	// 												seat.SeatType === 0 || seat.SeatType == 2
+	// 													? singleladiesbooked
+	// 													: ladiesbooked
+	// 											}
+	// 											alt="ladiesbooked"
+	// 											className={seat.ColumnSpan == "2" ? "vertical" : ""}
+	// 										/>
+	// 									</div>
+	// 								</td>
+	// 							);
+	// 						} else {
+	// 							seatRow.push(
+	// 								<td key={seat.SeatNo}>
+	// 									<div className={`seat_____container `}>
+	// 										<img
+	// 											title={`ID: ${seat.SeatNo}\nFare: ₹${seat.BaseFare}`}
+	// 											src={
+	// 												seat.SeatType === 0 || seat.SeatType == 2
+	// 													? singlebooked
+	// 													: booked
+	// 											}
+	// 											alt="booked"
+	// 											className={seat.ColumnSpan == "2" ? "vertical" : ""}
+	// 										/>
+	// 									</div>
+	// 								</td>
+	// 							);
+	// 						}
+	// 					}
+	// 				} else {
+	// 					seatRow.push(<td key={`empty-${row}-${col}`}></td>);
+	// 				}
+	// 			}
+	// 			if (!(seatCount === 0 && previousSeatCount === 0)) {
+	// 				seatTable.push(<tr key={`row-${row}`}>{seatRow}</tr>);
+	// 			}
+	// 			previousSeatCount = seatCount;
+	// 		}
+
+	// 		return (
+	// 			<table>
+	// 				<tbody>{seatTable}</tbody>
+	// 			</table>
+	// 		);
+	// 	} else if (isSrs) {
+	// 		const filteredSeats = seats;
+	// 		const highlightedPrice = selectedPriceFilter;
+			
+	// 		const numRows = Math.max(...filteredSeats?.map((seat) => parseInt(seat.column, 10))) + 1;
+	// 		const numCols = Math.max(...filteredSeats?.map((seat) => parseInt(seat.row, 10))) + 1;
+	// 		const minRow = Math.min(...filteredSeats?.map((seat) => parseInt(seat.column, 10)));
+
+	// 		const seatTable = [];
+	// 		let previousSeatCount = -1;
+
+	// 		// array of row indices and reverse it
+	// 		const rowIndices = Array.from({ length: numRows - minRow }, (_, i) => numRows - 1 - i);
+
+	// 		// Iterating through reversed rows
+	// 		for (const row of rowIndices) {
+	// 			const seatRow = [];
+	// 			let seatCount = 0;
+
+	// 			for (let col = 0; col < numCols; col++) {
+	// 				const seat = filteredSeats.find(
+	// 					(s) => parseInt(s.column, 10) === row && parseInt(s.row, 10) === col
+	// 				);
+
+	// 				if (seat) {
+	// 					seatCount++;
+	// 					const isHighlighted =
+	// 						parseFloat(seatDetails.available[seat.seatName]) ===
+	// 						parseFloat(highlightedPrice);
+
+	// 					if (seatDetails.available[seat.seatName]) {
+	// 						if (selectedSeats.includes(seat.seatName)) {
+	// 							seatRow.push(
+	// 								<td key={seat.seatName}>
+	// 									<div
+	// 										className={`seat_____container ${
+	// 											isHighlighted ? "highlighted_____seat" : ""
+	// 										} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+	// 									>
+	// 										<img
+	// 											onClick={() =>
+	// 												seatSelectionHandler(
+	// 													seat.seatName,
+	// 													seatDetails.available[seat.seatName],
+	// 													seatDetails.available_gst[seat.seatName] || 0,
+	// 													0,
+	// 													parseFloat(seatDetails.available[seat.seatName]) +
+	// 														parseFloat(
+	// 															seatDetails.available_gst[seat.seatName] || 0
+	// 														),
+	// 													seatDetails.ladies_seats?.includes(seat.seatName)
+	// 													// seat.ac,
+	// 													// seat.sleeper
+	// 												)
+	// 											}
+	// 											title={`ID: ${seat.seatName}\nFare: ₹${
+	// 												seatDetails.available[seat.seatName]
+	// 											}`}
+	// 											src={seat.width === 1 ? singleselected : selectedFill}
+	// 											alt="selected seat"
+	// 											// className={(seat.width == "2") ? "vertical" : ""}
+	// 										/>
+	// 									</div>
+	// 								</td>
+	// 							);
+	// 						} else {
+	// 							if (seatDetails.ladies_seats?.includes(seat.seatName)) {
+	// 								seatRow.push(
+	// 									<td key={seat.seatName}>
+	// 										<div
+	// 											className={`seat_____container ${
+	// 												isHighlighted ? "highlighted_____seat" : ""
+	// 											} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+	// 										>
+	// 											<img
+	// 												onClick={() =>
+	// 													seatSelectionHandler(
+	// 														seat.seatName,
+	// 														seatDetails.available[seat.seatName],
+	// 														seatDetails.available_gst[seat.seatName] || 0,
+	// 														0,
+	// 														parseFloat(seatDetails.available[seat.seatName]) +
+	// 															parseFloat(
+	// 																seatDetails.available_gst[seat.seatName] || 0
+	// 															),
+	// 														seatDetails.ladies_seats?.includes(seat.seatName)
+	// 														// seat.ac,
+	// 														// seat.sleeper
+	// 													)
+	// 												}
+	// 												title={`ID: ${seat.seatName}\nFare: ₹${
+	// 													seatDetails.available_gst[seat.seatName]
+	// 												}`}
+	// 												src={
+	// 													seat.width === 1
+	// 														? singleladiesavailable
+	// 														: ladiesavailable
+	// 												}
+	// 												alt="available ladies"
+	// 												// className={(seat.width == "2") ? "vertical" : ""}
+	// 											/>
+	// 										</div>
+	// 									</td>
+	// 								);
+	// 							} else {
+	// 								seatRow.push(
+	// 									<td key={seat.seatName}>
+	// 										<div
+	// 											className={`seat_____container ${
+	// 												isHighlighted ? "highlighted_____seat" : ""
+	// 											} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+	// 										>
+	// 											<img
+	// 												onClick={() =>
+	// 													seatSelectionHandler(
+	// 														seat.seatName,
+	// 														seatDetails.available[seat.seatName],
+	// 														seatDetails.available_gst[seat.seatName] || 0,
+	// 														0,
+	// 														parseFloat(seatDetails.available[seat.seatName]) +
+	// 															parseFloat(
+	// 																seatDetails.available_gst[seat.seatName] || 0
+	// 															),
+	// 														seatDetails.ladies_seats?.includes(seat.seatName)
+	// 														// seat.ac,
+	// 														// seat.sleeper
+	// 													)
+	// 												}
+	// 												title={`ID: ${seat.seatName}\nFare: ₹${
+	// 													seatDetails.available[seat.seatName]
+	// 												}`}
+	// 												src={seat.width === 1 ? singleavailable : available}
+	// 												alt="available"
+	// 												// className={(seat.width == "2") ? "vertical" : ""}
+	// 											/>
+	// 										</div>
+	// 									</td>
+	// 								);
+	// 							}
+	// 						}
+	// 					} else {
+	// 						if (seatDetails.ladies_booked_seats?.includes(seat.seatName)) {
+	// 							seatRow.push(
+	// 								<td key={seat.seatName}>
+	// 									<div
+	// 										className={`seat_____container ${
+	// 											isHighlighted ? "highlighted_____seat" : ""
+	// 										} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+	// 									>
+	// 										<img
+	// 											title={`ID: ${seat.seatName}`}
+	// 											src={
+	// 												seat.width === 1 ? singleladiesbooked : ladiesbooked
+	// 											}
+	// 											alt="ladiesbooked"
+	// 											// className={(seat.width == "2") ? "vertical" : ""}
+	// 										/>
+	// 									</div>
+	// 								</td>
+	// 							);
+	// 						} else {
+	// 							seatRow.push(
+	// 								<td key={seat.seatName}>
+	// 									<div
+	// 										className={`seat_____container ${
+	// 											isHighlighted ? "highlighted_____seat" : ""
+	// 										} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+	// 									>
+	// 										<img
+	// 											title={`ID: ${seat.seatName}`}
+	// 											src={seat.width === 1 ? singlebooked : booked}
+	// 											alt="booked"
+	// 											// className={(seat.width == "2") ? "vertical" : ""}
+	// 										/>
+	// 									</div>
+	// 								</td>
+	// 							);
+	// 						}
+	// 					}
+	// 				} else {
+	// 					seatRow.push(<td key={`empty-${row}-${col}`}></td>);
+	// 				}
+	// 			}
+
+	// 			if (!(seatCount === 0 && previousSeatCount === 0)) {
+	// 				seatTable.push(<tr key={`row-${row}`}>{seatRow}</tr>);
+	// 			}
+	// 			previousSeatCount = seatCount;
+	// 		}
+
+	// 		return (
+	// 			<table>
+	// 				<tbody>{seatTable}</tbody>
+	// 			</table>
+	// 		);
+	// 	} else {
+	// 		const filteredSeats = seats;
+	// 		const highlightedPrice = selectedPriceFilter;
+
+	// 		const numRows =
+	// 			Math.max(...filteredSeats?.map((seat) => parseInt(seat.row, 10))) + 1;
+	// 		const numCols =
+	// 			Math.max(...filteredSeats?.map((seat) => parseInt(seat.column, 10))) +
+	// 			1;
+
+	// 		const seatTable = [];
+	// 		let previousSeatCount = -1;
+
+	// 		for (let row = 0; row < numRows; row++) {
+	// 			const seatRow = [];
+	// 			let seatCount = 0;
+
+	// 			for (let col = 0; col < numCols; col++) {
+	// 				const seat = filteredSeats.find(
+	// 					(s) => parseInt(s.row, 10) === row && parseInt(s.column, 10) === col
+	// 				);
+
+	// 				if (seat) {
+	// 					seatCount++;
+	// 					const isHighlighted = seat.baseFare === highlightedPrice;
+	// 					if (seat.available === "true") {
+	// 						if (selectedSeats.includes(seat.name)) {
+	// 							seatRow.push(
+	// 								<td key={seat.name}>
+	// 									<div
+	// 										className={`seat_____container ${
+	// 											isHighlighted ? "highlighted_____seat" : ""
+	// 										} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+	// 									>
+	// 										<img
+	// 											onClick={() =>
+	// 												seatSelectionHandler(
+	// 													seat.name,
+	// 													seat.baseFare,
+	// 													seat.serviceTaxAbsolute,
+	// 													seat.operatorServiceChargeAbsolute,
+	// 													seat.fare,
+	// 													seat.ladiesSeat
+	// 													// seat.ac,
+	// 													// seat.sleeper
+	// 												)
+	// 											}
+	// 											title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
+	// 											src={
+	// 												seat.width !== "2" && seat.length !== "2"
+	// 													? singleselected
+	// 													: selectedFill
+	// 											}
+	// 											alt="selected seat"
+	// 											className={seat.width == "2" ? "vertical" : ""}
+	// 										/>
+	// 									</div>
+	// 								</td>
+	// 							);
+	// 						} else {
+	// 							if (seat.ladiesSeat === "true") {
+	// 								seatRow.push(
+	// 									<td key={seat.name}>
+	// 										<div
+	// 											className={`seat_____container ${
+	// 												isHighlighted ? "highlighted_____seat" : ""
+	// 											} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+	// 										>
+	// 											<img
+	// 												onClick={() =>
+	// 													seatSelectionHandler(
+	// 														seat.name,
+	// 														seat.baseFare,
+	// 														seat.serviceTaxAbsolute,
+	// 														seat.operatorServiceChargeAbsolute,
+	// 														seat.fare,
+	// 														seat.ladiesSeat
+	// 														// seat.ac,
+	// 														// seat.sleeper
+	// 													)
+	// 												}
+	// 												title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
+	// 												src={
+	// 													seat.width !== "2" && seat.length !== "2"
+	// 														? singleladiesavailable
+	// 														: ladiesavailable
+	// 												}
+	// 												alt="available ladies"
+	// 												className={seat.width == "2" ? "vertical" : ""}
+	// 											/>
+	// 										</div>
+	// 									</td>
+	// 								);
+	// 							} else {
+	// 								seatRow.push(
+	// 									<td key={seat.name}>
+	// 										<div
+	// 											className={`seat_____container ${
+	// 												isHighlighted ? "highlighted_____seat" : ""
+	// 											} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+	// 										>
+	// 											<img
+	// 												onClick={() =>
+	// 													seatSelectionHandler(
+	// 														seat.name,
+	// 														seat.baseFare,
+	// 														seat.serviceTaxAbsolute,
+	// 														seat.operatorServiceChargeAbsolute,
+	// 														seat.fare,
+	// 														seat.ladiesSeat
+	// 														// seat.ac,
+	// 														// seat.sleeper
+	// 													)
+	// 												}
+	// 												title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
+	// 												src={
+	// 													seat.width !== "2" && seat.length !== "2"
+	// 														? singleavailable
+	// 														: available
+	// 												}
+	// 												alt="available"
+	// 												className={seat.width == "2" ? "vertical" : ""}
+	// 											/>
+	// 										</div>
+	// 									</td>
+	// 								);
+	// 							}
+	// 						}
+	// 					} else {
+	// 						if (seat.ladiesSeat === "true") {
+	// 							seatRow.push(
+	// 								<td key={seat.name}>
+	// 									<div
+	// 										className={`seat_____container ${
+	// 											isHighlighted ? "" : ""
+	// 										} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+	// 									>
+	// 										<img
+	// 											title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
+	// 											src={
+	// 												seat.width !== "2" && seat.length !== "2"
+	// 													? singleladiesbooked
+	// 													: ladiesbooked
+	// 											}
+	// 											alt="ladiesbooked"
+	// 											className={seat.width == "2" ? "vertical" : ""}
+	// 										/>
+	// 									</div>
+	// 								</td>
+	// 							);
+	// 						} else {
+	// 							seatRow.push(
+	// 								<td key={seat.name}>
+	// 									<div
+	// 										className={`seat_____container ${
+	// 											isHighlighted ? "" : ""
+	// 										} ${highlightedPrice ? "priceOptionSelected" : ""}`}
+	// 									>
+	// 										<img
+	// 											title={`ID: ${seat.name}\nFare: ₹${seat.baseFare}`}
+	// 											src={
+	// 												seat.width !== "2" && seat.length !== "2"
+	// 													? singlebooked
+	// 													: booked
+	// 											}
+	// 											alt="booked"
+	// 											className={seat.width == "2" ? "vertical" : ""}
+	// 										/>
+	// 									</div>
+	// 								</td>
+	// 							);
+	// 						}
+	// 					}
+	// 				} else {
+	// 					seatRow.push(<td key={`empty-${row}-${col}`}></td>);
+	// 				}
+	// 			}
+	// 			if (!(seatCount === 0 && previousSeatCount === 0)) {
+	// 				seatTable.push(<tr key={`row-${row}`}>{seatRow}</tr>);
+	// 			}
+	// 			previousSeatCount = seatCount;
+
+	// 			// seatTable.push(<tr key={`row-${row}`}>{seatRow}</tr>);
+	// 		}
+
+	// 		return (
+	// 			<table>
+	// 				<tbody>{seatTable}</tbody>
+	// 			</table>
+	// 		);
+	// 	}
+	// };
 
 	// useEffect(() => {
 	//   const getSeats = async () => {

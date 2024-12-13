@@ -45,7 +45,6 @@ import AdminLogin from "./pages/AdminMaster/AdminLogin/AdminLogin";
 import AdminPanelBusbooking from "./pages/AdminMaster/AdminPanelBusbooking/AdminLayout";
 import AdminPanelAgentLayout from "./pages/AdminMaster/AdminPanelAgent/AdminLayout/AdminLayout";
 import AdminPanelTourAndTravels from "./pages/AdminMaster/AdminPanelTourAndTravels/AdminLayout";
-import AdminPanelSuper from "./pages/AdminMaster/AdminPanelSuper/AdminLayout/AdminLayout";
 
 function App() {
 	const dispatch = useDispatch();
@@ -90,7 +89,6 @@ function App() {
 					element={<AdminPanelTourAndTravels />}
 				/>
 				<Route path="/admin/agent" element={<AdminPanelAgentLayout />} />
-				<Route path="/admin/superadmin" element={<AdminPanelSuper />} />
 
 				<Route path="/busbooking" element={<BusBooking />} />
 				<Route path="/busbooking/payment" element={<Payment />} />
