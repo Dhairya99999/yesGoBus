@@ -1,22 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <script>
-      var script = document.createElement('script');
-      script.defer = true;
-      script.src = 'https://analytics.ahrefs.com/analytics.js';
-      script.setAttribute('data-key', 'OO5L8mO0ExDmxvV8wRYOyA');
-      document.getElementsByTagName('head')[0].appendChild(script);
-    </script>
-        <script src="https://analytics.ahrefs.com/analytics.js" data-key="OO5L8mO0ExDmxvV8wRYOyA" defer="true"></script>  </head>
-
     <meta charset="UTF-8" />
-
-    <!-- No cache -->
-    <!-- <meta http-equiv="cache-control" content="no-cache" />
-    <meta http-equiv="expires" content="0" />
-    <meta http-equiv="pragma" content="no-cache" /> -->
-
     <link rel="icon" type="image/svg+xml" href="./src/assets/logo.svg" />
 
     <!-- fonts -->
@@ -31,21 +16,24 @@
     <meta name="google-signin-client_id" content="100318910449-h74ooih65luj6ambadl5ik50arsafo4a.apps.googleusercontent.com" />
     <meta name="google-signin-scope" content="profile email" />
     <title>YesGoBus - India's Most Exciting Bus Booking Platform</title>
-    <!-- <script src="https://apis.google.com/js/platform.js" async defer></script> -->
     <script src="https://accounts.google.com/gsi/client"></script>
-    
-    <!-- <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
-    <script type="text/javascript">
-      function googleTranslateElementInit() {
-        new google.translate.TranslateElement(
-          {
-            pageLanguage: "en",
-            layout: window.google.translate.TranslateElement.InlineLayout.VERTICAL,
-          }, 
-          'google_translate_element'
-        );
-      }
-    </script> -->
+    <!-- Matomo -->
+<script>
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://yesgobussnetlifyapp.matomo.cloud/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src='https://cdn.matomo.cloud/yesgobussnetlifyapp.matomo.cloud/matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
+
+  </head>
   <body>
     <div id="root"></div>
 
